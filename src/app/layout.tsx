@@ -28,7 +28,12 @@ export default function RootLayout({
      fontSans.variable
     )}
    >
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider
+     defaultTheme="dark"
+     enableSystem={false}
+     attribute="class"
+     disableTransitionOnChange
+    >
      <Navbar />
      {children}
     </ThemeProvider>

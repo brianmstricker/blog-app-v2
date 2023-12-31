@@ -15,7 +15,7 @@ export function ThemeToggleButton() {
    setTheme("dark");
   }
  }
- if (!mounted) return <div className="w-6 h-6 bg-gray-400/20 rounded-full" />;
+ if (!mounted) return null;
  return (
   <button onClick={changeTheme}>
    {theme === "dark" ? (
