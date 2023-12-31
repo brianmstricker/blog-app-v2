@@ -17,11 +17,14 @@ export function ThemeToggleButton() {
  }
  if (!mounted) return null;
  return (
-  <button onClick={changeTheme}>
+  <button
+   onClick={changeTheme}
+   className="p-2 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200"
+  >
    {theme === "dark" ? (
-    <LuMoon className="w-6 h-6" />
+    <LuMoon className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
    ) : (
-    <FaRegSun className="w-6 h-6" />
+    <FaRegSun className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
    )}
    <span className="sr-only">Toggle theme</span>
   </button>
