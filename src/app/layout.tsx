@@ -3,7 +3,8 @@ import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar";
+import LeftMenu from "@/components/ui/LeftSide/LeftMenu";
+import RightMenu from "@/components/ui/RightSide/RightMenu";
 
 export const fontSans = FontSans({
  subsets: ["latin"],
@@ -11,8 +12,8 @@ export const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
- title: "Blog - Brian",
- description: "Brian's blog",
+ title: "Chirp",
+ description: "A Twitter clone called Chirp made with Next.js 14",
 };
 
 export default function RootLayout({
@@ -34,8 +35,13 @@ export default function RootLayout({
      attribute="class"
      disableTransitionOnChange
     >
-     <Navbar />
-     {children}
+     <div className="flex mx-auto w-fit">
+      <LeftMenu />
+      <main className="border-l border-r dark:border-l-white/15 dark:border-r-white/15 flex-1 max-w-xl min-h-screen px-4 min-w-[600px]">
+       {children}
+      </main>
+      <RightMenu />
+     </div>
     </ThemeProvider>
    </body>
   </html>

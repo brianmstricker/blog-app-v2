@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import { FaRegSun } from "react-icons/fa6";
+import { MdOutlineWbSunny } from "react-icons/md";
 import { LuMoon } from "react-icons/lu";
 import { useEffect, useState } from "react";
 
@@ -24,7 +24,7 @@ export function ThemeToggleButton() {
    {theme === "dark" ? (
     <LuMoon className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
    ) : (
-    <FaRegSun className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
+    <MdOutlineWbSunny className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
    )}
    <span className="sr-only">Toggle theme</span>
   </button>

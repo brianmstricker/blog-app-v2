@@ -1,3 +1,10 @@
 export default function Home() {
- return <main>home</main>;
+ return (
+  <div className="mt-4">
+   <div className="flex justify-evenly">
+    <div>For you</div>
+    <div>Following</div>
+   </div>
+  </div>
+ );
 }
