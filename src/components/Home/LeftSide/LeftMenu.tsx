@@ -18,7 +18,7 @@ const LeftMenu = () => {
   { href: "/profile", label: "Profile", icon: FaRegUser },
  ];
  return (
-  <aside className="min-w-[275px] h-screen sticky flex flex-col">
+  <aside className="h-screen sticky flex flex-col mr-4">
    <nav className="flex-1">
     <Link href={"/"} className="rounded-full">
      <Image src="/logo.png" width={65} height={65} alt="Logo" />
@@ -36,13 +36,11 @@ const LeftMenu = () => {
       </li>
      ))}
     </ul>
-    <div className="mr-6">
-     <button className="w-full mt-10 rounded-full text-lg font-medium bg-sky-500 text-white py-3 hover:bg-sky-500/90 transition-all duration-150">
-      Post
-     </button>
-    </div>
+    <button className="w-full mt-8 rounded-full text-lg font-medium bg-sky-500 text-white py-3 hover:bg-sky-500/90 transition-all duration-150">
+     Post
+    </button>
    </nav>
-   <div className="mb-4 mr-6 rounded-full" tabIndex={0}>
+   <div className="mb-4 rounded-full" tabIndex={0}>
     <LeftMenuUserInfo />
    </div>
   </aside>

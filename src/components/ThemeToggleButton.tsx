@@ -17,14 +17,11 @@ export function ThemeToggleButton() {
  }
  if (!mounted) return null;
  return (
-  <button
-   onClick={changeTheme}
-   className="p-2 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200"
-  >
+  <button onClick={changeTheme} className="py-2">
    {theme === "dark" ? (
-    <LuMoon className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
+    <LuMoon className="w-5 h-5 hover:scale-[95%] transition-all duration-200" />
    ) : (
-    <MdOutlineWbSunny className="w-6 h-6 hover:scale-[95%] transition-all duration-200" />
+    <MdOutlineWbSunny className="w-5 h-5 hover:scale-[95%] transition-all duration-200" />
    )}
    <span className="sr-only">Toggle theme</span>
   </button>
