@@ -25,7 +25,7 @@ const CheckoutGithub = () => {
    <Link
     href="https://www.github.com/brianmstricker"
     target="_blank"
-    className="bg-main w-fit px-4 py-1.5 rounded-full font-bold hover:bg-main/90 transition-all duration-150 tracking-tight mt-1"
+    className="bg-main w-fit px-4 py-1.5 rounded-full font-bold hover:bg-main/90 transition-all duration-150 tracking-tight mt-1 text-white"
    >
     View github
    </Link>

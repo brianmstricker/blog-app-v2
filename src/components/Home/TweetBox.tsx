@@ -3,8 +3,13 @@ import { CiImageOn } from "react-icons/ci";
 import { MdOutlineGifBox } from "react-icons/md";
 import { BiSliderAlt } from "react-icons/bi";
 import { BsEmojiSmile } from "react-icons/bs";
+import { FaEarthAmericas } from "react-icons/fa6";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const TweetBox = () => {
+ const [whoCanReply, setWhoCanReply] = useState(false);
+ const [tweet, setTweet] = useState("");
  const tweetOptions = [
   { icon: <CiImageOn />, text: "Media" },
   { icon: <MdOutlineGifBox />, text: "GIF" },
@@ -12,15 +17,27 @@ const TweetBox = () => {
   { icon: <BsEmojiSmile />, text: "Emoji" },
  ];
  return (
-  <div className="border-b">
-   <div className="px-4 pt-3 pb-1">
+  <div className="border-b dark:border-b-white/25">
+   <div className="px-4 pt-3 pb-1.5">
     <div className="flex">
      <div className="w-11 h-11 rounded-full bg-blue-600" />
      <div className="flex flex-col ml-3 flex-1">
       <textarea
        className="text-xl mt-2 font-light border-none bg-transparent outline-none dark:placeholder-white/50 placeholder-gray-500/50 resize-none"
        placeholder="What is happening?!"
+       rows={1}
+       onClick={() => setWhoCanReply(true)}
+       value={tweet}
+       onChange={(e) => setTweet(e.target.value)}
       />
+      {whoCanReply && (
+       <div className="border-b dark:border-b-white/25 mt-4 mb-2">
+        <div className="mb-4 flex items-center gap-2 ml-1 text-main text-sm font-bold">
+         <FaEarthAmericas />
+         <span>Everyone can reply</span>
+        </div>
+       </div>
+      )}
       <div className="flex items-center justify-between">
        <div>
         {tweetOptions.map((option) => (
@@ -41,7 +58,13 @@ const TweetBox = () => {
          </div>
         ))}
        </div>
-       <button className="bg-main py-1.5 px-4 rounded-full font-bold">
+       <button
+        className={cn(
+         "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
+         !tweet ? "opacity-50 cursor-default" : ""
+        )}
+        disabled={!tweet}
+       >
         Post
        </button>
       </div>
