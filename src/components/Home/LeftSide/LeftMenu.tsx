@@ -36,7 +36,7 @@ const LeftMenu = () => {
       </li>
      ))}
     </ul>
-    <button className="w-full mt-8 rounded-full text-lg font-medium bg-sky-500 text-white py-3 hover:bg-sky-500/90 transition-all duration-150">
+    <button className="w-full mt-8 rounded-full text-lg font-medium bg-main text-white py-3 hover:bg-main/90 transition-all duration-150">
      Post
     </button>
    </nav>

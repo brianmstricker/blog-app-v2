@@ -14,13 +14,13 @@ const ForYouFollowing = () => {
       key={tab.label}
       className={cn(
        "transition-all duration-75",
-       tab.label === activeTab ? "" : "text-white/55"
+       tab.label === activeTab ? "" : "dark:text-white/55 text-gray-500/50"
       )}
       onClick={() => setActiveTab(tab.label)}
      >
       <span className="block pb-4">{tab.label}</span>
       {tab.label === activeTab && (
-       <div className="w-full h-1 bg-sky-500 rounded-full" />
+       <div className="w-full h-1 bg-main rounded-full" />
       )}
      </button>
     ))}
