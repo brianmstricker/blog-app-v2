@@ -8,7 +8,7 @@ const ForYouFollowing = () => {
  const tabs = [{ label: "For you" }, { label: "Following" }];
  return (
   <div className="flex relative items-center border-b dark:border-b-white/25">
-   <div className="flex justify-around w-full mx-auto">
+   <div className="flex w-full mx-auto">
     {tabs.map((tab) => (
      <button
       key={tab.label}

@@ -9,3 +9,7 @@
 .dark {
  @apply bg-black text-white;
 }
+
+#tweetBox {
+ -webkit-user-modify: read-write-plaintext-only;
+}
