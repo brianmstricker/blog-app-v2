@@ -19,6 +19,7 @@ import {
 import LeftMenuUserInfo from "./LeftMenuUserInfo";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import PostModal from "./PostModal";
 
 const LeftMenu = () => {
  const path = usePathname();
@@ -81,9 +82,7 @@ const LeftMenu = () => {
       </li>
      ))}
     </ul>
-    <button className="w-full mt-8 rounded-full text-lg font-medium bg-main text-white py-3 hover:bg-main/90 transition-all duration-150">
-     Post
-    </button>
+    <PostModal />
    </nav>
    <div className="mb-4 rounded-full" tabIndex={0}>
     <LeftMenuUserInfo />
