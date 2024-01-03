@@ -1,21 +1,60 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { GoHomeFill } from "react-icons/go";
-import { FiSearch } from "react-icons/fi";
-import { FaRegBell } from "react-icons/fa";
-import { IoMailOutline } from "react-icons/io5";
-import { FaRegBookmark } from "react-icons/fa6";
-import { FaRegUser } from "react-icons/fa";
+import {
+ IoHomeOutline,
+ IoHomeSharp,
+ IoSearchOutline,
+ IoSearch,
+} from "react-icons/io5";
+import { IoMailOutline, IoMailSharp } from "react-icons/io5";
+import {
+ FaRegBookmark,
+ FaBookmark,
+ FaUser,
+ FaRegUser,
+ FaRegBell,
+ FaBell,
+} from "react-icons/fa6";
 import LeftMenuUserInfo from "./LeftMenuUserInfo";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const LeftMenu = () => {
+ const path = usePathname();
+ const [activeLink, setActiveLink] = useState(path);
+ useEffect(() => {
+  const newPath = path.replace("/", "");
+  setActiveLink(newPath);
+  if (newPath === "") setActiveLink("home");
+ }, [path]);
  const links = [
-  { href: "/", label: "Home", icon: GoHomeFill },
-  { href: "/explore", label: "Explore", icon: FiSearch },
-  { href: "/notifications", label: "Notifications", icon: FaRegBell },
-  { href: "/messages", label: "Messages", icon: IoMailOutline },
-  { href: "/bookmarks", label: "Bookmarks", icon: FaRegBookmark },
-  { href: "/profile", label: "Profile", icon: FaRegUser },
+  { href: "/", label: "Home", icon: IoHomeOutline, activeIcon: IoHomeSharp },
+  {
+   href: "/explore",
+   label: "Explore",
+   icon: IoSearchOutline,
+   activeIcon: IoSearch,
+  },
+  {
+   href: "/notifications",
+   label: "Notifications",
+   icon: FaRegBell,
+   activeIcon: FaBell,
+  },
+  {
+   href: "/messages",
+   label: "Messages",
+   icon: IoMailOutline,
+   activeIcon: IoMailSharp,
+  },
+  {
+   href: "/bookmarks",
+   label: "Bookmarks",
+   icon: FaRegBookmark,
+   activeIcon: FaBookmark,
+  },
+  { href: "/profile", label: "Profile", icon: FaRegUser, activeIcon: FaUser },
  ];
  return (
   <aside className="h-screen sticky flex flex-col mr-4">
@@ -30,7 +69,13 @@ const LeftMenu = () => {
         href={link.href}
         className="flex items-center gap-6 py-3 rounded-full px-4"
        >
-        {link.icon && <link.icon className="w-7 h-7" />}
+        <span className="text-2xl">
+         {activeLink.toLowerCase() === link.label.toLowerCase() ? (
+          <link.activeIcon className="w-7 h-7" />
+         ) : (
+          <link.icon className="w-7 h-7" />
+         )}
+        </span>
         <span className="text-xl">{link.label}</span>
        </Link>
       </li>

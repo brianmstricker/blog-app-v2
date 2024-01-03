@@ -18,20 +18,19 @@ const TweetBox = () => {
  function handleInput(e: any) {
   const text = e.target.innerHTML;
   setTweet(text);
-  console.log(tweet);
  }
  const buttonDisabled = tweet === "" || tweet === " " || tweet === "<br>";
  return (
   <div className="border-b dark:border-b-white/25">
-   <div className="px-4 pt-2.5 pb-1.5 flex">
+   <div className="px-4 pt-2.5 flex">
     <div>
      <div className="w-11 h-11 rounded-full bg-blue-600 " />
     </div>
-    <div className="flex flex-col ml-3 py-2 grow max-w-[92%]">
+    <div className="flex flex-col ml-3 py-2 grow max-w-[90%]">
      <div className="relative min-h-[40px] max-h-[600px] text-xl overflow-y-auto">
       <div className="select-none pointer-events-none">
        {!tweet && (
-        <span className="absolute dark:text-white/50 text-gray-500/50 font-extralight">
+        <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
          What is happening?!
         </span>
        )}
@@ -46,8 +45,8 @@ const TweetBox = () => {
       />
      </div>
      {whoCanReply && (
-      <div className="border-b dark:border-b-white/25 my-2">
-       <div className="mb-4 flex items-center gap-2 ml-1 text-main text-sm font-medium">
+      <div className="border-b dark:border-b-white/25 mb-2">
+       <div className="mb-6 flex items-center gap-2 ml-1 text-main text-sm font-medium relative top-3">
         <FaEarthAmericas />
         <span>Everyone can reply</span>
        </div>
@@ -58,7 +57,7 @@ const TweetBox = () => {
        {tweetOptions.map((option) => (
         <div
          key={option.text}
-         className="group inline-flex flex-col relative justify-center items-center mb-2"
+         className="group inline-flex flex-col relative justify-center items-center"
         >
          <label
           className="text-main cursor-pointer rounded-full font-bold text-xl inline-flex flex-col items-center p-2 focus:outline-main focus:outline"

@@ -9,7 +9,7 @@ const RightFooter = () => {
   { title: "© 2024 Chirp, Inc." },
  ];
  return (
-  <div className="text-xs px-4 text-gray-500/50 dark:text-white/50">
+  <div className="text-xs px-4 text-gray-500/60 dark:text-white/50">
    <ul className="flex flex-wrap gap-2">
     {categories.map((c) => (
      <li key={c.title}>{c.title}</li>

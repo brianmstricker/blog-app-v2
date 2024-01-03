@@ -14,7 +14,7 @@ const ForYouFollowing = () => {
       key={tab.label}
       className={cn(
        "transition-all duration-75 w-full pt-4",
-       tab.label === activeTab ? "" : "dark:text-white/55 text-gray-500/50"
+       tab.label === activeTab ? "" : "dark:text-white/55 text-gray-500/60"
       )}
       onClick={() => setActiveTab(tab.label)}
      >
