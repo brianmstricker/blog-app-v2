@@ -29,16 +29,21 @@ const PostModal = () => {
   }
  }, [path]);
  useEffect(() => {
+  console.log(window.history.state);
   document.addEventListener("mousedown", (e: any) => {
    if (modalRef.current && !modalRef.current.contains(e.target)) {
-    setModalShow(false);
-    window.history.back();
+    closeModal();
    }
   });
  }, []);
  function showModal() {
   window.history.pushState(null, "", "/compose/tweet");
   setModalShow(true);
+ }
+ function closeModal() {
+  setModalShow(false);
+  if (window.history.state === null) window.history.back();
+  window.history.pushState(null, "", "/");
  }
  return (
   <>
@@ -60,10 +65,7 @@ const PostModal = () => {
       >
        <button
         className="p-[2px] rounded-full relative -top-1 -left-1"
-        onClick={() => {
-         setModalShow(false);
-         window.history.back();
-        }}
+        onClick={closeModal}
        >
         <IoClose className="w-5 h-5" />
        </button>
