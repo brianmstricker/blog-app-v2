@@ -1,11 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { IoClose } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalTweetBox from "./ModalTweetBox";
 import { createPortal } from "react-dom";
 
 const PostModal = () => {
+ const modalRef = useRef<HTMLDivElement>(null);
  const path = usePathname();
  const [modalShow, setModalShow] = useState(false);
  const handlePopstate = () => {
@@ -27,6 +28,14 @@ const PostModal = () => {
    document.body.style.overflow = "unset";
   }
  }, [path]);
+ useEffect(() => {
+  document.addEventListener("mousedown", (e: any) => {
+   if (modalRef.current && !modalRef.current.contains(e.target)) {
+    setModalShow(false);
+    window.history.back();
+   }
+  });
+ }, []);
  function showModal() {
   window.history.pushState(null, "", "/compose/tweet");
   setModalShow(true);
@@ -42,15 +51,12 @@ const PostModal = () => {
    {modalShow &&
     createPortal(
      <div
+      tabIndex={-1}
       className="w-screen h-screen fixed inset-0 bg-[#5b708366] z-[100] flex justify-center"
-      onClick={() => {
-       setModalShow(false);
-       window.history.back();
-      }}
      >
       <div
+       ref={modalRef}
        className="bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
-       onClick={(e) => e.stopPropagation()}
       >
        <button
         className="p-[2px] rounded-full relative -top-1 -left-1"
