@@ -29,7 +29,6 @@ const PostModal = () => {
   }
  }, [path]);
  useEffect(() => {
-  console.log(window.history.state);
   document.addEventListener("mousedown", (e: any) => {
    if (modalRef.current && !modalRef.current.contains(e.target)) {
     closeModal();

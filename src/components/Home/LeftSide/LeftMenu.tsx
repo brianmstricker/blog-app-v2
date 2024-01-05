@@ -58,7 +58,7 @@ const LeftMenu = () => {
   { href: "/profile", label: "Profile", icon: FaRegUser, activeIcon: FaUser },
  ];
  return (
-  <aside className="h-screen sticky flex flex-col mr-4">
+  <aside className="h-screen sticky top-0 flex flex-col mr-4">
    <nav className="flex-1">
     <Link href={"/"} className="rounded-full">
      <Image src="/logo.png" width={65} height={65} alt="Logo" />

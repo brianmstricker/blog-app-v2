@@ -6,7 +6,7 @@ const LeftMenuUserInfo = () => {
    <div className="w-11 h-11 rounded-full bg-blue-600" />
    <div className="flex flex-1 flex-col ml-4">
     <span className="font-bold text-[14px] leading-[18px]">yo</span>
-    <span className="text-gray-500">@johndoe</span>
+    <span className="text-mainGray">@johndoe</span>
    </div>
    <div>
     <HiMiniEllipsisHorizontal />

@@ -22,6 +22,7 @@ const config = {
    colors: {
     main: "rgb(29, 155, 240)",
     secondary: "rgb(22, 24, 28)",
+    mainGray: "rgb(113, 118, 123)",
    },
    fontFamily: {
     sans: ["var(--font-sans)", ...fontFamily.sans],

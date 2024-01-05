@@ -6,7 +6,7 @@ import RightFooter from "./RightFooter";
 
 const RightMenu = () => {
  return (
-  <aside className="pl-4 flex flex-col gap-4">
+  <aside className="pl-4 flex flex-col gap-4 sticky top-0">
    <RightSearch />
    <CheckoutGithub />
    <WhatsHappening />

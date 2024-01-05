@@ -6,7 +6,7 @@ import { FaRegSmile } from "react-icons/fa";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const TweetBox = () => {
+const CreateTweetBox = () => {
  const [whoCanReply, setWhoCanReply] = useState(false);
  const [tweet, setTweet] = useState("");
  const tweetOptions = [
@@ -87,4 +87,4 @@ const TweetBox = () => {
   </div>
  );
 };
-export default TweetBox;
+export default CreateTweetBox;
