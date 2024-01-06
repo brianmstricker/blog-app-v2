@@ -1,2 +1,6 @@
+# todo
+
 -add auth
-using supabase/drizzleORM
+<https://orm.drizzle.team/docs/rqb>
+<https://authjs.dev/reference/nextjs>
+<https://ui.shadcn.com/docs/components/form>

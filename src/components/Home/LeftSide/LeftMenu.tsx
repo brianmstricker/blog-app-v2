@@ -29,7 +29,7 @@ const LeftMenu = () => {
   setActiveLink(newPath);
   if (newPath === "") setActiveLink("home");
  }, [path]);
- const links = [
+ const userLinks = [
   { href: "/", label: "Home", icon: IoHomeOutline, activeIcon: IoHomeSharp },
   {
    href: "/explore",
@@ -63,8 +63,9 @@ const LeftMenu = () => {
     <Link href={"/"} className="rounded-full">
      <Image src="/logo.png" width={65} height={65} alt="Logo" />
     </Link>
-    <ul className="flex flex-col mt-2 gap-4">
-     {links.map((link) => (
+    {/* show if user */}
+    {/* <ul className="flex flex-col mt-2 gap-4">
+     {userLinks.map((link) => (
       <li key={link.label}>
        <Link
         href={link.href}
@@ -81,12 +82,13 @@ const LeftMenu = () => {
        </Link>
       </li>
      ))}
-    </ul>
-    <PostModal />
+    </ul> 
+    <PostModal /> */}
    </nav>
-   <div className="mb-4 rounded-full" tabIndex={0}>
+   {/* show if user */}
+   {/* <div className="mb-4 rounded-full" tabIndex={0}>
     <LeftMenuUserInfo />
-   </div>
+   </div> */}
   </aside>
  );
 };

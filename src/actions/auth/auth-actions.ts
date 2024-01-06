@@ -1,6 +1,6 @@
 "use server";
 
-import { users } from "@/db/schema";
+import { users } from "@/db/schema/auth-schema";
 import { dbConnect } from "../../db/dbConnect";
 
 export const loginAction = async (values: any) => {
