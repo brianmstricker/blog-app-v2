@@ -28,11 +28,11 @@ export default function Index() {
      </span>
     </div>
     <div className="mx-auto min-[420px]:mx-0 w-[80%] lg:w-[60%] flex flex-col">
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90">
       <FcGoogle className="w-6 h-6" />
       <span>Sign up with Google</span>
      </button>
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90">
       <BsGithub className="w-6 h-6" />
       <span>Sign up with Github</span>
      </button>
@@ -62,6 +62,7 @@ export default function Index() {
    </div>
    <Link
     href="/home"
+    scroll={false}
     className="absolute bottom-4 flex items-center gap-2 text-sm text-main hover:underline underline-offset-2"
    >
     <span>Or view the homepage as a guest</span>

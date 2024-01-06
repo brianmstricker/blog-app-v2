@@ -14,8 +14,10 @@ const RightMenu = () => {
    {/* <CheckoutGithub /> */}
    {/* <WhatsHappening /> */}
    {/* <WhoToFollow /> */}
-   <NewToChirp />
-   <YouMightLike />
+   <div className="pt-2 flex flex-col gap-4">
+    <NewToChirp />
+    <YouMightLike />
+   </div>
    <RightFooter />
   </aside>
  );

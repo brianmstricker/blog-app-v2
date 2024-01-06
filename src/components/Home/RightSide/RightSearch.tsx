@@ -9,7 +9,7 @@ const RightSearch = () => {
      <FiSearch />
     </div>
     <input
-     className="font-light border-none dark:bg-secondary bg-secondary/10 rounded-full py-3 px-4 outline-none dark:placeholder-white/50 placeholder-black/50 w-full text-[15px] focus:outline-blue-400 focus:outline-[1.5px] focus:bg-transparent pl-14"
+     className="font-light border-none dark:bg-secondary bg-secondary/5 rounded-full py-3 px-4 outline-none dark:placeholder-white/50 placeholder-black/50 w-full text-[15px] focus:outline-blue-400 focus:outline-[1.5px] focus:bg-transparent pl-14"
      placeholder="Search"
     />
    </div>

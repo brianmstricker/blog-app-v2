@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const CheckoutGithub = () => {
  return (
-  <div className="dark:bg-secondary bg-secondary/10 rounded-2xl py-3 px-4 flex flex-col gap-1">
+  <div className="dark:bg-secondary bg-secondary/5 rounded-2xl py-3 px-4 flex flex-col gap-1">
    <h3 className="text-xl font-bold">Checkout my Github</h3>
    <p className="text-sm">
     Checkout my github:{" "}
