@@ -1,33 +1,72 @@
 import Image from "next/image";
+import { FcGoogle } from "react-icons/fc";
+import { BsGithub } from "react-icons/bs";
+import { PiArrowFatRightFill } from "react-icons/pi";
+import Link from "next/link";
 
 export default function Index() {
  return (
-  <main className="w-full h-screen flex items-center justify-evenly">
-   <div>
-    <Image src="/logo.png" width={450} height={450} alt="Logo" />
-   </div>
-   <div className="flex flex-col justify-between h-[60%]">
-    <div className="flex flex-col gap-12">
-     <h1 className="text-6xl font-black tracking-wide">Happening now</h1>
-     <span className="text-3xl font-bold">Join today.</span>
+  <main className="w-full h-screen flex flex-col lg:flex-row items-center lg:justify-evenly relative">
+   <div className="w-[80%] min-[420px]:w-[400px] lg:w-auto">
+    <div className="w-[100px] h-[100px] lg:w-[450px] lg:h-[450px] relative shrink-0 self-start lg:self-auto">
+     <Image
+      src="/logo.png"
+      fill
+      priority
+      alt="Logo"
+      sizes="(max-width: 1024px) 100px, 450px"
+     />
     </div>
-    <div className="w-[70%]">
-     <button>google</button>
-     <button>apple</button>
-     <div>or</div>
+   </div>
+   <div className="flex flex-col gap-y-8 lg:h-[60%] max-w-[400px] lg:max-w-none">
+    <div className="mx-auto min-[420px]:mx-0 flex flex-col gap-12 w-[80%] min-[420px]:w-full">
+     <span className="text-4xl min-[420px]:text-6xl font-black tracking-wider break-words min-[420px]:leading-[80px]">
+      Happening now
+     </span>
+     <span className="text-xl min-[420px]:text-3xl font-extrabold tracking-wide">
+      Join today.
+     </span>
+    </div>
+    <div className="mx-auto min-[420px]:mx-0 w-[80%] lg:w-[60%] flex flex-col">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2">
+      <FcGoogle className="w-6 h-6" />
+      <span>Sign up with Google</span>
+     </button>
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2">
+      <BsGithub className="w-6 h-6" />
+      <span>Sign up with Github</span>
+     </button>
+     <div className="flex items-center">
+      <div className="w-full bg-mainGray/40 h-[1px]" />
+      <span className="px-4">or</span>
+      <div className="w-full bg-mainGray/40 h-[1px]" />
+     </div>
      <div>
-      <button>create account</button>
-      <div className="text-xs">
-       By signing up, you agree to the Terms of Service and Privacy Policy,
-       including Cookie Use.
+      <button className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150">
+       Create account
+      </button>
+      <div className="text-[11px] mt-1 text-gray-400/80 leading-[14px]">
+       By signing up, you agree to the{" "}
+       <span className="text-main">Terms of Service</span> and{" "}
+       <span className="text-main">Privacy Policy</span>, including{" "}
+       <span className="text-main">Cookie Use</span>.
       </div>
      </div>
-    </div>
-    <div>
-     <div>Already have an account?</div>
-     <button>sign in</button>
+     <div className="mt-8 sm:mt-16">
+      <div className="font-bold">Already have an account?</div>
+      <button className="border border-white/50 text-main my-1 rounded-full py-2 px-4 w-full font-semibold mt-4 hover:bg-main/10 transition-all duration-150">
+       Sign in
+      </button>
+     </div>
     </div>
    </div>
+   <Link
+    href="/home"
+    className="absolute bottom-4 flex items-center gap-2 text-sm text-main hover:underline underline-offset-2"
+   >
+    <span>Or view the homepage as a guest</span>
+    <PiArrowFatRightFill className="w-4 h-4" />
+   </Link>
   </main>
  );
 }
