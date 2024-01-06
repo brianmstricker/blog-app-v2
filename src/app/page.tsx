@@ -28,11 +28,11 @@ export default function Index() {
      </span>
     </div>
     <div className="mx-auto min-[420px]:mx-0 w-[80%] lg:w-[60%] flex flex-col">
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent">
       <FcGoogle className="w-6 h-6" />
       <span>Sign up with Google</span>
      </button>
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent">
       <BsGithub className="w-6 h-6" />
       <span>Sign up with Github</span>
      </button>
@@ -42,7 +42,7 @@ export default function Index() {
       <div className="w-full bg-mainGray/40 h-[1px]" />
      </div>
      <div>
-      <button className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150">
+      <button className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150 border border-main">
        Create account
       </button>
       <div className="text-[11px] mt-1 text-gray-400/80 leading-[14px]">
@@ -54,7 +54,7 @@ export default function Index() {
      </div>
      <div className="mt-8 sm:mt-16">
       <div className="font-bold">Already have an account?</div>
-      <button className="border border-white/50 text-main my-1 rounded-full py-2 px-4 w-full font-semibold mt-4 hover:bg-main/10 transition-all duration-150">
+      <button className="border border-black/30 dark:border-white/50 text-main my-1 rounded-full py-2 px-4 w-full font-semibold mt-4 hover:bg-main/20 dark:hover:bg-main/10 transition-all duration-150">
        Sign in
       </button>
      </div>
