@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import LeftMenu from "@/components/Home/LeftSide/LeftMenu";
 import RightMenu from "@/components/Home/RightSide/RightMenu";
 import NonUserBanner from "@/components/NonUserBanner";
@@ -8,11 +9,13 @@ export const metadata: Metadata = {
  description: "A Twitter clone called Chirp made with Next.js 14",
 };
 
-export default function UserLayout({
+export default async function UserLayout({
  children,
 }: {
  children: React.ReactNode;
 }) {
+ const userInfo = await auth();
+ const user = userInfo?.user;
  return (
   <>
    <div className="flex mx-auto max-w-[1300px] px-4 relative">
@@ -26,7 +29,7 @@ export default function UserLayout({
      <RightMenu />
     </div>
    </div>
-   <NonUserBanner />
+   {!user && <NonUserBanner />}
   </>
  );
 }

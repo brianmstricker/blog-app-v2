@@ -3,6 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsGithub } from "react-icons/bs";
 import { PiArrowFatRightFill } from "react-icons/pi";
 import Link from "next/link";
+import { signIn } from "@/auth";
 
 export default function Index() {
  return (
@@ -28,10 +29,20 @@ export default function Index() {
      </span>
     </div>
     <div className="mx-auto min-[420px]:mx-0 w-[80%] lg:w-[60%] flex flex-col">
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90">
-      <FcGoogle className="w-6 h-6" />
-      <span>Sign up with Google</span>
-     </button>
+     <form
+      action={async () => {
+       "use server";
+       await signIn("google");
+      }}
+     >
+      <button
+       type="submit"
+       className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90 w-full"
+      >
+       <FcGoogle className="w-6 h-6" />
+       <span>Sign up with Google</span>
+      </button>
+     </form>
      <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90">
       <BsGithub className="w-6 h-6" />
       <span>Sign up with Github</span>

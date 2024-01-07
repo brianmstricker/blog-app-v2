@@ -2,14 +2,25 @@
 
 import bcrypt from "bcryptjs";
 import * as z from "zod";
-import { RegisterSchema } from "@/schemas";
+import { LoginSchema, RegisterSchema } from "@/schemas";
 import { db } from "@/lib/db";
+import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const loginAction = async (values: any) => {
- console.log(values);
- const allUsers = await db.user.findMany();
- console.log(allUsers);
- return { success: true };
+ const validatedFields = LoginSchema.safeParse(values);
+ if (!validatedFields.success) return { error: "Invalid fields" };
+ const { email, password } = validatedFields.data;
+ try {
+  await signIn("credentials", {
+   email,
+   password,
+   redirectTo: DEFAULT_LOGIN_REDIRECT,
+  });
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+  // throw error;
+ }
 };
 
 export const registerAction = async (
