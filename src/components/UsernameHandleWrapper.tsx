@@ -4,10 +4,8 @@ import { createPortal } from "react-dom";
 import UsernameHandleForm from "./UsernameHandleForm";
 import { logoutAction } from "@/actions/auth-actions";
 import HideScroll from "./HideScroll";
-import { useRouter } from "next/navigation";
 
 const UsernameHandleWrapper = ({ user }: { user: User | null | undefined }) => {
- const router = useRouter();
  if (!user) return null;
  if ((user && !user.username) || (user && !user.handle))
   return createPortal(
@@ -24,7 +22,7 @@ const UsernameHandleWrapper = ({ user }: { user: User | null | undefined }) => {
          <button
           onClick={async () => {
            await logoutAction();
-           router.push("/");
+           window.location.reload();
           }}
           type="submit"
           className="text-red-500/80 inline hover:underline underline-offset-2"

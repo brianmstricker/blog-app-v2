@@ -42,6 +42,20 @@ const UsernameHandleForm = () => {
       </FormItem>
      )}
     />
+    <FormField
+     control={form.control}
+     name="handle"
+     render={({ field }) => (
+      <FormItem>
+       <FormLabel>Handle</FormLabel>
+       <FormControl>
+        <Input placeholder="shadcn" {...field} />
+       </FormControl>
+       <FormDescription>This is your public display name.</FormDescription>
+       <FormMessage />
+      </FormItem>
+     )}
+    />
     <button type="submit">Submit</button>
    </form>
   </Form>
