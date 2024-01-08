@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import * as z from "zod";
 import { LoginSchema, RegisterSchema } from "@/schemas";
 import { db } from "@/lib/db";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const loginAction = async (values: any) => {
@@ -43,4 +43,12 @@ export const registerAction = async (
  await db.user.create({ data: newUser });
  console.log(newUser);
  return { success: true };
+};
+
+export const logoutAction = async () => {
+ try {
+  await signOut();
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
 };

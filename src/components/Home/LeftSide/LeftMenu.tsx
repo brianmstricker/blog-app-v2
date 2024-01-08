@@ -17,11 +17,13 @@ const LeftMenu = async () => {
     {!!user && <LeftMenuNav />}
     {!!user && <PostModal />}
    </nav>
-   {!!user && (
-    <div className="mb-4 rounded-full" tabIndex={0}>
-     <LeftMenuUserInfo user={user} />
-    </div>
-   )}
+   {!!user &&
+    user.username &&
+    user.handle(
+     <div className="mb-4 rounded-full" tabIndex={0}>
+      <LeftMenuUserInfo user={user} />
+     </div>
+    )}
   </aside>
  );
 };

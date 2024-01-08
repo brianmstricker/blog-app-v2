@@ -13,3 +13,7 @@
 #tweetBox {
  -webkit-user-modify: read-write-plaintext-only;
 }
+
+.hide-scroll {
+ overflow: hidden !important;
+}

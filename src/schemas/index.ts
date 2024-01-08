@@ -13,6 +13,9 @@ export const RegisterSchema = z.object({
 });
 
 export const UsernameHandleSchema = z.object({
- username: z.string().max(30),
+ username: z
+  .string()
+  .max(30)
+  .regex(/^[a-zA-Z0-9_]+$/),
  handle: z.string().max(30),
 });
