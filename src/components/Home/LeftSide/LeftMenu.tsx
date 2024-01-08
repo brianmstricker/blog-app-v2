@@ -11,15 +11,15 @@ const LeftMenu = async () => {
  return (
   <aside className="h-screen sticky top-0 flex flex-col mr-4">
    <nav className="flex-1">
-    <Link href={"/"} className="rounded-full" scroll={false}>
+    <Link href={!user ? "/" : "/home"} className="rounded-full" scroll={false}>
      <Image src="/logo.png" width={65} height={65} alt="Logo" />
     </Link>
-    {user && <LeftMenuNav />}
-    {user && <PostModal />}
+    {!!user && <LeftMenuNav />}
+    {!!user && <PostModal />}
    </nav>
-   {user && (
+   {!!user && (
     <div className="mb-4 rounded-full" tabIndex={0}>
-     <LeftMenuUserInfo />
+     <LeftMenuUserInfo user={user} />
     </div>
    )}
   </aside>

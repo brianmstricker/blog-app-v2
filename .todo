@@ -4,3 +4,4 @@
 <https://orm.drizzle.team/docs/rqb>
 <https://authjs.dev/reference/nextjs>
 <https://ui.shadcn.com/docs/components/form>
+-make it so if user doesn't have username they need to add one

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import LeftMenu from "@/components/Home/LeftSide/LeftMenu";
 import RightMenu from "@/components/Home/RightSide/RightMenu";
 import NonUserBanner from "@/components/NonUserBanner";
+import UsernameHandleWrapper from "@/components/UsernameHandleWrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default async function UserLayout({
  const user = userInfo?.user;
  return (
   <>
+   <UsernameHandleWrapper user={user} />
    <div className="flex mx-auto max-w-[1300px] px-4 relative">
     <div className="w-[20%]">
      <LeftMenu />

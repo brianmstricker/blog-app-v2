@@ -1,6 +1,8 @@
+import { User } from "next-auth";
 import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 
-const LeftMenuUserInfo = () => {
+const LeftMenuUserInfo = ({ user }: { user: User }) => {
+ // console.log(user);
  return (
   <div className="flex items-center cursor-pointer hover:bg-white/10 p-3 rounded-full">
    <div className="w-11 h-11 rounded-full bg-blue-600" />
