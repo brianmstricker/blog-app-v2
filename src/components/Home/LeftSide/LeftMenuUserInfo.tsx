@@ -11,6 +11,7 @@ import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 const LeftMenuUserInfo = ({ user }: { user: User }) => {
  const [showLogoutMenu, setShowLogoutMenu] = useState(false);
  const [showConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
+ const [loading, setLoading] = useState(false);
  const logoutMenuRef = useRef<HTMLDivElement>(null);
  useEffect(() => {
   const handleOutsideClick = (e: any) => {
@@ -98,12 +99,18 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
          </p>
          <button
           onClick={async () => {
+           setLoading(true);
            await logoutAction();
            window.location.reload();
+           setLoading(false);
           }}
-          className="bg-black text-white dark:bg-white dark:text-black rounded-full py-2.5 font-bold mt-3 border border-white dark:border-black"
+          className={cn(
+           "bg-black text-white dark:bg-white dark:text-black rounded-full py-2.5 font-bold mt-3 border border-white dark:border-black",
+           loading && "opacity-50 cursor-default"
+          )}
+          disabled={loading}
          >
-          Log out
+          {loading ? "Logging out..." : "Log out"}
          </button>
          <button
           onClick={() => setShowConfirmLogoutModal(false)}
