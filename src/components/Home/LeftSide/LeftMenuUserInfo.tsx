@@ -1,19 +1,17 @@
 "use client";
 import { logoutAction } from "@/actions/auth-actions";
+import HideScroll from "@/components/HideScroll";
 import { cn } from "@/lib/utils";
 import { User } from "next-auth";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 
 const LeftMenuUserInfo = ({ user }: { user: User }) => {
  const [showLogoutMenu, setShowLogoutMenu] = useState(false);
  const [showConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
  const logoutMenuRef = useRef<HTMLDivElement>(null);
- // onClick={async () => {
- //       await logoutAction();
- //       window.location.reload();
- //      }}
  useEffect(() => {
   const handleOutsideClick = (e: any) => {
    const modalNode = logoutMenuRef.current;
@@ -76,8 +74,49 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
      </div>
     </div>
    </div>
-   {/* todo: work on this */}
-   {showConfirmLogoutModal && <div className="fixed">test</div>}
+   {showConfirmLogoutModal &&
+    createPortal(
+     <>
+      <HideScroll />
+      <div className="fixed bg-black inset-0 w-screen h-screen z-[100]">
+       <div className="bg-[#5b708366] fixed inset-0 w-screen h-screen flex items-center justify-center">
+        <div className="bg-white dark:bg-black w-fit p-6 rounded-2xl flex flex-col gap-2 max-w-[300px]">
+         <div className="w-fit mx-auto relative -top-3">
+          <Image
+           src="/logo.png"
+           alt="Chirp Logo"
+           width={75}
+           height={75}
+           className="rounded-full"
+           sizes="75px"
+          />
+         </div>
+         <div className="text-lg font-bold -mt-4">Log out of Chirp?</div>
+         <p className="text-sm text-mainGray -mt-1">
+          You can always log back in at any time. If you just want to switch
+          accounts, you can do that by adding an existing account.{" "}
+         </p>
+         <button
+          onClick={async () => {
+           await logoutAction();
+           window.location.reload();
+          }}
+          className="bg-black text-white dark:bg-white dark:text-black rounded-full py-2.5 font-bold mt-3 border border-white dark:border-black"
+         >
+          Log out
+         </button>
+         <button
+          onClick={() => setShowConfirmLogoutModal(false)}
+          className="border border-gray-400 rounded-full py-2.5 dark:border-white/20 font-bold"
+         >
+          Cancel
+         </button>
+        </div>
+       </div>
+      </div>
+     </>,
+     document.body
+    )}
   </>
  );
 };

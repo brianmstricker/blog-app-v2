@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import ModalTweetBox from "./ModalTweetBox";
 import { createPortal } from "react-dom";
+import HideScroll from "@/components/HideScroll";
 
 const PostModal = () => {
  const modalRef = useRef<HTMLDivElement>(null);
@@ -82,25 +83,28 @@ const PostModal = () => {
    </button>
    {modalShow &&
     createPortal(
-     <div
-      tabIndex={-1}
-      className="w-screen h-screen fixed inset-0 bg-[#5b708366] z-[100] flex justify-center"
-     >
+     <>
+      <HideScroll />
       <div
-       ref={modalRef}
-       className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
+       tabIndex={-1}
+       className="w-screen h-screen fixed inset-0 bg-[#5b708366] z-[100] flex justify-center"
       >
-       <button
-        className="p-[2px] rounded-full relative -top-1 -left-1"
-        onClick={closeModal}
+       <div
+        ref={modalRef}
+        className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
        >
-        <IoClose className="w-5 h-5" />
-       </button>
-       <div className="h-[90%] pt-4">
-        <ModalTweetBox />
+        <button
+         className="p-[2px] rounded-full relative -top-1 -left-1"
+         onClick={closeModal}
+        >
+         <IoClose className="w-5 h-5" />
+        </button>
+        <div className="h-[90%] pt-4">
+         <ModalTweetBox />
+        </div>
        </div>
       </div>
-     </div>,
+     </>,
      document.body
     )}
   </>
