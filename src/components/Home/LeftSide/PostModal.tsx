@@ -29,12 +29,17 @@ const PostModal = () => {
   }
  }, [path]);
  useEffect(() => {
-  document.addEventListener("mousedown", (e: any) => {
-   if (modalRef.current && !modalRef.current.contains(e.target)) {
+  const handleOutsideClick = (e: any) => {
+   const modalNode = modalRef.current;
+   if (modalNode && !modalNode.contains(e.target)) {
     closeModal();
    }
-  });
- }, []);
+  };
+  document.addEventListener("mousedown", handleOutsideClick);
+  return () => {
+   document.removeEventListener("mousedown", handleOutsideClick);
+  };
+ }, [modalRef]);
  function showModal() {
   window.history.pushState(null, "", "/compose/tweet");
   setModalShow(true);

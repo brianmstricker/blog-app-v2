@@ -17,3 +17,12 @@
 .hide-scroll {
  overflow: hidden !important;
 }
+
+.boxShadow {
+ box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 15px, rgba(0, 0, 0, 0.1) 0px 0px 3px 1px;
+}
+
+.boxShadow:is(.dark .dark\:bg-black) {
+ box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px,
+  rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
+}
