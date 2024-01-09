@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { UsernameHandleSchema } from "@/schemas";
 import Image from "next/image";
+import { updateUsernameHandleAction } from "@/actions/auth-actions";
+import { cn } from "@/lib/utils";
 
 const UsernameHandleForm = ({
  userImage,
@@ -27,9 +29,13 @@ const UsernameHandleForm = ({
    handle: "",
   },
  });
- const onSubmit = (data: z.infer<typeof UsernameHandleSchema>) => {
-  console.log(data);
+ const onSubmit = async (data: z.infer<typeof UsernameHandleSchema>) => {
+  const action = await updateUsernameHandleAction(data);
+  if (action.success) window.location.reload();
+  else alert("Something went wrong, please try again.");
  };
+ const { isSubmitting, isLoading } = form.formState;
+ const buttonDisabled = isSubmitting || isLoading;
  return (
   <Form {...form}>
    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -56,7 +62,7 @@ const UsernameHandleForm = ({
       <FormItem>
        <FormLabel>Handle</FormLabel>
        <FormControl>
-        <Input placeholder="@tromboneMan😱" {...field} />
+        <Input placeholder="tromboneMan😱" {...field} />
        </FormControl>
        <FormDescription>
         This is your handle, which can be pretty much anything.
@@ -66,7 +72,7 @@ const UsernameHandleForm = ({
      )}
     />
     <div
-     className="flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto"
+     className="flex items-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto"
      tabIndex={0}
     >
      {!userImage ? (
@@ -83,13 +89,22 @@ const UsernameHandleForm = ({
       </div>
      )}
      <div className="flex flex-1 flex-col ml-4">
-      <span className="font-bold text-[14px] leading-[18px]">jimbo42</span>
-      <span className="text-mainGray">@tromboneMan😱</span>
+      <span className="font-bold text-[14px] leading-[18px]">
+       {form.watch("username") || "jimbo42"}
+      </span>
+      <span className="font-bold text-[14px] leading-[18px]">{}</span>
+      <span className="text-mainGray">
+       @{form.watch("handle") || "tromboneMan😱"}
+      </span>
      </div>
     </div>
     <button
-     className="block w-fit mx-auto bg-main hover:bg-main/90 rounded-full px-4 py-2 text-white"
+     className={cn(
+      "block w-fit mx-auto bg-main hover:bg-main/90 rounded-full px-4 py-2 text-white",
+      buttonDisabled && "opacity-50 cursor-default"
+     )}
      type="submit"
+     disabled={buttonDisabled}
     >
      Submit
     </button>

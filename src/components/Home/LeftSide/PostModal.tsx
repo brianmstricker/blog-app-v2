@@ -83,7 +83,7 @@ const PostModal = () => {
      >
       <div
        ref={modalRef}
-       className="bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
+       className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
       >
        <button
         className="p-[2px] rounded-full relative -top-1 -left-1"

@@ -40,8 +40,8 @@ const UsernameHandleWrapperModal = ({
     ref={modalRef}
     className="w-screen h-screen fixed inset-0 bg-[#5b708375] flex justify-center items-center z-[100] backdrop-blur-[3px]"
    >
-    <div className="bg-white dark:bg-black w-full h-full md:w-[90%] md:h-[90%] max-w-[1000px] max-h-[550px] rounded-2xl p-4">
-     <div className="">
+    <div className="bg-white dark:bg-black w-full h-full sm:w-[90%] sm:h-auto max-w-[800px] sm:rounded-2xl p-4">
+     <div>
       <h2 className="text-4xl font-bold text-center">Finish Account Setup</h2>
       <div className="w-fit mx-auto">
        <p className="text-sm text-gray-400 my-1">

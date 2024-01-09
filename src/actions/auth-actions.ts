@@ -2,9 +2,9 @@
 
 import bcrypt from "bcryptjs";
 import * as z from "zod";
-import { LoginSchema, RegisterSchema } from "@/schemas";
+import { LoginSchema, RegisterSchema, UsernameHandleSchema } from "@/schemas";
 import { db } from "@/lib/db";
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const loginAction = async (values: any) => {
@@ -29,25 +29,54 @@ export const registerAction = async (
  const validatedFields = RegisterSchema.safeParse(values);
  if (!validatedFields.success) return { error: "Invalid fields" };
  const { password, name, username, email } = validatedFields.data;
- const existingUser = await db.user.findFirst({
-  where: { OR: [{ email }, { username }] },
- });
- if (existingUser) return { error: "Username or Email already exists" };
- const hashedPassword = await bcrypt.hash(password, 10);
- const newUser = {
-  name,
-  username,
-  email,
-  password: hashedPassword,
- };
- await db.user.create({ data: newUser });
- console.log(newUser);
- return { success: true };
+ try {
+  const existingUser = await db.user.findFirst({
+   where: { OR: [{ email }, { username }] },
+  });
+  if (existingUser) return { error: "Username or Email already exists" };
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = {
+   name,
+   username,
+   email,
+   password: hashedPassword,
+  };
+  await db.user.create({ data: newUser });
+  console.log(newUser);
+  return { success: true };
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
 };
 
 export const logoutAction = async () => {
  try {
   await signOut();
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const updateUsernameHandleAction = async (
+ values: z.infer<typeof UsernameHandleSchema>
+) => {
+ const validatedFields = UsernameHandleSchema.safeParse(values);
+ if (!validatedFields.success) return { error: "Invalid fields" };
+ const { username, handle } = validatedFields.data;
+ try {
+  const userInfo = await auth();
+  const user = userInfo?.user;
+  if (!userInfo || !user) return { error: "Not logged in" };
+  const id = userInfo.user?.id;
+  const existingUsername = await db.user.findFirst({
+   where: { username },
+  });
+  if (existingUsername) return { error: "Username already exists" };
+  await db.user.update({
+   where: { id },
+   data: { username, handle },
+  });
+  return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }
