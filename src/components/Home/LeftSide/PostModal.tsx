@@ -44,6 +44,29 @@ const PostModal = () => {
   if (window.history.state === null) window.history.back();
   window.history.pushState(null, "", "/");
  }
+ //  todo: maybe get this working
+ //  useEffect(() => {
+ //   const handleKeyDown = (e: any) => {
+ //    if (e.key === "Tab" && modalRef.current) {
+ //     const modalElements = modalRef.current.querySelectorAll(
+ //      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+ //     );
+ //     const firstElement = modalElements[0];
+ //     const lastElement = modalElements[modalElements.length - 1];
+ //     if (!e.shiftKey && document.activeElement === lastElement) {
+ //      e.preventDefault();
+ //      firstElement.focus();
+ //     } else if (e.shiftKey && document.activeElement === firstElement) {
+ //      e.preventDefault();
+ //      lastElement.focus();
+ //     }
+ //    }
+ //   };
+ //   window.addEventListener("keydown", handleKeyDown);
+ //   return () => {
+ //    window.removeEventListener("keydown", handleKeyDown);
+ //   };
+ //  }, []);
  return (
   <>
    <button

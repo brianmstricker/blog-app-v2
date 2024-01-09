@@ -60,6 +60,7 @@ const LeftMenuNav = () => {
     <li key={link.label}>
      <Link
       href={link.href}
+      scroll={false}
       className="flex items-center gap-6 py-3 rounded-full px-4 hover:bg-white/10 transition-all duration-150"
      >
       <span className="text-2xl">

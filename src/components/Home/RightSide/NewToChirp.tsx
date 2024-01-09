@@ -33,7 +33,7 @@ const NewToChirp = () => {
        <span>Sign up with Github</span>
       </button>
      </form>
-     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold hover:bg-white/90 transition-all duration-150 border border-white w-[93%]">
+     <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold hover:bg-white/90 transition-all duration-150 border border-black/30 dark:border-white w-[93%]">
       Create account
      </button>
      <div className="text-[13px] font-light mt-1 text-gray-400/80 leading-[16px]">

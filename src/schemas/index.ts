@@ -15,7 +15,18 @@ export const RegisterSchema = z.object({
 export const UsernameHandleSchema = z.object({
  username: z
   .string()
-  .max(30)
-  .regex(/^[a-zA-Z0-9_]+$/),
- handle: z.string().max(30),
+  .min(3, "Username must be at least 3 characters long")
+  .max(30, "Username must be at most 30 characters long")
+  .regex(
+   /^[a-zA-Z0-9_]+$/,
+   "Username must only contain alphanumeric characters and underscores"
+  ),
+ handle: z
+  .string()
+  .min(3, "Handle must be at least 3 characters long")
+  .max(30, "Handle must be at most 30 characters long")
+  .regex(
+   /^[^<>[\]{}\\|`~]+$/,
+   "Handle must not contain certain special characters"
+  ),
 });
