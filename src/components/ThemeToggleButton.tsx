@@ -17,7 +17,7 @@ export function ThemeToggleButton() {
  }
  if (!mounted) return null;
  return (
-  <button onClick={changeTheme} className="py-2">
+  <button onClick={changeTheme} className="p-2 rounded-full">
    {theme === "dark" ? (
     <LuMoon className="w-5 h-5 hover:scale-[95%] transition-all duration-200" />
    ) : (

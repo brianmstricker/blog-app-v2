@@ -4,10 +4,15 @@ import { BsGithub } from "react-icons/bs";
 import { PiArrowFatRightFill } from "react-icons/pi";
 import Link from "next/link";
 import { signIn } from "@/auth";
+import CreateAccountButton from "@/components/CreateAccount/CreateAccountButton";
+import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 
 export default function Index() {
  return (
   <main className="w-full h-screen flex flex-col lg:flex-row items-center lg:justify-evenly relative">
+   <div className="absolute right-4 top-4">
+    <ThemeToggleButton />
+   </div>
    <div className="w-[80%] min-[420px]:w-[400px] lg:w-auto">
     <div className="w-[100px] h-[100px] lg:w-[450px] lg:h-[450px] relative shrink-0 self-start lg:self-auto">
      <Image
@@ -60,14 +65,12 @@ export default function Index() {
       <div className="w-full bg-mainGray/40 h-[1px]" />
      </div>
      <div>
-      <button className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150 border border-main">
-       Create account
-      </button>
+      <CreateAccountButton />
       <div className="text-[11px] mt-1 text-gray-400/80 leading-[14px]">
        By signing up, you agree to the{" "}
        <span className="text-main">Terms of Service</span> and{" "}
        <span className="text-main">Privacy Policy</span>, including{" "}
-       <span className="text-main">Cookie Use</span>.
+       <span className="text-main">Cookie Use</span>. C
       </div>
      </div>
      <div className="mt-8 sm:mt-16">
