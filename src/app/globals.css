@@ -26,3 +26,22 @@
  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px,
   rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
 }
+
+input:-webkit-autofill {
+ -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+input:-webkit-autofill:is(.dark .dark\:bg-black) {
+ -webkit-box-shadow: 0 0 0px 1000px black inset;
+}
+
+.triangle {
+ width: 20px;
+ height: 20px;
+ rotate: 180deg;
+ filter: drop-shadow(rgb(199, 199, 200) 1px -1px 1px);
+}
+
+.triangle:is(.dark .dark\:fill-black) {
+ filter: drop-shadow(rgb(56, 59, 62) 1px -1px 1px);
+}

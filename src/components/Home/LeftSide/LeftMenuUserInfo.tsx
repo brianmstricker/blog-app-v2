@@ -54,7 +54,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
     {showLogoutMenu && (
      <div
       ref={logoutMenuRef}
-      className="boxShadow bg-white dark:bg-black rounded-2xl border dark:border-white/25 h-full w-full min-w-[260px] max-w-[360px] min-h-[80px] max-h-[480px] relative -top-4 overflow-hidden pt-3"
+      className="boxShadow bg-white dark:bg-black rounded-2xl border dark:border-white/25 h-full w-full min-w-[260px] max-w-[360px] min-h-[80px] max-h-[480px] relative -top-4 pt-3"
      >
       <button
        id="logout"
@@ -64,6 +64,17 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
       >
        <span className="block pl-4">Log out @{user.handle}</span>
       </button>
+      <div className="flex justify-center">
+       <svg
+        className="triangle absolute -bottom-3 fill-white dark:fill-black"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+       >
+        <g>
+         <path d="M22 17H2L12 6l10 11z"></path>
+        </g>
+       </svg>
+      </div>
      </div>
     )}
     <div
