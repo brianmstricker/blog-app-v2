@@ -13,6 +13,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
  const [showConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
  const [loading, setLoading] = useState(false);
  const logoutMenuRef = useRef<HTMLDivElement>(null);
+ const confirmModalRef = useRef<HTMLDivElement>(null);
  useEffect(() => {
   const handleOutsideClick = (e: any) => {
    const modalNode = logoutMenuRef.current;
@@ -25,6 +26,28 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
    document.removeEventListener("mousedown", handleOutsideClick);
   };
  }, [logoutMenuRef]);
+ useEffect(() => {
+  const handleKeyDown = (e: any) => {
+   if (e.key === "Tab" && confirmModalRef.current) {
+    const modalElements = confirmModalRef.current.querySelectorAll(
+     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = modalElements[0] as HTMLElement;
+    const lastElement = modalElements[modalElements.length - 1] as HTMLElement;
+    if (!e.shiftKey && document.activeElement === lastElement) {
+     e.preventDefault();
+     firstElement.focus();
+    } else if (e.shiftKey && document.activeElement === firstElement) {
+     e.preventDefault();
+     lastElement.focus();
+    }
+   }
+  };
+  window.addEventListener("keydown", handleKeyDown);
+  return () => {
+   window.removeEventListener("keydown", handleKeyDown);
+  };
+ }, []);
  return (
   <>
    <div className="relative">
@@ -81,7 +104,10 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
       <HideScroll />
       <div className="fixed bg-black inset-0 w-screen h-screen z-[100]">
        <div className="bg-[#5b708366] fixed inset-0 w-screen h-screen flex items-center justify-center">
-        <div className="bg-white dark:bg-black w-fit p-6 rounded-2xl flex flex-col gap-2 max-w-[300px]">
+        <div
+         ref={confirmModalRef}
+         className="bg-white dark:bg-black w-fit p-6 rounded-2xl flex flex-col gap-2 max-w-[300px]"
+        >
          <div className="w-fit mx-auto relative -top-3">
           <Image
            src="/logo.png"
