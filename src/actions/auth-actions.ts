@@ -27,7 +27,7 @@ export const registerAction = async (
 ) => {
  const validatedFields = RegisterSchema.safeParse(values);
  if (!validatedFields.success) return { error: "Invalid fields" };
- const { password, name, username, email } = validatedFields.data;
+ const { password, name, username, email, handle } = validatedFields.data;
  try {
   const existingUser = await db.user.findFirst({
    where: { OR: [{ email }, { username }] },
@@ -37,11 +37,19 @@ export const registerAction = async (
   const newUser = {
    name,
    username,
+   handle,
    email,
    password: hashedPassword,
   };
-  await db.user.create({ data: newUser });
-  console.log(newUser);
+  const account = await db.user.create({ data: newUser });
+  if (!account) return { error: "Something went wrong" };
+  //todo: fix credentials provider
+  // const signedIn = await signIn("credentials", {
+  //  email,
+  //  password,
+  //  // redirectTo: DEFAULT_LOGIN_REDIRECT,
+  // });
+  // if (!signedIn) return { error: "Something went wrong" };
   return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
@@ -87,6 +95,18 @@ export const existingEmailSearchAction = async (email: string) => {
    where: { email },
   });
   if (existingEmail) return { error: "Email already exists" };
+  return { success: true };
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const existingUsernameSearchAction = async (username: string) => {
+ try {
+  const existingUsername = await db.user.findFirst({
+   where: { username },
+  });
+  if (existingUsername) return { error: "Username already exists" };
   return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };

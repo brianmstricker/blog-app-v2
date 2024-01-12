@@ -2,13 +2,17 @@
 import CreateAccountLabel from "./CreateAccountLabel";
 import { ModalPageProps } from "./ModalPageOne";
 
-const ModalPageTwo = ({ form, errors }: ModalPageProps) => {
- //todo: work on page two form validation/errors, and search for username to make sure it isn't taken
+const ModalPageTwo = ({ form, errors, userExistError }: ModalPageProps) => {
  return (
   <>
    <div className="font-bold text-xl">Step 2 of 2</div>
    <h2 className="text-3xl font-bold">Finalize your Account</h2>
-   <CreateAccountLabel errors={errors} form={form} field="username" />
+   <CreateAccountLabel
+    errors={errors}
+    form={form}
+    field="username"
+    userExistError={userExistError}
+   />
    <CreateAccountLabel errors={errors} form={form} field="handle" />
    <div
     className="flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto my-auto overflow-hidden max-w-[80%]"

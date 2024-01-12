@@ -5,6 +5,7 @@ export type ModalPageProps = {
  form: any;
  errors: any;
  emailExistError?: boolean;
+ userExistError?: boolean;
 };
 
 const ModalPageOne = ({ form, errors, emailExistError }: ModalPageProps) => {

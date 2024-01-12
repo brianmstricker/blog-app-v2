@@ -12,7 +12,12 @@ import { isFirstPageInvalid, isSecondPageInvalid } from "./pageValidFunction";
 import { createPortal } from "react-dom";
 import ModalPageOne from "./ModalPageOne";
 import ModalPageTwo from "./ModalPageTwo";
-import { existingEmailSearchAction } from "@/actions/auth-actions";
+import {
+ existingEmailSearchAction,
+ existingUsernameSearchAction,
+ registerAction,
+} from "@/actions/auth-actions";
+import { useRouter } from "next/navigation";
 
 const getPageErrors = (pageResult: any) => {
  const { errors } =
@@ -21,10 +26,12 @@ const getPageErrors = (pageResult: any) => {
 };
 
 const CreateAccountButton = () => {
+ const router = useRouter();
  const [showModal, setShowModal] = useState(false);
  const [page, setPage] = useState(1);
  const [loading, setLoading] = useState(false);
  const [invalidEmails, setInvalidEmails] = useState<string[]>([]);
+ const [invalidUsernames, setInvalidUsernames] = useState<string[]>([]);
  const modalRef = useRef<HTMLDivElement | null>(null);
  const form = useForm<z.infer<typeof RegisterSchema>>({
   resolver: zodResolver(RegisterSchema),
@@ -38,7 +45,9 @@ const CreateAccountButton = () => {
  });
  const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
   setLoading(true);
-  console.log(data);
+  const action = await registerAction(data);
+  //todo: remove line under if credentialsProvider starts working
+  if (action.success) router.push("/home");
   setLoading(false);
  };
  async function checkEmail(email: string) {
@@ -48,6 +57,16 @@ const CreateAccountButton = () => {
    setInvalidEmails([...invalidEmails, email]);
   } else {
    setPage(2);
+  }
+  setLoading(false);
+ }
+ async function checkUsername(username: string) {
+  setLoading(true);
+  const action = await existingUsernameSearchAction(username);
+  if (action.error) {
+   setInvalidUsernames([...invalidUsernames, username]);
+  } else {
+   form.handleSubmit(onSubmit)();
   }
   setLoading(false);
  }
@@ -63,7 +82,11 @@ const CreateAccountButton = () => {
   loading ||
   invalidEmails.includes(form.watch("email"));
  const secondButtonDisabled =
-  isSubmitting || isLoading || isSecondPageInvalid(form) || loading;
+  isSubmitting ||
+  isLoading ||
+  isSecondPageInvalid(form) ||
+  loading ||
+  invalidUsernames.includes(form.watch("username"));
  useEffect(() => {
   const handleKeyDown = (e: any) => {
    if (e.key === "Tab" && modalRef.current) {
@@ -133,7 +156,11 @@ const CreateAccountButton = () => {
            />
           )}
           {page === 2 && (
-           <ModalPageTwo form={form} errors={isSecondPageErrors} />
+           <ModalPageTwo
+            form={form}
+            errors={isSecondPageErrors}
+            userExistError={invalidUsernames.includes(form.watch("username"))}
+           />
           )}
           {page === 1 && (
            <button
@@ -156,8 +183,11 @@ const CreateAccountButton = () => {
              "block border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold",
              secondButtonDisabled && "opacity-50 cursor-default"
             )}
-            onClick={form.handleSubmit(onSubmit)}
+            onClick={async () => {
+             await checkUsername(form.watch("username"));
+            }}
             disabled={!!secondButtonDisabled}
+            type="submit"
            >
             Create account
            </button>
