@@ -7,7 +7,7 @@ const ForYouFollowing = () => {
  const [activeTab, setActiveTab] = useState("For you");
  const tabs = [{ label: "For you" }, { label: "Following" }];
  return (
-  <div className="flex sticky top-0 items-center border-b dark:border-b-white/25 z-[2] bg-white dark:bg-black/60 backdrop-blur-md">
+  <div className="flex sticky top-0 items-center border-b dark:border-b-white/25 z-[2] bg-white/60 dark:bg-black/60 backdrop-blur-md">
    <div className="flex w-full mx-auto">
     {tabs.map((tab) => (
      <button

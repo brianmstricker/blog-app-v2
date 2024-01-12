@@ -18,6 +18,7 @@ import {
  registerAction,
 } from "@/actions/auth-actions";
 import { useRouter } from "next/navigation";
+import HideScroll from "../HideScroll";
 
 const getPageErrors = (pageResult: any) => {
  const { errors } =
@@ -25,7 +26,7 @@ const getPageErrors = (pageResult: any) => {
  return errors;
 };
 
-const CreateAccountButton = () => {
+const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
  const router = useRouter();
  const [showModal, setShowModal] = useState(false);
  const [page, setPage] = useState(1);
@@ -111,92 +112,104 @@ const CreateAccountButton = () => {
  }, []);
  return (
   <>
-   <button
-    onClick={() => setShowModal(true)}
-    className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150 border border-main"
-   >
-    Create account
-   </button>
+   {!homepage ? (
+    <button
+     onClick={() => setShowModal(true)}
+     className="bg-main text-white my-1 rounded-full py-2 px-4 w-full font-semibold hover:bg-main/90 transition-all duration-150 border border-main"
+    >
+     Create account
+    </button>
+   ) : (
+    <button
+     onClick={() => setShowModal(true)}
+     className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold hover:bg-black/5 dark:hover:bg-white/90 transition-all duration-150 border border-black/30 dark:border-white w-[93%]"
+    >
+     Create account
+    </button>
+   )}
    {showModal &&
     createPortal(
-     <div className="fixed w-screen h-screen inset-0 bg-[#5b708366] flex items-center justify-center z-[100]">
-      <div
-       ref={modalRef}
-       className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
-      >
-       {page === 1 ? (
-        <button
-         onClick={() => {
-          setShowModal(false);
-          setPage(1);
-          form.reset();
-         }}
-         className="absolute top-[12px] left-2 p-2 rounded-full"
-        >
-         <IoClose className="w-5 h-5" />
-        </button>
-       ) : (
-        <button
-         onClick={() => {
-          setPage(1);
-         }}
-         className="absolute top-[12px] left-2 p-2 rounded-full"
-        >
-         <IoArrowBackSharp className="w-5 h-5" />
-        </button>
-       )}
-       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
-         <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
-          {page === 1 && (
-           <ModalPageOne
-            form={form}
-            errors={isFirstPageErrors}
-            emailExistError={invalidEmails.includes(form.watch("email"))}
-           />
-          )}
-          {page === 2 && (
-           <ModalPageTwo
-            form={form}
-            errors={isSecondPageErrors}
-            userExistError={invalidUsernames.includes(form.watch("username"))}
-           />
-          )}
-          {page === 1 && (
-           <button
-            className={cn(
-             "block border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold",
-             firstButtonDisabled && "opacity-50 cursor-default"
-            )}
-            onClick={async () => {
-             await checkEmail(form.watch("email"));
-            }}
-            disabled={!!firstButtonDisabled}
-            type="button"
-           >
-            Next
-           </button>
-          )}
-          {page === 2 && (
-           <button
-            className={cn(
-             "block border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold",
-             secondButtonDisabled && "opacity-50 cursor-default"
-            )}
-            onClick={async () => {
-             await checkUsername(form.watch("username"));
-            }}
-            disabled={!!secondButtonDisabled}
-            type="submit"
-           >
-            Create account
-           </button>
-          )}
-         </div>
-        </form>
-       </Form>
+     <>
+      <HideScroll />
+      <div className="fixed w-screen h-screen inset-0 bg-slate-600/80 dark:bg-[#5b708366] flex items-center justify-center z-[100]">
+       <div
+        ref={modalRef}
+        className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
+       >
+        {page === 1 ? (
+         <button
+          onClick={() => {
+           setShowModal(false);
+           setPage(1);
+           form.reset();
+          }}
+          className="absolute top-[12px] left-2 p-2 rounded-full"
+         >
+          <IoClose className="w-5 h-5" />
+         </button>
+        ) : (
+         <button
+          onClick={() => {
+           setPage(1);
+          }}
+          className="absolute top-[12px] left-2 p-2 rounded-full"
+         >
+          <IoArrowBackSharp className="w-5 h-5" />
+         </button>
+        )}
+        <Form {...form}>
+         <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
+          <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
+           {page === 1 && (
+            <ModalPageOne
+             form={form}
+             errors={isFirstPageErrors}
+             emailExistError={invalidEmails.includes(form.watch("email"))}
+            />
+           )}
+           {page === 2 && (
+            <ModalPageTwo
+             form={form}
+             errors={isSecondPageErrors}
+             userExistError={invalidUsernames.includes(form.watch("username"))}
+            />
+           )}
+           {page === 1 && (
+            <button
+             className={cn(
+              "block border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold",
+              firstButtonDisabled && "opacity-50 cursor-default"
+             )}
+             onClick={async () => {
+              await checkEmail(form.watch("email"));
+             }}
+             disabled={!!firstButtonDisabled}
+             type="button"
+            >
+             Next
+            </button>
+           )}
+           {page === 2 && (
+            <button
+             className={cn(
+              "block border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold",
+              secondButtonDisabled && "opacity-50 cursor-default"
+             )}
+             onClick={async () => {
+              await checkUsername(form.watch("username"));
+             }}
+             disabled={!!secondButtonDisabled}
+             type="submit"
+            >
+             Create account
+            </button>
+           )}
+          </div>
+         </form>
+        </Form>
+       </div>
       </div>
-     </div>,
+     </>,
      document.body
     )}
   </>
