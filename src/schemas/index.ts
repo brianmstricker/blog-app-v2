@@ -33,7 +33,7 @@ export const RegisterSchema = z.object({
   ),
  handle: z
   .string()
-  .min(3, "Handle must be at least 3 characters long")
+  .min(1, "Handle must be at least 1 characters long")
   .max(30, "Handle must be at most 30 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
@@ -52,7 +52,7 @@ export const UsernameHandleSchema = z.object({
   ),
  handle: z
   .string()
-  .min(3, "Handle must be at least 3 characters long")
+  .min(1, "Handle must be at least 1 characters long")
   .max(30, "Handle must be at most 30 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,

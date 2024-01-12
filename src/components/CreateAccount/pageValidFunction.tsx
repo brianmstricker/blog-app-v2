@@ -3,6 +3,8 @@ type ErrorObj = {
  email?: string;
  password?: string;
  confirmPassword?: string;
+ username?: string;
+ handle?: string;
 };
 
 export function isFirstPageInvalid(form: any) {
@@ -37,5 +39,31 @@ export function isFirstPageInvalid(form: any) {
  if (Object.keys(errors).length > 0) {
   return { errors };
  }
- return !name || !email || !password;
+ return !name || !email || !password || !confirmPassword;
+}
+export function isSecondPageInvalid(form: any) {
+ let errors: ErrorObj = {};
+ const username = form.watch("username");
+ const handle = form.watch("handle");
+ if (username) {
+  if (username.length < 3 || username.length > 30) {
+   errors.username = "Username must be between 3 and 30 characters";
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+   errors.username =
+    "Username must only contain alphanumeric characters and underscores";
+  }
+ }
+ if (handle) {
+  if (handle.length < 1 || handle.length > 30) {
+   errors.handle = "Handle must be between 3 and 30 characters";
+  }
+  if (!/^[^<>[\]{}\\|`~]+$/.test(handle)) {
+   errors.handle = "Handle must not contain certain special characters";
+  }
+ }
+ if (Object.keys(errors).length > 0) {
+  return { errors };
+ }
+ return !username || !handle;
 }

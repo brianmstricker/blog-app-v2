@@ -81,7 +81,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
      tabIndex={0}
      onClick={() => setShowLogoutMenu((prev) => !prev)}
      className={cn(
-      "flex items-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 p-3 rounded-full transition-all duration-150",
+      "flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full transition-all duration-150",
       showLogoutMenu && "pointer-events-none"
      )}
     >

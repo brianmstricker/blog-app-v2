@@ -72,7 +72,7 @@ const UsernameHandleForm = ({
      )}
     />
     <div
-     className="flex items-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto"
+     className="flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto"
      tabIndex={0}
     >
      {!userImage ? (

@@ -45,3 +45,7 @@ input:-webkit-autofill:is(.dark .dark\:bg-black) {
 .triangle:is(.dark .dark\:fill-black) {
  filter: drop-shadow(rgb(56, 59, 62) 1px -1px 1px);
 }
+
+.transition-custom {
+ transition: all 0.2s ease-in-out liner;
+}

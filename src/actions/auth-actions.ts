@@ -19,7 +19,6 @@ export const loginAction = async (values: any) => {
   });
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
-  // throw error;
  }
 };
 
@@ -76,6 +75,18 @@ export const updateUsernameHandleAction = async (
    where: { id },
    data: { username, handle },
   });
+  return { success: true };
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const existingEmailSearchAction = async (email: string) => {
+ try {
+  const existingEmail = await db.user.findFirst({
+   where: { email },
+  });
+  if (existingEmail) return { error: "Email already exists" };
   return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
