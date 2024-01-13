@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import LeftMenuUserInfo from "./LeftMenuUserInfo";
-import PostModal from "./PostModal";
+import PostModal from "./PostModal/PostModal";
 import LeftMenuNav from "./LeftMenuNav";
 import { auth } from "@/auth";
 
@@ -11,7 +11,11 @@ const LeftMenu = async () => {
  return (
   <aside className="h-screen sticky top-0 flex flex-col mr-4">
    <nav className="flex-1">
-    <Link href={!user ? "/" : "/home"} className="rounded-full" scroll={false}>
+    <Link
+     href={!user ? "/" : "/home"}
+     className="rounded-full w-fit block"
+     scroll={false}
+    >
      <Image src="/logo.png" width={65} height={65} alt="Logo" />
     </Link>
     {!!user && <LeftMenuNav />}

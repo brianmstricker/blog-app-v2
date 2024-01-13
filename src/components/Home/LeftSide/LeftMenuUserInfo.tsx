@@ -60,7 +60,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
        id="logout"
        onClick={() => setShowConfirmLogoutModal(true)}
        type="submit"
-       className="font-bold hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-150 w-full text-start py-2"
+       className="font-bold hover:bg-black/10 dark:hover:bg-white/15 transition-all duration-150 w-full text-start py-2"
       >
        <span className="block pl-4">Log out @{user.handle}</span>
       </button>
@@ -81,7 +81,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
      tabIndex={0}
      onClick={() => setShowLogoutMenu((prev) => !prev)}
      className={cn(
-      "flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full transition-all duration-150",
+      "flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/15 p-3 rounded-full transition-all duration-150",
       showLogoutMenu && "pointer-events-none"
      )}
     >
@@ -147,7 +147,8 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
           )}
           disabled={loading}
          >
-          {loading ? "Logging out..." : "Log out"}
+          {loading && "Logging out..."}
+          {!loading && "Log out"}
          </button>
          <button
           onClick={() => setShowConfirmLogoutModal(false)}

@@ -4,4 +4,5 @@
 <https://orm.drizzle.team/docs/rqb>
 <https://authjs.dev/reference/nextjs>
 <https://ui.shadcn.com/docs/components/form>
--update username/handle form
+-loading state when signing in
+-close modals with escape

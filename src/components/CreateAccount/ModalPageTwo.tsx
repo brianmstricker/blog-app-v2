@@ -15,7 +15,7 @@ const ModalPageTwo = ({ form, errors, userExistError }: ModalPageProps) => {
    />
    <CreateAccountLabel errors={errors} form={form} field="handle" />
    <div
-    className="flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 p-3 rounded-full w-fit mx-auto my-auto overflow-hidden max-w-[80%]"
+    className="flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/15 p-3 rounded-full w-fit mx-auto my-auto overflow-hidden max-w-[80%]"
     tabIndex={0}
    >
     <div className="w-11 h-11 rounded-full bg-blue-600 shrink-0" />
