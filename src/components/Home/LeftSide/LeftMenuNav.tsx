@@ -62,6 +62,9 @@ const LeftMenuNav = () => {
       href={link.href}
       scroll={false}
       className="flex items-center gap-6 py-3 rounded-full px-4 hover:bg-black/10 dark:hover:bg-white/15 transition-all duration-150"
+      onClick={() => {
+       window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
      >
       <span className="text-2xl">
        {activeLink.toLowerCase() === link.label.toLowerCase() ? (
