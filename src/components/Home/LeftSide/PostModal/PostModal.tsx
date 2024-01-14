@@ -6,10 +6,10 @@ import ModalTweetBox from "../ModalTweetBox";
 import { createPortal } from "react-dom";
 import HideScroll from "@/components/HideScroll";
 import { ThreeCircles } from "react-loader-spinner";
+import FocusTrap from "focus-trap-react";
 
 const PostModal = () => {
  const router = useRouter();
- //todo: fix tab key when modal is open
  const modalRef = useRef<HTMLDivElement | null>(null);
  const path = usePathname();
  const [prevPath, setPrevPath] = useState("");
@@ -22,7 +22,7 @@ const PostModal = () => {
   } else {
    setClosingModal(true);
    setModalShow(false);
-   router.push("/");
+   router.push("/", { scroll: false });
   }
   setModalShow(false);
  }, [prevPath, router]);
@@ -65,27 +65,17 @@ const PostModal = () => {
   };
  }, [modalRef, closeModal]);
  useEffect(() => {
+  if (!modalShow) return;
   const handleKeyDown = (e: any) => {
-   if (e.key === "Tab" && modalRef.current) {
-    const modalElements = modalRef.current.querySelectorAll(
-     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = modalElements[0] as HTMLElement;
-    const lastElement = modalElements[modalElements.length - 1] as HTMLElement;
-    if (!e.shiftKey && document.activeElement === lastElement) {
-     e.preventDefault();
-     firstElement.focus();
-    } else if (e.shiftKey && document.activeElement === firstElement) {
-     e.preventDefault();
-     lastElement.focus();
-    }
+   if (e.key === "Escape") {
+    closeModal();
    }
   };
   window.addEventListener("keydown", handleKeyDown);
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
   };
- }, []);
+ }, [closeModal, modalShow]);
  return (
   <>
    <button
@@ -98,35 +88,37 @@ const PostModal = () => {
     createPortal(
      <>
       <HideScroll />
-      <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
-       {closingModal && (
-        <div className="flex items-center justify-center">
-         <ThreeCircles
-          visible={true}
-          height="100"
-          width="100"
-          color="#1d9bf0"
-          ariaLabel="three-circles-loading"
-         />
-        </div>
-       )}
-       {!closingModal && (
-        <div
-         ref={modalRef}
-         className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-4 sm:mt-12 relative"
-        >
-         <button
-          className="p-[2px] rounded-full relative -top-1 -left-1"
-          onClick={closeModal}
-         >
-          <IoClose className="w-5 h-5" />
-         </button>
-         <div className="h-[90%] pt-4">
-          <ModalTweetBox />
+      <FocusTrap>
+       <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
+        {closingModal && (
+         <div className="flex items-center justify-center">
+          <ThreeCircles
+           visible={true}
+           height="100"
+           width="100"
+           color="#1d9bf0"
+           ariaLabel="three-circles-loading"
+          />
          </div>
-        </div>
-       )}
-      </div>
+        )}
+        {!closingModal && (
+         <div
+          ref={modalRef}
+          className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-3 sm:mt-12 relative"
+         >
+          <button
+           className="p-[2px] rounded-full relative top-1 left-1"
+           onClick={closeModal}
+          >
+           <IoClose className="w-5 h-5" />
+          </button>
+          <div className="h-[90%] pt-6">
+           <ModalTweetBox />
+          </div>
+         </div>
+        )}
+       </div>
+      </FocusTrap>
      </>,
      document.body
     )}

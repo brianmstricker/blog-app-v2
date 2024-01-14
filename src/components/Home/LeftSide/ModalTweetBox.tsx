@@ -3,11 +3,15 @@ import { FaRegImage, FaEarthAmericas } from "react-icons/fa6";
 import { MdOutlineGifBox } from "react-icons/md";
 import { BiSliderAlt } from "react-icons/bi";
 import { FaRegSmile } from "react-icons/fa";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const ModalTweetBox = () => {
  const [tweet, setTweet] = useState("");
+ const inputRef = useRef<HTMLDivElement | null>(null);
+ function handleParentClick() {
+  if (inputRef.current) inputRef.current.focus();
+ }
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
   { icon: <MdOutlineGifBox />, text: "GIF" },
@@ -20,37 +24,39 @@ const ModalTweetBox = () => {
  }
  const buttonDisabled = tweet === "" || tweet === " ";
  return (
-  <div className="flex flex-col sm:justify-between h-full">
-   <div className="flex">
-    <div>
-     <div className="w-11 h-11 rounded-full bg-blue-600 " />
-    </div>
-    <div className="ml-3 py-2 grow max-w-[90%]">
-     <div className="relative min-h-[40px] max-h-[600px] text-xl overflow-y-auto">
-      <div className="select-none pointer-events-none">
-       {!tweet && (
-        <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
-         What is happening?!
-        </span>
-       )}
-      </div>
-      <div
-       contentEditable={true}
-       id="tweetBox"
-       className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light"
-       tabIndex={0}
-       onInput={handleInput}
-      />
+  <div className="flex flex-col h-full">
+   <div onClick={handleParentClick} className="relative grow">
+    <div className="flex flex-1">
+     <div className="pointer-events-none shrink-0">
+      <div className="w-11 h-11 rounded-full bg-blue-600 " />
      </div>
+     <div className="h-full w-[90%] ml-3 mt-2">
+      <div className="relative min-h-[80px] max-h-[600px] text-xl overflow-y-auto h-full">
+       <div className="select-none pointer-events-none">
+        {!tweet && (
+         <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
+          What is happening?!
+         </span>
+        )}
+       </div>
+       <div
+        contentEditable={true}
+        id="tweetBox"
+        className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light"
+        tabIndex={0}
+        onInput={handleInput}
+        ref={inputRef}
+       />
+      </div>
+     </div>
+    </div>
+    <div className="absolute bottom-3 left-1 flex h-fit items-center gap-2 ml-1 text-main text-sm font-medium select-none">
+     <FaEarthAmericas />
+     <span>Everyone can reply</span>
     </div>
    </div>
-   <div className="mt-10 sm:mt-auto">
-    <div className="border-b dark:border-b-white/25 mb-2">
-     <div className="mb-6 flex items-center gap-2 ml-1 text-main text-sm font-medium relative top-3">
-      <FaEarthAmericas />
-      <span>Everyone can reply</span>
-     </div>
-    </div>
+   <div className="border-t dark:border-t-white/25 mb-2" />
+   <div>
     <div className="flex items-center justify-between">
      <div>
       {tweetOptions.map((option) => (
