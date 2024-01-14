@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { IoClose, IoArrowBackSharp } from "react-icons/io5";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,8 @@ import {
 } from "@/actions/auth-actions";
 import { useRouter } from "next/navigation";
 import HideScroll from "../HideScroll";
+import FocusTrap from "focus-trap-react";
+import { Puff } from "react-loader-spinner";
 
 const getPageErrors = (pageResult: any) => {
  const { errors } =
@@ -33,6 +35,7 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
  const [loading, setLoading] = useState(false);
  const [invalidEmails, setInvalidEmails] = useState<string[]>([]);
  const [invalidUsernames, setInvalidUsernames] = useState<string[]>([]);
+ const [validEmails, setValidEmails] = useState<string[]>([]);
  const modalRef = useRef<HTMLDivElement | null>(null);
  const form = useForm<z.infer<typeof RegisterSchema>>({
   resolver: zodResolver(RegisterSchema),
@@ -52,11 +55,16 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
   setLoading(false);
  };
  async function checkEmail(email: string) {
+  if (validEmails.includes(email)) {
+   setPage(2);
+   return;
+  }
   setLoading(true);
   const action = await existingEmailSearchAction(email);
   if (action.error) {
    setInvalidEmails([...invalidEmails, email]);
   } else {
+   setValidEmails([...validEmails, email]);
    setPage(2);
   }
   setLoading(false);
@@ -88,28 +96,28 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
   isSecondPageInvalid(form) ||
   loading ||
   invalidUsernames.includes(form.watch("username"));
+ const closeModal = useCallback(() => {
+  setShowModal(false);
+  setPage(1);
+  form.reset();
+  setInvalidEmails([]);
+  setInvalidUsernames([]);
+ }, [form]);
  useEffect(() => {
+  if (!showModal) return;
   const handleKeyDown = (e: any) => {
-   if (e.key === "Tab" && modalRef.current) {
-    const modalElements = modalRef.current.querySelectorAll(
-     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = modalElements[0] as HTMLElement;
-    const lastElement = modalElements[modalElements.length - 1] as HTMLElement;
-    if (!e.shiftKey && document.activeElement === lastElement) {
-     e.preventDefault();
-     firstElement.focus();
-    } else if (e.shiftKey && document.activeElement === firstElement) {
-     e.preventDefault();
-     lastElement.focus();
-    }
+   if (e.key === "Escape" && page === 1) {
+    closeModal();
+   }
+   if (e.key === "Escape" && page === 2) {
+    setPage(1);
    }
   };
   window.addEventListener("keydown", handleKeyDown);
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
   };
- }, []);
+ }, [closeModal, showModal, page]);
  return (
   <>
    {!homepage ? (
@@ -131,84 +139,102 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
     createPortal(
      <>
       <HideScroll />
-      <div className="fixed w-screen h-screen inset-0 bg-slate-600/80 dark:bg-[#5b708366] flex items-center justify-center z-[100]">
-       <div
-        ref={modalRef}
-        className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
-       >
-        {page === 1 ? (
-         <button
-          onClick={() => {
-           setShowModal(false);
-           setPage(1);
-           form.reset();
-          }}
-          className="absolute top-[12px] left-2 p-2 rounded-full"
-         >
-          <IoClose className="w-5 h-5" />
-         </button>
-        ) : (
-         <button
-          onClick={() => {
-           setPage(1);
-          }}
-          className="absolute top-[12px] left-2 p-2 rounded-full"
-         >
-          <IoArrowBackSharp className="w-5 h-5" />
-         </button>
-        )}
-        <Form {...form}>
-         <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
-          <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
-           {page === 1 && (
-            <ModalPageOne
-             form={form}
-             errors={isFirstPageErrors}
-             emailExistError={invalidEmails.includes(form.watch("email"))}
-            />
-           )}
-           {page === 2 && (
-            <ModalPageTwo
-             form={form}
-             errors={isSecondPageErrors}
-             userExistError={invalidUsernames.includes(form.watch("username"))}
-            />
-           )}
-           {page === 1 && (
-            <button
-             className={cn(
-              "block border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold",
-              firstButtonDisabled && "opacity-50 cursor-default"
-             )}
-             onClick={async () => {
-              await checkEmail(form.watch("email"));
-             }}
-             disabled={!!firstButtonDisabled}
-             type="button"
-            >
-             Next
-            </button>
-           )}
-           {page === 2 && (
-            <button
-             className={cn(
-              "block border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold",
-              secondButtonDisabled && "opacity-50 cursor-default"
-             )}
-             onClick={async () => {
-              await checkUsername(form.watch("username"));
-             }}
-             disabled={!!secondButtonDisabled}
-             type="submit"
-            >
-             Create account
-            </button>
-           )}
-          </div>
-         </form>
-        </Form>
+      <FocusTrap>
+       <div className="fixed w-screen h-screen inset-0 bg-slate-600/80 dark:bg-[#5b708366] flex items-center justify-center z-[100]">
+        <div
+         ref={modalRef}
+         className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
+        >
+         {page === 1 ? (
+          <button
+           onClick={closeModal}
+           className="absolute top-[12px] left-2 p-2 rounded-full"
+          >
+           <IoClose className="w-5 h-5" />
+          </button>
+         ) : (
+          <button
+           onClick={() => {
+            setPage(1);
+           }}
+           className="absolute top-[12px] left-2 p-2 rounded-full"
+          >
+           <IoArrowBackSharp className="w-5 h-5" />
+          </button>
+         )}
+         <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
+           <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
+            {page === 1 && (
+             <ModalPageOne
+              form={form}
+              errors={isFirstPageErrors}
+              emailExistError={invalidEmails.includes(form.watch("email"))}
+             />
+            )}
+            {page === 2 && (
+             <ModalPageTwo
+              form={form}
+              errors={isSecondPageErrors}
+              userExistError={invalidUsernames.includes(form.watch("username"))}
+             />
+            )}
+            {page === 1 && (
+             <button
+              className={cn(
+               "border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold max-h-[58px] flex items-center justify-center",
+               firstButtonDisabled && "opacity-50 cursor-default"
+              )}
+              onClick={async () => {
+               await checkEmail(form.watch("email"));
+              }}
+              disabled={!!firstButtonDisabled}
+              type="button"
+             >
+              {loading ? (
+               <Puff
+                visible={true}
+                height="40"
+                width="40"
+                color="#1d9bf0"
+                ariaLabel="puff-loading"
+               />
+              ) : (
+               "Next"
+              )}
+             </button>
+            )}
+            {page === 2 && (
+             <button
+              className={cn(
+               "border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold max-h-[58px] flex items-center justify-center",
+               secondButtonDisabled && "opacity-50 cursor-default"
+              )}
+              onClick={async () => {
+               await checkUsername(form.watch("username"));
+              }}
+              disabled={!!secondButtonDisabled}
+              type="submit"
+             >
+              {loading ? (
+               <Puff
+                visible={true}
+                height="40"
+                width="40"
+                color="#1d9bf0"
+                ariaLabel="puff-loading"
+               />
+              ) : (
+               "Create account"
+              )}
+             </button>
+            )}
+           </div>
+          </form>
+         </Form>
+        </div>
        </div>
-      </div>
+      </FocusTrap>
      </>,
      document.body
     )}
