@@ -11,11 +11,16 @@ export const postTweetAction = async (tweet: z.infer<typeof TweetSchema>) => {
  if (!userInfo || !user) return { error: "Not logged in" };
  try {
   const validatedFields = TweetSchema.safeParse(tweet);
-  if (!validatedFields.success) return { error: "Invalid fields" };
-  const { text } = validatedFields.data;
+  if (!validatedFields.success)
+   return {
+    error: "Invalid fields",
+    fields: validatedFields.error.issues.map((issue) => issue.message),
+   };
+  const { text, media } = validatedFields.data;
+  const updatedText = text?.trim().replace(/<br>/g, "");
   const newTweet = await db.tweet.create({
    data: {
-    text,
+    text: updatedText,
     userId: user.id,
    },
   });
@@ -30,7 +35,12 @@ export const fetchTweetsAction = async () => {
  try {
   const tweets = await db.tweet.findMany({
    orderBy: { createdAt: "desc" },
-   include: { user: true, likes: true },
+   include: {
+    user: {
+     select: { username: true, handle: true, image: true },
+    },
+    likes: true,
+   },
   });
   return tweets || [];
  } catch (error: any) {

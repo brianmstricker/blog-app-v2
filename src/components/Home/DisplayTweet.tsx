@@ -18,10 +18,9 @@ type DisplayTweetProps = {
  replyToId?: string | null;
  userId: string;
  user: {
-  id: string;
   handle: string | null;
   username: string | null;
-  email: string | null;
+  image: string | null;
  };
  likes: {
   id: string;
@@ -32,11 +31,25 @@ type DisplayTweetProps = {
 };
 
 const DisplayTweet = ({ tweet }: { tweet: DisplayTweetProps }) => {
+ // console.log(tweet);
+ //todo: likes functionality
  return (
   <div className="border-b dark:border-b-white/25">
    <article className="py-2 px-3 flex gap-3" tabIndex={0}>
-    <div className="shrink-0">
-     <div className="w-11 h-11 rounded-full bg-blue-600 " />
+    <div className="shrink-0 select-none">
+     {!tweet.user.image ? (
+      <div className="w-11 h-11 rounded-full bg-blue-600" />
+     ) : (
+      <div className="relative w-11 h-11 rounded-full">
+       <Image
+        src={tweet.user.image}
+        alt="user PFP"
+        fill
+        className="rounded-full"
+        sizes="44px"
+       />
+      </div>
+     )}
     </div>
     <div className="flex-1">
      <div className="flex items-center justify-between">
@@ -61,7 +74,7 @@ const DisplayTweet = ({ tweet }: { tweet: DisplayTweetProps }) => {
        fill
       />
      </div> */}
-     <div className="mt-4 mb-1 flex items-center justify-between text-mainGray">
+     <div className="mt-2 mb-1 flex items-center justify-between text-mainGray">
       <div className="flex items-center justify-between max-w-[70%] w-full">
        <div className="flex items-center gap-1">
         <BiMessageRounded className="text-lg" />

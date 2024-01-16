@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 import { postTweetAction } from "@/actions/tweet-actions";
 
 const CreateTweetBox = () => {
+ //todo: add media, gif, poll, emoji functionality
+ //todo: add who can reply functionality
+ //todo: show character limit
  const [whoCanReply, setWhoCanReply] = useState(false);
  const [tweet, setTweet] = useState("");
  const tweetOptions = [
@@ -17,10 +20,12 @@ const CreateTweetBox = () => {
   { icon: <FaRegSmile />, text: "Emoji" },
  ];
  function handleInput(e: any) {
-  const text = e.target.innerHTML;
-  setTweet(text);
+  const text = e.target.innerText;
+  const updatedText = text.trim();
+  setTweet(updatedText);
  }
- const buttonDisabled = tweet === "" || tweet === " " || tweet === "<br>";
+ const buttonDisabled =
+  tweet === "" || tweet === " " || tweet === "<br>" || tweet.trim() === "";
  async function handleSubmit() {
   const post = await postTweetAction({ text: tweet });
   if (post.success) {
@@ -87,7 +92,7 @@ const CreateTweetBox = () => {
        onClick={handleSubmit}
        className={cn(
         "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
-        !tweet ? "opacity-50 cursor-default" : ""
+        !tweet || buttonDisabled ? "opacity-50 cursor-default" : ""
        )}
        disabled={buttonDisabled}
       >
