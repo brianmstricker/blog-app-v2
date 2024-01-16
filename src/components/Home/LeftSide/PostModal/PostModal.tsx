@@ -92,6 +92,7 @@ const PostModal = () => {
        <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
         {closingModal && (
          <div className="flex items-center justify-center">
+          <div tabIndex={0} className="w-0 h-0" />
           <ThreeCircles
            visible={true}
            height="100"

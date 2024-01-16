@@ -21,7 +21,8 @@ export default {
       password,
       foundUser.password
      );
-     if (isCorrectPassword) return foundUser;
+     const { password: _, ...user } = foundUser;
+     if (isCorrectPassword) return user;
     }
     return null;
    },

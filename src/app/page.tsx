@@ -6,6 +6,8 @@ import Link from "next/link";
 import { signIn } from "@/auth";
 import CreateAccountButton from "@/components/CreateAccount/CreateAccountButton";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
+import MainGoogleButton from "@/components/Home/MainGoogleButton";
+import MainGithubButton from "@/components/Home/MainGithubButton";
 
 export default function Index() {
  return (
@@ -40,13 +42,7 @@ export default function Index() {
        await signIn("google");
       }}
      >
-      <button
-       type="submit"
-       className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90 w-full"
-      >
-       <FcGoogle className="w-6 h-6" />
-       <span>Sign up with Google</span>
-      </button>
+      <MainGoogleButton />
      </form>
      <form
       action={async () => {
@@ -54,10 +50,7 @@ export default function Index() {
        await signIn("github");
       }}
      >
-      <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent hover:bg-white/90 w-full">
-       <BsGithub className="w-6 h-6" />
-       <span>Sign up with Github</span>
-      </button>
+      <MainGithubButton />
      </form>
      <div className="flex items-center">
       <div className="w-full bg-mainGray/40 h-[1px]" />
@@ -75,7 +68,7 @@ export default function Index() {
      </div>
      <div className="mt-8 sm:mt-16">
       <div className="font-bold">Already have an account?</div>
-      <button className="border border-black/30 dark:border-white/50 text-main my-1 rounded-full py-2 px-4 w-full font-semibold mt-4 hover:bg-main/20 dark:hover:bg-main/10 transition-all duration-150">
+      <button className="border border-black/30 dark:border-white/50 text-main my-1 rounded-full py-2 px-4 w-full font-semibold mt-4 hover:bg-main/20 transition-all duration-150">
        Sign in
       </button>
      </div>

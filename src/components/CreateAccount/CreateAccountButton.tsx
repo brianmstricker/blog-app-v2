@@ -51,7 +51,10 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
   setLoading(true);
   const action = await registerAction(data);
   //todo: remove line under if credentialsProvider starts working
-  if (action.success) router.push("/home");
+  if (action.success) {
+   window.location.reload();
+   return;
+  }
   setLoading(false);
  };
  async function checkEmail(email: string) {
@@ -221,7 +224,7 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
                 visible={true}
                 height="40"
                 width="40"
-                color="#1d9bf0"
+                color="#fff"
                 ariaLabel="puff-loading"
                />
               ) : (

@@ -15,7 +15,6 @@ export const loginAction = async (values: any) => {
   await signIn("credentials", {
    email,
    password,
-   redirectTo: DEFAULT_LOGIN_REDIRECT,
   });
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
@@ -44,13 +43,21 @@ export const registerAction = async (
   const account = await db.user.create({ data: newUser });
   if (!account) return { error: "Something went wrong" };
   //todo: fix credentials provider
-  // const signedIn = await signIn("credentials", {
-  //  email,
-  //  password,
-  //  // redirectTo: DEFAULT_LOGIN_REDIRECT,
-  // });
-  // if (!signedIn) return { error: "Something went wrong" };
+  const signedIn = await signIn("credentials", {
+   email,
+   password,
+   // redirectTo: DEFAULT_LOGIN_REDIRECT,
+  });
+  if (!signedIn) return { error: "Something went wrong" };
   return { success: true };
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const googleLoginAction = async () => {
+ try {
+  await signIn("google", { callbackUrl: DEFAULT_LOGIN_REDIRECT });
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }
@@ -59,6 +66,7 @@ export const registerAction = async (
 export const logoutAction = async () => {
  try {
   await signOut();
+  return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }

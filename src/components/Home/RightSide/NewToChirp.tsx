@@ -1,7 +1,8 @@
 import { signIn } from "@/auth";
 import CreateAccountButton from "@/components/CreateAccount/CreateAccountButton";
 import { BsGithub } from "react-icons/bs";
-import { FcGoogle } from "react-icons/fc";
+import RightGoogleButton from "./RightGoogleButton";
+import RightGithubButton from "./RightGithubButton";
 
 const NewToChirp = () => {
  return (
@@ -18,10 +19,7 @@ const NewToChirp = () => {
        await signIn("google");
       }}
      >
-      <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent w-[93%] hover:bg-black/5 dark:hover:bg-white/90">
-       <FcGoogle className="w-6 h-6" />
-       <span>Sign up with Google</span>
-      </button>
+      <RightGoogleButton />
      </form>
      <form
       action={async () => {
@@ -29,10 +27,7 @@ const NewToChirp = () => {
        await signIn("github");
       }}
      >
-      <button className="bg-white text-black my-1 rounded-full py-2 px-4 font-semibold flex items-center justify-center gap-2 border border-black/30 dark:border-x-transparent w-[93%] hover:bg-black/5 dark:hover:bg-white/90">
-       <BsGithub className="w-6 h-6" />
-       <span>Sign up with Github</span>
-      </button>
+      <RightGithubButton />
      </form>
      <CreateAccountButton homepage />
      <div className="text-[13px] font-light mt-1 text-gray-400/80 leading-[16px]">
