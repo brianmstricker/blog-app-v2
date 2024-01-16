@@ -12,7 +12,7 @@ export default async function Home() {
   <>
    <ForYouFollowing />
    {!!user ? (
-    <CreateTweetBox />
+    <CreateTweetBox userImage={user.image} />
    ) : (
     <div className="border-b dark:border-b-white/25 py-5 text-center text-xl font-bold">
      Sign in to get Chirping!

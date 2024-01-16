@@ -12,7 +12,7 @@ const LeftMenu = async () => {
    <nav className="flex-1">
     <LeftMenuLogo user={!!user} />
     {!!user && <LeftMenuNav />}
-    {!!user && <PostModal />}
+    {!!user && <PostModal userImg={user?.image} />}
    </nav>
    {!!user && user.username && user.handle && (
     <div className="mb-4 rounded-full">

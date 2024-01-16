@@ -5,8 +5,16 @@ import { BiSliderAlt } from "react-icons/bi";
 import { FaRegSmile } from "react-icons/fa";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { postTweetAction } from "@/actions/tweet-actions";
 
-const ModalTweetBox = () => {
+const ModalTweetBox = ({
+ userImg,
+ closeModal,
+}: {
+ userImg?: string | null;
+ closeModal: () => void;
+}) => {
  const [tweet, setTweet] = useState("");
  const inputRef = useRef<HTMLDivElement | null>(null);
  function handleParentClick() {
@@ -19,16 +27,43 @@ const ModalTweetBox = () => {
   { icon: <FaRegSmile />, text: "Emoji" },
  ];
  function handleInput(e: any) {
-  const text = e.target.innerHTML;
-  setTweet(text);
+  const text = e.target.innerText;
+  const updatedText = text.trim();
+  setTweet(updatedText);
  }
- const buttonDisabled = tweet === "" || tweet === " ";
+ const buttonDisabled =
+  tweet === "" || tweet === " " || tweet === "<br>" || tweet.trim() === "";
+ async function handleSubmit() {
+  const post = await postTweetAction({ text: tweet });
+  if (post.success) {
+   setTweet("");
+   const tweetBox = document.getElementById("tweetBoxModal");
+   if (tweetBox) {
+    tweetBox.innerHTML = "";
+   }
+   closeModal();
+  }
+ }
  return (
   <div className="flex flex-col h-full">
    <div onClick={handleParentClick} className="relative grow">
     <div className="flex flex-1">
      <div className="pointer-events-none shrink-0">
-      <div className="w-11 h-11 rounded-full bg-blue-600 " />
+      <div className="shrink-0 select-none">
+       {!userImg ? (
+        <div className="w-11 h-11 rounded-full bg-blue-600" />
+       ) : (
+        <div className="relative w-11 h-11 rounded-full">
+         <Image
+          src={userImg}
+          alt="user PFP"
+          fill
+          className="rounded-full"
+          sizes="44px"
+         />
+        </div>
+       )}
+      </div>
      </div>
      <div className="h-full w-[90%] ml-3 mt-2">
       <div className="relative min-h-[80px] max-h-[600px] text-xl overflow-y-auto h-full">
@@ -41,7 +76,7 @@ const ModalTweetBox = () => {
        </div>
        <div
         contentEditable={true}
-        id="tweetBox"
+        id="tweetBoxModal"
         className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light"
         tabIndex={0}
         onInput={handleInput}
@@ -78,9 +113,10 @@ const ModalTweetBox = () => {
       ))}
      </div>
      <button
+      onClick={handleSubmit}
       className={cn(
        "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
-       !tweet ? "opacity-50 cursor-default" : ""
+       !tweet || buttonDisabled ? "opacity-50 cursor-default" : ""
       )}
       disabled={buttonDisabled}
      >

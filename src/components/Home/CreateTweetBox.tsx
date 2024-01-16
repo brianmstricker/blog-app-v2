@@ -6,8 +6,9 @@ import { FaRegSmile } from "react-icons/fa";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { postTweetAction } from "@/actions/tweet-actions";
+import Image from "next/image";
 
-const CreateTweetBox = () => {
+const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  //todo: add media, gif, poll, emoji functionality
  //todo: add who can reply functionality
  //todo: show character limit
@@ -39,8 +40,20 @@ const CreateTweetBox = () => {
  return (
   <div className="border-b dark:border-b-white/25">
    <div className="px-4 pt-2.5 flex">
-    <div>
-     <div className="w-11 h-11 rounded-full bg-blue-600 " />
+    <div className="shrink-0 select-none">
+     {!userImage ? (
+      <div className="w-11 h-11 rounded-full bg-blue-600" />
+     ) : (
+      <div className="relative w-11 h-11 rounded-full">
+       <Image
+        src={userImage}
+        alt="user PFP"
+        fill
+        className="rounded-full"
+        sizes="44px"
+       />
+      </div>
+     )}
     </div>
     <div className="flex flex-col ml-3 py-2 grow max-w-[90%]">
      <div className="relative min-h-[40px] max-h-[600px] text-xl overflow-y-auto">

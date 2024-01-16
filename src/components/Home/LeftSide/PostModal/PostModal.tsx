@@ -8,7 +8,7 @@ import HideScroll from "@/components/HideScroll";
 import { ThreeCircles } from "react-loader-spinner";
 import FocusTrap from "focus-trap-react";
 
-const PostModal = () => {
+const PostModal = ({ userImg }: { userImg?: string | null }) => {
  const router = useRouter();
  const modalRef = useRef<HTMLDivElement | null>(null);
  const path = usePathname();
@@ -114,7 +114,7 @@ const PostModal = () => {
            <IoClose className="w-5 h-5" />
           </button>
           <div className="h-[90%] pt-6">
-           <ModalTweetBox />
+           <ModalTweetBox userImg={userImg} closeModal={closeModal} />
           </div>
          </div>
         )}
