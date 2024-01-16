@@ -59,3 +59,17 @@ export const UsernameHandleSchema = z.object({
    "Handle must not contain certain special characters"
   ),
 });
+
+export const TweetSchema = z.object({
+ text: z.union([
+  z
+   .string()
+   .min(1, "Tweet must be at least 1 characters long")
+   .max(300, "Tweet must be at most 300 characters long"),
+  z.undefined(),
+ ]),
+ //todo: maybe not .url()
+ media: z.union([z.string().url(), z.undefined()]),
+ reply: z.boolean().optional(),
+ replyToId: z.string().optional(),
+});

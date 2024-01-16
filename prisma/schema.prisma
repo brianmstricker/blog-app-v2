@@ -24,6 +24,7 @@ model User {
  updatedAt     DateTime  @updatedAt
  accounts      Account[]
  tweets        Tweet[]
+ likes         Like[]
 }
 
 model Account {
@@ -39,17 +40,31 @@ model Account {
  scope             String?
  id_token          String? @db.Text
  session_state     String?
-
- user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
  @@unique([provider, providerAccountId])
 }
 
 model Tweet {
  id        String   @id @default(cuid())
- content   String   @db.VarChar(300)
+ text      String?  @db.VarChar(300)
+ media     String?
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+ reply     Boolean  @default(false)
+ replyToId String?
  userId    String
  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ likes     Like[]
+}
+
+model Like {
+ id        String   @id @default(cuid())
+ tweetId   String
+ userId    String
+ createdAt DateTime @default(now())
+ tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+ user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+ @@unique([tweetId, userId])
 }

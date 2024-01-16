@@ -5,6 +5,7 @@ import { BiSliderAlt } from "react-icons/bi";
 import { FaRegSmile } from "react-icons/fa";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { postTweetAction } from "@/actions/tweet-actions";
 
 const CreateTweetBox = () => {
  const [whoCanReply, setWhoCanReply] = useState(false);
@@ -20,6 +21,16 @@ const CreateTweetBox = () => {
   setTweet(text);
  }
  const buttonDisabled = tweet === "" || tweet === " " || tweet === "<br>";
+ async function handleSubmit() {
+  const post = await postTweetAction({ text: tweet });
+  if (post.success) {
+   setTweet("");
+   const tweetBox = document.getElementById("tweetBox");
+   if (tweetBox) {
+    tweetBox.innerHTML = "";
+   }
+  }
+ }
  return (
   <div className="border-b dark:border-b-white/25">
    <div className="px-4 pt-2.5 flex">
@@ -73,6 +84,7 @@ const CreateTweetBox = () => {
        ))}
       </div>
       <button
+       onClick={handleSubmit}
        className={cn(
         "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
         !tweet ? "opacity-50 cursor-default" : ""
