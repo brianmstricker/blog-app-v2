@@ -1,5 +1,5 @@
 import ForYouFollowing from "@/components/Home/ForYouFollowing";
-import CreateTweetBox from "@/components/Home/CreateTweetBox";
+import CreateTweetBox from "@/components/Home/HomeTweetBox/CreateTweetBox";
 import DisplayTweet from "@/components/Home/DisplayTweet";
 import { auth } from "@/auth";
 import { fetchTweetsAction } from "@/actions/tweet-actions";
