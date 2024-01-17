@@ -13,6 +13,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  //todo: add media, gif, emoji functionality
  //todo: add who can reply functionality
  //todo: show character limit
+ //todo: set background image on a div like twitter to hopefully stop images from popping in and out
  const [whoCanReply, setWhoCanReply] = useState(false);
  const [tweet, setTweet] = useState("");
  const [media, setMedia] = useState<File[] | null | []>([]);
@@ -24,11 +25,6 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   { icon: <BiSliderAlt />, text: "Poll" },
   { icon: <FaRegSmile />, text: "Emoji" },
  ];
- function handleInput(e: any) {
-  const text = e.target.innerText;
-  const updatedText = text.trim();
-  setTweet(updatedText);
- }
  function buttonDisabled() {
   if (!tweet && !media) return true;
   if (!tweet && media && media.length === 0) return true;
@@ -44,6 +40,42 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   if (!media) return true;
   return false;
  }
+ function handleInput(e: any) {
+  const maxTextLength = 300;
+  const readOnlyInput = document.getElementById("readOnly");
+  const tweetBox = document.getElementById("tweetBox");
+  const tweetLengthAmount = document.getElementById("tweetLengthAmount");
+  let text = e.target.innerText;
+  setTweet(text);
+  if (tweetLengthAmount) {
+   if (text.length > 0) {
+    setTimeout(() => {
+     tweetLengthAmount.classList.remove("opacity-0");
+    }, 100);
+    if (text.length > maxTextLength) {
+     setTimeout(() => {
+      tweetLengthAmount.classList.add("text-red-800");
+     }, 100);
+    } else {
+     setTimeout(() => {
+      tweetLengthAmount.classList.remove("text-red-800");
+     }, 100);
+    }
+   } else {
+    tweetLengthAmount.classList.add("opacity-0");
+   }
+  }
+  const currentTextLength = text.length;
+  if (readOnlyInput && tweetBox) {
+   if (currentTextLength > maxTextLength) {
+    let overText = text.substring(maxTextLength);
+    overText = `<span class="bg-red-500 bg-opacity-50">${overText}</span>`;
+    text = text.substring(0, maxTextLength) + overText;
+    tweetBox.style.zIndex = "-1";
+   }
+   readOnlyInput.innerHTML = text;
+  }
+ }
  async function handleSubmit() {
   let formData = new FormData();
   // if (media) formData.append("media", media);
@@ -52,15 +84,16 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   if (post.success) {
    setTweet("");
    const tweetBox = document.getElementById("tweetBox");
-   if (tweetBox) {
-    tweetBox.innerHTML = "";
+   const readOnlyInput = document.getElementById("readOnly");
+   if (tweetBox && readOnlyInput) {
+    tweetBox.innerText = "";
+    readOnlyInput.innerHTML = "";
    }
   }
  }
  useEffect(() => {
   if (!media) return;
   const mediaArray = Array.from(media || ([] as File[]));
-  console.log(mediaArray);
   const updatedMediaArray = mediaArray.slice(0, 4);
   const mediaUrlArray = updatedMediaArray.map((media) =>
    URL.createObjectURL(media)
@@ -85,7 +118,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   };
  }, [preview]);
  return (
-  <div className="border-b dark:border-b-white/25">
+  <div className="border-b dark:border-b-white/25 select-none">
    <div className="px-4 pt-2.5 flex">
     <div className="shrink-0 select-none">
      {!userImage ? (
@@ -114,10 +147,15 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
       <div
        contentEditable={true}
        id="tweetBox"
-       className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light"
+       className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light z-[1] leading-6"
        tabIndex={0}
        onInput={handleInput}
        onFocus={() => setWhoCanReply(true)}
+      />
+      <div
+       contentEditable={true}
+       id="readOnly"
+       className="absolute inset-0 outline-none whitespace-pre-wrap break-words h-full block font-light z-[-1] select-none leading-6"
       />
      </div>
      {preview && preview.length !== 3 && preview.length !== 0 && (
@@ -312,16 +350,24 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
         </div>
        ))}
       </div>
-      <button
-       onClick={handleSubmit}
-       className={cn(
-        "bg-main py-1.5 px-4 rounded-full font-bold text-white",
-        buttonDisabled() ? "opacity-50 cursor-default" : ""
-       )}
-       disabled={buttonDisabled()}
-      >
-       Post
-      </button>
+      <div className="flex gap-2 items-center">
+       <span
+        id="tweetLengthAmount"
+        className="text-sm font-bold transition-all duration-200 opacity-0"
+       >
+        {tweet.length}/300
+       </span>
+       <button
+        onClick={handleSubmit}
+        className={cn(
+         "bg-main py-1.5 px-4 rounded-full font-bold text-white",
+         buttonDisabled() ? "opacity-50 cursor-default" : ""
+        )}
+        disabled={buttonDisabled()}
+       >
+        Post
+       </button>
+      </div>
      </div>
     </div>
    </div>

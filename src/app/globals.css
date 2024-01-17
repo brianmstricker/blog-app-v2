@@ -10,7 +10,8 @@
  @apply bg-black text-white;
 }
 
-#tweetBox {
+#tweetBox,
+#readOnly {
  -webkit-user-modify: read-write-plaintext-only;
 }
 
