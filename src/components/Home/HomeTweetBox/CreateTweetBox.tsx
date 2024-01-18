@@ -3,7 +3,7 @@ import { FaRegImage, FaEarthAmericas } from "react-icons/fa6";
 import { MdOutlineGifBox } from "react-icons/md";
 import { BiSliderAlt } from "react-icons/bi";
 import { FaRegSmile } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { postTweetAction } from "@/actions/tweet-actions";
 import Image from "next/image";
@@ -19,6 +19,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  const [media, setMedia] = useState<File[] | null | []>([]);
  const [preview, setPreview] = useState<null | string[]>(null);
  const [imageAspect, setImageAspect] = useState<number | null>(null);
+ const inputRef = useRef<HTMLDivElement | null>(null);
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
   { icon: <MdOutlineGifBox />, text: "GIF" },
@@ -117,6 +118,19 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
    setImageAspect(null);
   };
  }, [preview]);
+ function handleParentClick() {
+  if (inputRef.current) {
+   inputRef.current.focus();
+   const range = document.createRange();
+   range.selectNodeContents(inputRef.current);
+   range.collapse(false);
+   const selection = window.getSelection();
+   if (selection) {
+    selection.removeAllRanges();
+    selection.addRange(range);
+   }
+  }
+ }
  return (
   <div className="border-b dark:border-b-white/25 select-none">
    <div className="px-4 pt-2.5 flex">
@@ -136,121 +150,56 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
      )}
     </div>
     <div className="flex flex-col ml-3 py-2 grow max-w-[90%]">
-     <div className="relative min-h-[40px] max-h-[600px] text-xl overflow-y-auto">
-      <div className="select-none pointer-events-none">
-       {!tweet && (
-        <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
-         What is happening?!
-        </span>
-       )}
-      </div>
+     <div onClick={handleParentClick}>
       <div
-       contentEditable={true}
-       id="tweetBox"
-       className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light z-[1] leading-6"
-       tabIndex={0}
-       onInput={handleInput}
-       onFocus={() => setWhoCanReply(true)}
-      />
-      <div
-       contentEditable={true}
-       id="readOnly"
-       className="absolute inset-0 outline-none whitespace-pre-wrap break-words h-full block font-light z-[-1] select-none leading-6"
-      />
-     </div>
-     {preview && preview.length !== 3 && preview.length !== 0 && (
-      <div className="my-2">
-       <div className="block overflow-hidden">
-        <div
-         className="relative"
-         style={{
-          paddingBottom:
-           media?.length === 1 && imageAspect
-            ? `${100 / imageAspect}%`
-            : "56.25%",
-         }}
-        >
-         <div className="absolute w-full h-full inset-0">
-          <div
-           className={cn(
-            "w-full h-full",
-            preview.length === 2 && "grid grid-cols-2 gap-2",
-            preview.length === 4 && "grid grid-cols-2 gap-2"
-           )}
-          >
-           {preview.map((prev, index) => (
-            <div
-             key={prev}
-             className="relative w-full h-full transition-all ease-out duration-200"
-            >
-             <div
-              onClick={() => {
-               const updatedPreview = [...preview];
-               const updatedMedia = media ? [...media] : [];
-               updatedPreview.splice(index, 1);
-               updatedMedia.splice(index, 1);
-               setPreview(updatedPreview);
-               setMedia(updatedMedia);
-               setImageAspect(null);
-              }}
-              className="absolute top-1.5 right-1.5 z-[2] rounded-full p-1 bg-black/70 hover:bg-black/55 cursor-pointer"
-             >
-              <IoClose className="fill-white text-xl" />
-             </div>
-             <Image
-              className="object-cover rounded-3xl w-full h-full"
-              src={prev}
-              alt="preview of media upload"
-              fill
-              draggable={false}
-             />
-            </div>
-           ))}
-          </div>
-         </div>
-        </div>
+       onClick={(e) => {
+        e.stopPropagation();
+       }}
+       className="relative min-h-[40px] max-h-[600px] text-xl overflow-y-auto"
+      >
+       <div className="select-none pointer-events-none">
+        {!tweet && (
+         <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
+          What is happening?!
+         </span>
+        )}
        </div>
+       <div
+        contentEditable={true}
+        id="tweetBox"
+        className="outline-none whitespace-pre-wrap break-words h-full select-text block font-light z-[1] leading-6"
+        tabIndex={0}
+        onInput={handleInput}
+        ref={inputRef}
+        onFocus={() => setWhoCanReply(true)}
+       />
+       <div
+        contentEditable={true}
+        id="readOnly"
+        className="absolute inset-0 outline-none whitespace-pre-wrap break-words h-full block font-light z-[-1] select-none leading-6"
+       />
       </div>
-     )}
-     {preview && preview.length === 3 && (
-      <div className="my-2">
-       <div className="block overflow-hidden">
-        <div
-         className="relative"
-         style={{
-          paddingBottom: "56.25%",
-         }}
-        >
-         <div className="absolute inset-0 w-full h-full">
-          <div className="grid grid-cols-2 gap-2 w-full h-full">
+      {preview && preview.length !== 3 && preview.length !== 0 && (
+       <div className="my-2">
+        <div className="block overflow-hidden">
+         <div
+          className="relative"
+          style={{
+           paddingBottom:
+            media?.length === 1 && imageAspect
+             ? `${100 / imageAspect}%`
+             : "56.25%",
+          }}
+         >
+          <div className="absolute w-full h-full inset-0">
            <div
-            key={preview[0]}
-            className="relative w-full h-full transition-all ease-out duration-200"
+            className={cn(
+             "w-full h-full",
+             preview.length === 2 && "grid grid-cols-2 gap-2",
+             preview.length === 4 && "grid grid-cols-2 gap-2"
+            )}
            >
-            <div
-             onClick={() => {
-              const updatedPreview = [...preview];
-              const updatedMedia = media ? [...media] : [];
-              updatedPreview.splice(0, 1);
-              updatedMedia.splice(0, 1);
-              setPreview(updatedPreview);
-              setMedia(updatedMedia);
-              setImageAspect(null);
-             }}
-             className="absolute top-1.5 right-1.5 z-[2] rounded-full p-1 bg-black/70 hover:bg-black/55 cursor-pointer"
-            >
-             <IoClose className="fill-white text-xl" />
-            </div>
-            <Image
-             className="object-cover rounded-3xl w-full h-full"
-             src={preview[0]}
-             alt="preview of media upload"
-             fill
-             draggable={false}
-            />
-           </div>
-           <div className="flex flex-col gap-2">
-            {preview.slice(1).map((prev, index) => (
+            {preview.map((prev, index) => (
              <div
               key={prev}
               className="relative w-full h-full transition-all ease-out duration-200"
@@ -269,15 +218,13 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
               >
                <IoClose className="fill-white text-xl" />
               </div>
-              {media && media.length > 0 && (
-               <Image
-                className="object-cover rounded-3xl w-full h-full"
-                src={prev}
-                alt="preview of media upload"
-                fill
-                draggable={false}
-               />
-              )}
+              <Image
+               className="object-cover rounded-3xl w-full h-full"
+               src={prev}
+               alt="preview of media upload"
+               fill
+               draggable={false}
+              />
              </div>
             ))}
            </div>
@@ -285,17 +232,92 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
          </div>
         </div>
        </div>
-      </div>
-     )}
-     {whoCanReply && (
-      <div className="border-b dark:border-b-white/25 mb-2">
-       <div className="mb-6 flex items-center gap-2 ml-1 text-main text-sm font-medium relative top-3">
-        <FaEarthAmericas />
-        <span>Everyone can reply</span>
+      )}
+      {preview && preview.length === 3 && (
+       <div className="my-2">
+        <div className="block overflow-hidden">
+         <div
+          className="relative"
+          style={{
+           paddingBottom: "56.25%",
+          }}
+         >
+          <div className="absolute inset-0 w-full h-full">
+           <div className="grid grid-cols-2 gap-2 w-full h-full">
+            <div
+             key={preview[0]}
+             className="relative w-full h-full transition-all ease-out duration-200"
+            >
+             <div
+              onClick={() => {
+               const updatedPreview = [...preview];
+               const updatedMedia = media ? [...media] : [];
+               updatedPreview.splice(0, 1);
+               updatedMedia.splice(0, 1);
+               setPreview(updatedPreview);
+               setMedia(updatedMedia);
+               setImageAspect(null);
+              }}
+              className="absolute top-1.5 right-1.5 z-[2] rounded-full p-1 bg-black/70 hover:bg-black/55 cursor-pointer"
+             >
+              <IoClose className="fill-white text-xl" />
+             </div>
+             <Image
+              className="object-cover rounded-3xl w-full h-full"
+              src={preview[0]}
+              alt="preview of media upload"
+              fill
+              draggable={false}
+             />
+            </div>
+            <div className="flex flex-col gap-2">
+             {preview.slice(1).map((prev, index) => (
+              <div
+               key={prev}
+               className="relative w-full h-full transition-all ease-out duration-200"
+              >
+               <div
+                onClick={() => {
+                 const updatedPreview = [...preview];
+                 const updatedMedia = media ? [...media] : [];
+                 updatedPreview.splice(index, 1);
+                 updatedMedia.splice(index, 1);
+                 setPreview(updatedPreview);
+                 setMedia(updatedMedia);
+                 setImageAspect(null);
+                }}
+                className="absolute top-1.5 right-1.5 z-[2] rounded-full p-1 bg-black/70 hover:bg-black/55 cursor-pointer"
+               >
+                <IoClose className="fill-white text-xl" />
+               </div>
+               {media && media.length > 0 && (
+                <Image
+                 className="object-cover rounded-3xl w-full h-full"
+                 src={prev}
+                 alt="preview of media upload"
+                 fill
+                 draggable={false}
+                />
+               )}
+              </div>
+             ))}
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
        </div>
-      </div>
-     )}
-     <div className="flex items-center justify-between">
+      )}
+      {whoCanReply && (
+       <div className="border-b dark:border-b-white/25">
+        <div className="mb-6 flex items-center gap-2 ml-1 text-main text-sm font-medium relative top-3">
+         <FaEarthAmericas />
+         <span>Everyone can reply</span>
+        </div>
+       </div>
+      )}
+     </div>
+     <div className="flex items-center justify-between mt-2">
       <div>
        {tweetOptions.map((option) => (
         <div
