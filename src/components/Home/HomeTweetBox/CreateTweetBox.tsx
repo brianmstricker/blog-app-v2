@@ -54,11 +54,11 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
     }, 100);
     if (text.length > maxTextLength) {
      setTimeout(() => {
-      tweetLengthAmount.classList.add("text-red-800");
+      tweetLengthAmount.classList.add("text-red-500");
      }, 100);
     } else {
      setTimeout(() => {
-      tweetLengthAmount.classList.remove("text-red-800");
+      tweetLengthAmount.classList.remove("text-red-500");
      }, 100);
     }
    } else {
@@ -360,7 +360,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
        <button
         onClick={handleSubmit}
         className={cn(
-         "bg-main py-1.5 px-4 rounded-full font-bold text-white",
+         "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
          buttonDisabled() ? "opacity-50 cursor-default" : ""
         )}
         disabled={buttonDisabled()}

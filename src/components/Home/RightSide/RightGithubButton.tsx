@@ -1,4 +1,5 @@
 "use client";
+import HideScroll from "@/components/HideScroll";
 import { createPortal, useFormStatus } from "react-dom";
 import { BsGithub } from "react-icons/bs";
 import { ThreeCircles } from "react-loader-spinner";
@@ -13,15 +14,17 @@ const RightGithubButton = () => {
    </button>
    {pending &&
     createPortal(
-     <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center items-center select-none">
-      <ThreeCircles
-       visible={true}
-       height="100"
-       width="100"
-       color="#1d9bf0"
-       ariaLabel="three-circles-loading"
-      />
-     </div>,
+     <HideScroll>
+      <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center items-center select-none">
+       <ThreeCircles
+        visible={true}
+        height="100"
+        width="100"
+        color="#1d9bf0"
+        ariaLabel="three-circles-loading"
+       />
+      </div>
+     </HideScroll>,
      document.body
     )}
   </>
