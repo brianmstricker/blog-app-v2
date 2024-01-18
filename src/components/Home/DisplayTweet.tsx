@@ -35,7 +35,7 @@ const DisplayTweet = ({ tweet }: { tweet: DisplayTweetProps }) => {
  //todo: likes functionality
  return (
   <div className="border-b dark:border-b-white/25">
-   <article className="py-2 px-3 flex gap-3" tabIndex={0}>
+   <article className="py-2 px-3 flex gap-3 leading-5" tabIndex={0}>
     <div className="shrink-0 select-none">
      {!tweet.user.image ? (
       <div className="w-11 h-11 rounded-full bg-blue-600" />

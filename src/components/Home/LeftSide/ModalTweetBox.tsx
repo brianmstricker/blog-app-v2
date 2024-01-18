@@ -18,7 +18,17 @@ const ModalTweetBox = ({
  const [tweet, setTweet] = useState("");
  const inputRef = useRef<HTMLDivElement | null>(null);
  function handleParentClick() {
-  if (inputRef.current) inputRef.current.focus();
+  if (inputRef.current) {
+   inputRef.current.focus();
+   const range = document.createRange();
+   range.selectNodeContents(inputRef.current);
+   range.collapse(false);
+   const selection = window.getSelection();
+   if (selection) {
+    selection.removeAllRanges();
+    selection.addRange(range);
+   }
+  }
  }
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
@@ -46,7 +56,7 @@ const ModalTweetBox = ({
  }
  return (
   <div className="flex flex-col h-full">
-   <div onClick={handleParentClick} className="relative grow">
+   <div onClick={handleParentClick} className="relative grow pt-6">
     <div className="flex flex-1">
      <div className="pointer-events-none shrink-0">
       <div className="shrink-0 select-none">
@@ -66,7 +76,10 @@ const ModalTweetBox = ({
       </div>
      </div>
      <div className="h-full w-[90%] ml-3 mt-2">
-      <div className="relative min-h-[80px] max-h-[600px] text-xl overflow-y-auto h-full">
+      <div
+       onClick={(e) => e.stopPropagation()}
+       className="relative min-h-[80px] max-h-[600px] text-xl overflow-y-auto h-full"
+      >
        <div className="select-none pointer-events-none">
         {!tweet && (
          <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">

@@ -87,39 +87,40 @@ const PostModal = ({ userImg }: { userImg?: string | null }) => {
    {modalShow &&
     createPortal(
      <>
-      <HideScroll />
-      <FocusTrap>
-       <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
-        {closingModal && (
-         <div className="flex items-center justify-center">
-          <div tabIndex={0} className="w-0 h-0" />
-          <ThreeCircles
-           visible={true}
-           height="100"
-           width="100"
-           color="#1d9bf0"
-           ariaLabel="three-circles-loading"
-          />
-         </div>
-        )}
-        {!closingModal && (
-         <div
-          ref={modalRef}
-          className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-3 sm:mt-12 relative"
-         >
-          <button
-           className="p-[2px] rounded-full relative top-1 left-1"
-           onClick={closeModal}
-          >
-           <IoClose className="w-5 h-5" />
-          </button>
-          <div className="h-[90%] pt-6">
-           <ModalTweetBox userImg={userImg} closeModal={closeModal} />
+      <HideScroll>
+       <FocusTrap>
+        <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
+         {closingModal && (
+          <div className="flex items-center justify-center">
+           <div tabIndex={0} className="w-0 h-0" />
+           <ThreeCircles
+            visible={true}
+            height="100"
+            width="100"
+            color="#1d9bf0"
+            ariaLabel="three-circles-loading"
+           />
           </div>
-         </div>
-        )}
-       </div>
-      </FocusTrap>
+         )}
+         {!closingModal && (
+          <div
+           ref={modalRef}
+           className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-3 sm:mt-12 relative"
+          >
+           <button
+            className="p-[2px] rounded-full relative top-1 left-1"
+            onClick={closeModal}
+           >
+            <IoClose className="w-5 h-5" />
+           </button>
+           <div className="h-[90%]">
+            <ModalTweetBox userImg={userImg} closeModal={closeModal} />
+           </div>
+          </div>
+         )}
+        </div>
+       </FocusTrap>
+      </HideScroll>
      </>,
      document.body
     )}

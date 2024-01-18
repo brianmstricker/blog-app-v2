@@ -141,103 +141,106 @@ const CreateAccountButton = ({ homepage }: { homepage?: boolean }) => {
    {showModal &&
     createPortal(
      <>
-      <HideScroll />
-      <FocusTrap>
-       <div className="fixed w-screen h-screen inset-0 bg-slate-600/80 dark:bg-[#5b708366] flex items-center justify-center z-[100]">
-        <div
-         ref={modalRef}
-         className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
-        >
-         {page === 1 ? (
-          <button
-           onClick={closeModal}
-           className="absolute top-[12px] left-2 p-2 rounded-full"
-          >
-           <IoClose className="w-5 h-5" />
-          </button>
-         ) : (
-          <button
-           onClick={() => {
-            setPage(1);
-           }}
-           className="absolute top-[12px] left-2 p-2 rounded-full"
-          >
-           <IoArrowBackSharp className="w-5 h-5" />
-          </button>
-         )}
-         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
-           <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
-            {page === 1 && (
-             <ModalPageOne
-              form={form}
-              errors={isFirstPageErrors}
-              emailExistError={invalidEmails.includes(form.watch("email"))}
-             />
-            )}
-            {page === 2 && (
-             <ModalPageTwo
-              form={form}
-              errors={isSecondPageErrors}
-              userExistError={invalidUsernames.includes(form.watch("username"))}
-             />
-            )}
-            {page === 1 && (
-             <button
-              className={cn(
-               "border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold max-h-[58px] flex items-center justify-center",
-               firstButtonDisabled && "opacity-50 cursor-default"
-              )}
-              onClick={async () => {
-               await checkEmail(form.watch("email"));
-              }}
-              disabled={!!firstButtonDisabled}
-              type="button"
-             >
-              {loading ? (
-               <Puff
-                visible={true}
-                height="40"
-                width="40"
-                color="#1d9bf0"
-                ariaLabel="puff-loading"
-               />
-              ) : (
-               "Next"
-              )}
-             </button>
-            )}
-            {page === 2 && (
-             <button
-              className={cn(
-               "border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold max-h-[58px] flex items-center justify-center",
-               secondButtonDisabled && "opacity-50 cursor-default"
-              )}
-              onClick={async () => {
-               await checkUsername(form.watch("username"));
-              }}
-              disabled={!!secondButtonDisabled}
-              type="submit"
-             >
-              {loading ? (
-               <Puff
-                visible={true}
-                height="40"
-                width="40"
-                color="#fff"
-                ariaLabel="puff-loading"
-               />
-              ) : (
-               "Create account"
-              )}
-             </button>
-            )}
-           </div>
-          </form>
-         </Form>
+      <HideScroll>
+       <FocusTrap>
+        <div className="fixed w-screen h-screen inset-0 bg-slate-600/80 dark:bg-[#5b708366] flex items-center justify-center z-[100]">
+         <div
+          ref={modalRef}
+          className="bg-white dark:bg-black rounded-2xl p-4 relative w-full h-full sm:w-[80%] sm:h-[80%] md:max-w-[600px] md:max-h-[650px]"
+         >
+          {page === 1 ? (
+           <button
+            onClick={closeModal}
+            className="absolute top-[12px] left-2 p-2 rounded-full"
+           >
+            <IoClose className="w-5 h-5" />
+           </button>
+          ) : (
+           <button
+            onClick={() => {
+             setPage(1);
+            }}
+            className="absolute top-[12px] left-2 p-2 rounded-full"
+           >
+            <IoArrowBackSharp className="w-5 h-5" />
+           </button>
+          )}
+          <Form {...form}>
+           <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
+            <div className="max-w-[80%] mx-auto w-full flex flex-col gap-6 h-full">
+             {page === 1 && (
+              <ModalPageOne
+               form={form}
+               errors={isFirstPageErrors}
+               emailExistError={invalidEmails.includes(form.watch("email"))}
+              />
+             )}
+             {page === 2 && (
+              <ModalPageTwo
+               form={form}
+               errors={isSecondPageErrors}
+               userExistError={invalidUsernames.includes(
+                form.watch("username")
+               )}
+              />
+             )}
+             {page === 1 && (
+              <button
+               className={cn(
+                "border mt-auto py-4 rounded-full bg-black text-white dark:bg-white dark:text-black mb-2 font-bold max-h-[58px] flex items-center justify-center",
+                firstButtonDisabled && "opacity-50 cursor-default"
+               )}
+               onClick={async () => {
+                await checkEmail(form.watch("email"));
+               }}
+               disabled={!!firstButtonDisabled}
+               type="button"
+              >
+               {loading ? (
+                <Puff
+                 visible={true}
+                 height="40"
+                 width="40"
+                 color="#1d9bf0"
+                 ariaLabel="puff-loading"
+                />
+               ) : (
+                "Next"
+               )}
+              </button>
+             )}
+             {page === 2 && (
+              <button
+               className={cn(
+                "border mt-auto py-4 rounded-full bg-main text-white dark:bg-main dark:text-white mb-2 font-bold max-h-[58px] flex items-center justify-center",
+                secondButtonDisabled && "opacity-50 cursor-default"
+               )}
+               onClick={async () => {
+                await checkUsername(form.watch("username"));
+               }}
+               disabled={!!secondButtonDisabled}
+               type="submit"
+              >
+               {loading ? (
+                <Puff
+                 visible={true}
+                 height="40"
+                 width="40"
+                 color="#fff"
+                 ariaLabel="puff-loading"
+                />
+               ) : (
+                "Create account"
+               )}
+              </button>
+             )}
+            </div>
+           </form>
+          </Form>
+         </div>
         </div>
-       </div>
-      </FocusTrap>
+       </FocusTrap>
+      </HideScroll>
      </>,
      document.body
     )}
