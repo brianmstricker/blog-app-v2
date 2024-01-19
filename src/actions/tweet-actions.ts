@@ -35,18 +35,19 @@ export const postTweetAction = async (formData: FormData) => {
    for (const file of media) {
     if (!(file instanceof File)) return { error: "Invalid file" };
     if (file.size > 5 * 1024 * 1024) return { error: "File too large" };
+    const newName = file.name + uuidv4();
     const fileBuffer = await file.arrayBuffer();
     const command = new PutObjectCommand({
      Bucket: process.env.S3_BUCKET_NAME!,
      ACL: "public-read",
-     Key: file.name + uuidv4(),
+     Key: newName,
      //@ts-ignore
      Body: fileBuffer,
      ContentType: file.type,
     });
     Promise.all([client.send(command)]);
     mediaUrls.push(
-     `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${file.name}`
+     `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${newName}`
     );
    }
   }
@@ -81,6 +82,7 @@ export const fetchTweetsAction = async () => {
      select: { username: true, handle: true, image: true },
     },
     likes: true,
+    media: true,
    },
   });
   return tweets || [];

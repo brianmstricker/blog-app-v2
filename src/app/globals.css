@@ -50,3 +50,27 @@ input:-webkit-autofill:is(.dark .dark\:bg-black) {
 .transition-custom {
  transition: all 0.2s ease-in-out liner;
 }
+
+.threeImg > div:first-child > img {
+ border-radius: 0 1rem 0 0;
+}
+
+.threeImg > div:last-child > img {
+ border-radius: 0 0 1rem 0;
+}
+
+.fourImg > div:first-child > img {
+ border-radius: 1rem 0 0 0;
+}
+
+.fourImg > div:nth-child(2) > img {
+ border-radius: 0 1rem 0 0;
+}
+
+.fourImg > div:nth-child(3) > img {
+ border-radius: 0 0 0 1rem;
+}
+
+.fourImg > div:last-child > img {
+ border-radius: 0 0 1rem 0;
+}

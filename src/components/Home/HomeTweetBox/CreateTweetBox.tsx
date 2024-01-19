@@ -8,17 +8,18 @@ import { cn } from "@/lib/utils";
 import { postTweetAction } from "@/actions/tweet-actions";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
+import { TailSpin } from "react-loader-spinner";
 
 const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
- //todo: add media, gif, emoji functionality
+ //todo: add gif, emoji functionality
  //todo: add who can reply functionality
- //todo: show character limit
- //todo: set background image on a div like twitter to hopefully stop images from popping in and out
+ //todo: maybe set background image on a div like twitter to hopefully stop images from popping in and out
  const [whoCanReply, setWhoCanReply] = useState(false);
  const [tweet, setTweet] = useState("");
  const [media, setMedia] = useState<File[] | null | []>([]);
  const [preview, setPreview] = useState<null | string[]>(null);
  const [imageAspect, setImageAspect] = useState<number | null>(null);
+ const [loading, setLoading] = useState(false);
  const inputRef = useRef<HTMLDivElement | null>(null);
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
@@ -26,20 +27,6 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   { icon: <BiSliderAlt />, text: "Poll" },
   { icon: <FaRegSmile />, text: "Emoji" },
  ];
- function buttonDisabled() {
-  if (!tweet && !media) return true;
-  if (!tweet && media && media.length === 0) return true;
-  if (tweet && !media) {
-   if (tweet.length > 300 || tweet.trim() === "") return true;
-  }
-  if (tweet && media && media.length > 0) {
-   if (tweet.length > 300) {
-    return true;
-   }
-  }
-  if (media && media.length > 4) return true;
-  return false;
- }
  function handleInput(e: any) {
   const maxTextLength = 300;
   const readOnlyInput = document.getElementById("readOnly");
@@ -77,6 +64,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
   }
  }
  async function handleSubmit() {
+  setLoading(true);
   let formData = new FormData();
   if (media) {
    media.forEach((file) => {
@@ -102,6 +90,22 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
     tweetLengthAmount.classList.add("opacity-0");
    }
   }
+  setLoading(false);
+ }
+ function buttonDisabled() {
+  if (loading) return true;
+  if (!tweet && !media) return true;
+  if (!tweet && media && media.length === 0) return true;
+  if (tweet && !media) {
+   if (tweet.length > 300 || tweet.trim() === "") return true;
+  }
+  if (tweet && media && media.length > 0) {
+   if (tweet.length > 300) {
+    return true;
+   }
+  }
+  if (media && media.length > 4) return true;
+  return false;
  }
  useEffect(() => {
   if (!media) return;
@@ -230,7 +234,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
                <IoClose className="fill-white text-xl" />
               </div>
               <Image
-               className="object-cover rounded-xl w-full h-full"
+               className="object-cover rounded-2xl w-full h-full"
                src={prev}
                alt="preview of media upload"
                fill
@@ -274,7 +278,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
               <IoClose className="fill-white text-xl" />
              </div>
              <Image
-              className="object-cover rounded-xl w-full h-full"
+              className="object-cover rounded-2xl w-full h-full"
               src={preview[0]}
               alt="preview of media upload"
               fill
@@ -303,7 +307,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
                </div>
                {media && media.length > 0 && (
                 <Image
-                 className="object-cover rounded-xl w-full h-full"
+                 className="object-cover rounded-2xl w-full h-full"
                  src={prev}
                  alt="preview of media upload"
                  fill
@@ -398,7 +402,21 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
         )}
         disabled={buttonDisabled()}
        >
-        Post
+        {!loading ? (
+         "Post"
+        ) : (
+         <span className="flex items-center gap-2">
+          Posting
+          <TailSpin
+           visible={true}
+           height="16"
+           width="16"
+           color="white"
+           ariaLabel="tail-spin-loading"
+           radius="1"
+          />
+         </span>
+        )}
        </button>
       </div>
      </div>

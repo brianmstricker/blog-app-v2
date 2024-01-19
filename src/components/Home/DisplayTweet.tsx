@@ -7,11 +7,11 @@ import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
 import { FiShare } from "react-icons/fi";
 import moment from "moment";
+import DisplayTweetMedia from "./DisplayTweetMedia";
 
 type DisplayTweetProps = {
  id: string;
  text: string | null;
- media?: string | null;
  createdAt: Date;
  updatedAt: Date;
  reply?: boolean;
@@ -22,6 +22,13 @@ type DisplayTweetProps = {
   username: string | null;
   image: string | null;
  };
+ media:
+  | {
+     id: string;
+     tweetId: string;
+     url: string;
+    }[]
+  | [];
  likes: {
   id: string;
   userId: string;
@@ -31,7 +38,6 @@ type DisplayTweetProps = {
 };
 
 const DisplayTweet = ({ tweet }: { tweet: DisplayTweetProps }) => {
- // console.log(tweet);
  //todo: likes functionality
  return (
   <div className="border-b dark:border-b-white/25">
@@ -66,14 +72,7 @@ const DisplayTweet = ({ tweet }: { tweet: DisplayTweetProps }) => {
       </div>
      </div>
      {tweet.text && <div className="text-[15px] mt-[2px]">{tweet.text}</div>}
-     {/* <div className="mt-3 relative w-[400px] max-w-[70%] h-[600px] max-h-[510px]">
-      <Image
-       src="/testImage.jpg"
-       alt="tweet"
-       className="rounded-2xl object-cover"
-       fill
-      />
-     </div> */}
+     <DisplayTweetMedia media={tweet.media} />
      <div className="mt-2 mb-1 flex items-center justify-between text-mainGray">
       <div className="flex items-center justify-between max-w-[70%] w-full">
        <div className="flex items-center gap-1">
