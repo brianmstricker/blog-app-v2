@@ -25,6 +25,7 @@ model User {
  accounts      Account[]
  tweets        Tweet[]
  likes         Like[]
+ Media         Media[]
 }
 
 model Account {
@@ -48,14 +49,25 @@ model Account {
 model Tweet {
  id        String   @id @default(cuid())
  text      String?  @db.VarChar(300)
- media     String?
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  reply     Boolean  @default(false)
  replyToId String?
  userId    String
+ media     Media[]
  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
  likes     Like[]
+}
+
+model Media {
+ id      String @id @default(cuid())
+ url     String
+ tweetId String
+ userId  String
+ tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+ user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+ @@unique([tweetId, userId, url])
 }
 
 model Like {

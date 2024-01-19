@@ -29,16 +29,15 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  function buttonDisabled() {
   if (!tweet && !media) return true;
   if (!tweet && media && media.length === 0) return true;
-  if (tweet) {
-   return (
-    tweet === "" ||
-    tweet === " " ||
-    tweet === "<br>" ||
-    tweet.trim() === "" ||
-    tweet.length > 300
-   );
+  if (tweet && !media) {
+   if (tweet.length > 300 || tweet.trim() === "") return true;
   }
-  if (!media) return true;
+  if (tweet && media && media.length > 0) {
+   if (tweet.length > 300) {
+    return true;
+   }
+  }
+  if (media && media.length > 4) return true;
   return false;
  }
  function handleInput(e: any) {
@@ -79,16 +78,28 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  }
  async function handleSubmit() {
   let formData = new FormData();
-  // if (media) formData.append("media", media);
-  // console.log(formData.get("media"));
-  const post = await postTweetAction({ text: tweet });
+  if (media) {
+   media.forEach((file) => {
+    formData.append("media", file);
+   });
+  }
+  if (tweet && tweet.length > 0 && tweet.length > 300) {
+   return alert("Tweet is too long");
+  }
+  if (tweet && tweet.length > 0) {
+   formData.append("text", tweet.trim());
+  }
+  const post = await postTweetAction(formData);
   if (post.success) {
    setTweet("");
+   setMedia([]);
    const tweetBox = document.getElementById("tweetBox");
    const readOnlyInput = document.getElementById("readOnly");
-   if (tweetBox && readOnlyInput) {
+   const tweetLengthAmount = document.getElementById("tweetLengthAmount");
+   if (tweetBox && readOnlyInput && tweetLengthAmount) {
     tweetBox.innerText = "";
     readOnlyInput.innerHTML = "";
+    tweetLengthAmount.classList.add("opacity-0");
    }
   }
  }
@@ -219,7 +230,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
                <IoClose className="fill-white text-xl" />
               </div>
               <Image
-               className="object-cover rounded-3xl w-full h-full"
+               className="object-cover rounded-xl w-full h-full"
                src={prev}
                alt="preview of media upload"
                fill
@@ -263,7 +274,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
               <IoClose className="fill-white text-xl" />
              </div>
              <Image
-              className="object-cover rounded-3xl w-full h-full"
+              className="object-cover rounded-xl w-full h-full"
               src={preview[0]}
               alt="preview of media upload"
               fill
@@ -292,7 +303,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
                </div>
                {media && media.length > 0 && (
                 <Image
-                 className="object-cover rounded-3xl w-full h-full"
+                 className="object-cover rounded-xl w-full h-full"
                  src={prev}
                  alt="preview of media upload"
                  fill

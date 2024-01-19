@@ -1,31 +1,72 @@
 "use server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { TweetSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
-import * as z from "zod";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
 
-export const postTweetAction = async (tweet: z.infer<typeof TweetSchema>) => {
+const client = new S3Client({
+ region: process.env.AWS_REGION,
+ credentials: {
+  accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+ },
+});
+
+export const postTweetAction = async (formData: FormData) => {
  const userInfo = await auth();
  const user = userInfo?.user;
  if (!userInfo || !user) return { error: "Not logged in" };
  try {
-  const validatedFields = TweetSchema.safeParse(tweet);
-  if (!validatedFields.success)
-   return {
-    error: "Invalid fields",
-    fields: validatedFields.error.issues.map((issue) => issue.message),
-   };
-  const { text, media } = validatedFields.data;
-  const updatedText = text?.trim().replace(/<br>/g, "");
+  const text = formData.get("text");
+  const media = formData.getAll("media");
+  if (!text && !media) return { error: "No text or media" };
+  if (text && typeof text !== "string") return { error: "Invalid text" };
+  if (text && typeof text === "string" && text.length > 300) {
+   return { error: "Tweet too long" };
+  }
+  if (media && media.length > 4) {
+   return { error: "Too many images" };
+  }
+  let updatedText = text?.trim();
+  if (updatedText === "") updatedText = undefined;
+  const mediaUrls: string[] = [];
+  if (media) {
+   for (const file of media) {
+    if (!(file instanceof File)) return { error: "Invalid file" };
+    if (file.size > 5 * 1024 * 1024) return { error: "File too large" };
+    const fileBuffer = await file.arrayBuffer();
+    const command = new PutObjectCommand({
+     Bucket: process.env.S3_BUCKET_NAME!,
+     ACL: "public-read",
+     Key: file.name + uuidv4(),
+     //@ts-ignore
+     Body: fileBuffer,
+     ContentType: file.type,
+    });
+    Promise.all([client.send(command)]);
+    mediaUrls.push(
+     `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${file.name}`
+    );
+   }
+  }
   const newTweet = await db.tweet.create({
    data: {
     text: updatedText,
     userId: user.id,
    },
   });
+  if (mediaUrls.length > 0) {
+   await db.media.createMany({
+    data: mediaUrls.map((url) => ({
+     tweetId: newTweet.id,
+     url,
+     userId: user.id,
+    })),
+   });
+  }
   revalidatePath("/");
-  return { success: true, tweet: newTweet };
+  return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }
