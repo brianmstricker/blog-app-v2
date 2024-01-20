@@ -1,8 +1,8 @@
 import ForYouFollowing from "@/components/Home/ForYouFollowing";
 import CreateTweetBox from "@/components/Home/HomeTweetBox/CreateTweetBox";
-import DisplayTweet from "@/components/Home/DisplayTweet";
 import { auth } from "@/auth";
 import { fetchTweetsAction } from "@/actions/tweet-actions";
+import MediaLoading from "@/components/Home/MediaLoading";
 
 export default async function Home() {
  const userInfo = await auth();
@@ -20,9 +20,7 @@ export default async function Home() {
    )}
    {Array.isArray(tweets) && tweets.length > 0 && (
     <>
-     {tweets.map((tweet) => (
-      <DisplayTweet key={tweet.id} tweet={tweet} />
-     ))}
+     <MediaLoading tweets={tweets} />
     </>
    )}
    {Array.isArray(tweets) && tweets.length === 0 && (
