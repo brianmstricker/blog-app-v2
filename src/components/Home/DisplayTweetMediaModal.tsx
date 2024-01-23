@@ -53,6 +53,7 @@ const DisplayTweetMediaModal = ({
  //   window.removeEventListener("keydown", handleKeyDown);
  //  };
  // }, [closeModal, modalShow]);
+ console.log(media.aspectRatio);
  return createPortal(
   <>
    <HideScroll>
@@ -66,17 +67,21 @@ const DisplayTweetMediaModal = ({
      >
       <div className="flex h-full">
        <div className="w-full h-full flex justify-center">
-        <div ref={modalRef} className="w-[95%] h-[95%] mx-auto -top-2 relative">
-         <div className="relative h-full w-full">
+        <div
+         ref={modalRef}
+         className="-top-2 relative max-h-[95%] max-w-[95%] mx-auto"
+         style={{ aspectRatio: Number(media.aspectRatio) }}
+        >
+         <div className="relative w-full h-full">
           <Image
            src={media.url}
            alt="tweet media"
-           className="object-contain"
+           className="object-cover"
            fill
           />
          </div>
-         <div className="text-center">
-          <div className="w-fit mx-auto" tabIndex={0}>
+         <div className="w-fit mx-auto">
+          <div className="mx-auto" tabIndex={0}>
            like/favorite/etc
           </div>
          </div>
@@ -86,7 +91,7 @@ const DisplayTweetMediaModal = ({
         ref={menuRef}
         className="h-full bg-black ml-auto border-l dark:border-l-white/25"
        >
-        <div className="p-2  w-[330px]">right menu</div>
+        <div className="p-2 max-w-[330px]">right menu</div>
        </div>
       </div>
      </div>

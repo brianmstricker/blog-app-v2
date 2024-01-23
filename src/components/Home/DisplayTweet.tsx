@@ -8,7 +8,6 @@ import Image from "next/image";
 import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export type DisplayTweetProps = {
@@ -46,7 +45,6 @@ export type DisplayTweetProps = {
 
 const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
  //todo: likes functionality
- const router = useRouter();
  const username = tweet.user.username;
  return (
   <Link
