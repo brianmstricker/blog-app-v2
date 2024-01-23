@@ -12,7 +12,6 @@ const UsernameHandleWrapperModal = ({
  userImage: string | null | undefined;
 }) => {
  const modalRef = useRef<HTMLDivElement | null>(null);
-
  return createPortal(
   <>
    <HideScroll>

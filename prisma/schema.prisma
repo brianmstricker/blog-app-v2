@@ -60,12 +60,15 @@ model Tweet {
 }
 
 model Media {
- id      String @id @default(cuid())
- url     String
- tweetId String
- userId  String
- tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
- user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+ id          String @id @default(cuid())
+ url         String
+ tweetId     String
+ userId      String
+ width       String
+ height      String
+ aspectRatio String
+ tweet       Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+ user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
  @@unique([tweetId, userId, url])
 }

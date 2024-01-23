@@ -20,6 +20,26 @@ export const postTweetAction = async (formData: FormData) => {
  try {
   const text = formData.get("text");
   const media = formData.getAll("media");
+  const width = formData
+   .getAll("width")
+   .toString()
+   .replace("[", "")
+   .replace("]", "")
+   .split(",");
+  const height = formData
+   .getAll("height")
+   .toString()
+   .replace("[", "")
+   .replace("]", "")
+   .split(",");
+  const aspectRatio = formData
+   .getAll("aspectRatio")
+   .toString()
+   .replace("[", "")
+   .replace("]", "")
+   .replace(/\"/g, "")
+   .split(",");
+  console.log(width, height, aspectRatio);
   if (!text && !media) return { error: "No text or media" };
   if (text && typeof text !== "string") return { error: "Invalid text" };
   if (text && typeof text === "string" && text.length > 300) {
@@ -51,6 +71,8 @@ export const postTweetAction = async (formData: FormData) => {
     );
    }
   }
+  if (!updatedText && mediaUrls.length === 0)
+   return { error: "No text or media" };
   const newTweet = await db.tweet.create({
    data: {
     text: updatedText,
@@ -58,17 +80,33 @@ export const postTweetAction = async (formData: FormData) => {
    },
   });
   if (mediaUrls.length > 0) {
+   const getWidth = (url: string) => {
+    const index = mediaUrls.findIndex((mediaUrl) => mediaUrl === url);
+    return width[index];
+   };
+   const getHeight = (url: string) => {
+    const index = mediaUrls.findIndex((mediaUrl) => mediaUrl === url);
+    return height[index];
+   };
+   const getAspectRatio = (url: string) => {
+    const index = mediaUrls.findIndex((mediaUrl) => mediaUrl === url);
+    return aspectRatio[index];
+   };
    await db.media.createMany({
     data: mediaUrls.map((url) => ({
      tweetId: newTweet.id,
      url,
      userId: user.id,
+     width: getWidth(url),
+     height: getHeight(url),
+     aspectRatio: getAspectRatio(url),
     })),
    });
   }
   revalidatePath("/");
   return { success: true };
  } catch (error: any) {
+  console.log(error);
   return { error: error?.message || "Something went wrong" };
  }
 };
@@ -86,6 +124,35 @@ export const fetchTweetsAction = async () => {
    },
   });
   return tweets || [];
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const fetchTweetAction = async ({
+ tweetId,
+ username,
+}: {
+ tweetId: string;
+ username: string;
+}) => {
+ try {
+  const tweet = await db.tweet.findFirst({
+   where: {
+    id: tweetId,
+    user: {
+     username,
+    },
+   },
+   include: {
+    user: {
+     select: { username: true, handle: true, image: true },
+    },
+    likes: true,
+    media: true,
+   },
+  });
+  return tweet || null;
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }

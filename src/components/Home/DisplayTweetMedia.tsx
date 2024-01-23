@@ -1,8 +1,7 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DisplayTweetMediaModal from "./DisplayTweetMediaModal";
 
 type TweetMediaProps = {
@@ -11,94 +10,70 @@ type TweetMediaProps = {
      id: string;
      tweetId: string;
      url: string;
+     width: string;
+     height: string;
+     aspectRatio: string;
     }[]
   | [];
  username: string | null;
- setMediaLoading: () => void;
 };
 
-const DisplayTweetMedia = ({
- media,
- username,
- setMediaLoading,
-}: TweetMediaProps) => {
- const [imageAspect, setImageAspect] = useState<number | null>(null);
+const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
  const [renderModal, setRenderModal] = useState(false);
- const [imageWidth, setImageWidth] = useState<number | null>(null);
- const [imageHeight, setImageHeight] = useState<number | null>(null);
- useEffect(() => {
-  if (media) {
-   media.forEach((media) => {
-    const img = document.createElement("img");
-    img.src = media.url;
-    img.onload = () => {
-     setImageWidth(img.width);
-     setImageHeight(img.height);
-     setImageAspect(img.width / img.height);
-     setMediaLoading();
-    };
-   });
-  }
-  return () => {
-   setImageAspect(null);
-   setImageWidth(null);
-   setImageHeight(null);
-  };
- }, [media, setMediaLoading]);
- const imgAspectPercent = imageAspect ? `${100 / imageAspect}%` : "56.25%";
  return (
   <>
    {media &&
     media.length === 1 &&
-    media.map((med, i) => (
-     <div key={med.id}>
-      {med.url && (
-       <>
-        {renderModal && (
-         <DisplayTweetMediaModal
-          media={med}
-          mediaWidth={imageWidth}
-          mediaHeight={imageHeight}
-          closeModal={() => setRenderModal(false)}
-         />
-        )}
-        <div
-         onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          // window.history.pushState(
-          //  null,
-          //  "",
-          //  `/${username}/status/${med.tweetId}/photo/${i + 1}`
-          // );
-          setRenderModal(true);
-         }}
-         className={cn(
-          "relative mt-3 block overflow-hidden",
-          Number(imgAspectPercent.replace("%", "")) > 100 &&
-           "max-w-[408px] max-h-[510px]",
-          username && "hover:cursor-pointer"
-         )}
-        >
-         <div
-          style={{
-           paddingBottom: imgAspectPercent,
-          }}
-         />
-         <div className="absolute inset-0 w-full h-full">
-          <Image
-           src={med.url}
-           alt="tweet media"
-           className="rounded-2xl object-cover border border-gray-200 dark:border-secondary"
-           fill
-           sizes="408px"
+    media.map((med, i) => {
+     const imgAspectPercent = `${100 / Number(med.aspectRatio)}%`;
+     return (
+      <div key={med.id}>
+       {med.url && (
+        <>
+         {renderModal && (
+          <DisplayTweetMediaModal
+           media={med}
+           closeModal={() => setRenderModal(false)}
           />
+         )}
+         <div
+          onClick={(e) => {
+           e.stopPropagation();
+           e.preventDefault();
+           // window.history.pushState(
+           //  null,
+           //  "",
+           //  `/${username}/status/${med.tweetId}/photo/${i + 1}`
+           // );
+           setRenderModal(true);
+          }}
+          className={cn(
+           "relative mt-3 block overflow-hidden",
+           Number(imgAspectPercent.replace("%", "")) > 100 &&
+            "max-w-[408px] max-h-[510px]",
+           username && "hover:cursor-pointer"
+          )}
+         >
+          <div
+           style={{
+            paddingBottom: imgAspectPercent || `56.25%`,
+           }}
+          />
+          <div className="absolute inset-0 w-full h-full">
+           <Image
+            src={med.url}
+            alt="tweet media"
+            className="rounded-2xl object-cover border border-gray-200 dark:border-secondary"
+            fill
+            sizes="408px"
+           />
+          </div>
          </div>
-        </div>
-       </>
-      )}
-     </div>
-    ))}
+        </>
+       )}
+      </div>
+     );
+    })}
    {media && media.length === 3 && (
     <div className="mt-3">
      <div className="block overflow-hidden">

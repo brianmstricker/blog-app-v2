@@ -20,6 +20,9 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  const [preview, setPreview] = useState<null | string[]>(null);
  const [imageAspect, setImageAspect] = useState<number | null>(null);
  const [loading, setLoading] = useState(false);
+ const [mediaWidth, setMediaWidth] = useState<string | Blob>("");
+ const [mediaHeight, setMediaHeight] = useState<string | Blob>("");
+ const [mediaAspectRatio, setMediaAspectRatio] = useState<string | Blob>("");
  const inputRef = useRef<HTMLDivElement | null>(null);
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
@@ -66,11 +69,42 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  async function handleSubmit() {
   setLoading(true);
   let formData = new FormData();
-  if (media) {
-   media.forEach((file) => {
-    formData.append("media", file);
-   });
+  if (media && media.length > 0) {
+   const imageDimensions = await Promise.all(
+    media.map(async (file: File) => {
+     const img = document.createElement("img");
+     img.src = URL.createObjectURL(file);
+     const onLoad = new Promise((resolve) => {
+      img.onload = () => resolve({ width: img.width, height: img.height });
+     });
+     formData.append("media", file);
+     return onLoad;
+    })
+   );
+   const width = imageDimensions.map((dim: any) => dim.width);
+   const height = imageDimensions.map((dim: any) => dim.height);
+   const aspectRatio = imageDimensions.map((dim: any) =>
+    (dim.width / dim.height).toFixed(2)
+   );
+   formData.append("width", JSON.stringify(width));
+   formData.append("height", JSON.stringify(height));
+   formData.append("aspectRatio", JSON.stringify(aspectRatio));
   }
+  // if (media) {
+  //  media.forEach((file) => {
+  //   const img = document.createElement("img");
+  //   img.src = URL.createObjectURL(file);
+  //   img.onload = () => {
+  //    setMediaWidth(String(img.width));
+  //    setMediaHeight(String(img.height));
+  //    setMediaAspectRatio(String((img.width / img.height).toFixed(2)));
+  //   };
+  //   formData.append("width", mediaWidth);
+  //   formData.append("height", mediaHeight);
+  //   formData.append("aspectRatio", mediaAspectRatio);
+  //   formData.append("media", file);
+  //  });
+  // }
   if (tweet && tweet.length > 0 && tweet.length > 300) {
    return alert("Tweet is too long");
   }
@@ -372,7 +406,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
                  const updatedMedia = [...media, ...mediaFiles];
                  if (updatedMedia.length > 4)
                   return alert("You can only upload 4 images at a time");
-                 setMedia(updatedMedia);
+                 setMedia(updatedMedia as File[]);
                 }
                }
               }

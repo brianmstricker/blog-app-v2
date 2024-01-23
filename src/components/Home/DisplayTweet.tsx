@@ -9,7 +9,6 @@ import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export type DisplayTweetProps = {
  tweet: {
@@ -30,6 +29,9 @@ export type DisplayTweetProps = {
       id: string;
       tweetId: string;
       url: string;
+      width: string;
+      height: string;
+      aspectRatio: string;
      }[]
    | [];
   likes: {
@@ -39,16 +41,12 @@ export type DisplayTweetProps = {
    createdAt: Date;
   }[];
  };
- setMediaLoading: () => void;
 };
 
-const DisplayTweet = ({ tweet, setMediaLoading }: DisplayTweetProps) => {
+const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
  //todo: likes functionality
  const router = useRouter();
  const username = tweet.user.username;
- // useEffect(() => {
- //  setMediaLoading();
- // }, [setMediaLoading]);
  return (
   <div
    onClick={() => router.push(`${username}/status/${tweet.id}`)}
@@ -88,13 +86,8 @@ const DisplayTweet = ({ tweet, setMediaLoading }: DisplayTweetProps) => {
       <div className="text-[15px] mt-[2px] font-light">{tweet.text}</div>
      )}
      {tweet.media && tweet.media.length > 0 && (
-      <DisplayTweetMedia
-       media={tweet.media}
-       username={tweet.user.username}
-       setMediaLoading={setMediaLoading}
-      />
+      <DisplayTweetMedia media={tweet.media} username={tweet.user.username} />
      )}
-     {!tweet.media && setMediaLoading()}
      <div className="mt-2 mb-1 flex items-center justify-between text-mainGray">
       <div className="flex items-center justify-between max-w-[70%] w-full">
        <div className="flex items-center gap-1">

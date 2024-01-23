@@ -18,7 +18,7 @@ export const {
   },
   async jwt({ token }) {
    if (!token?.sub) return token;
-   const user = await db.user.findUnique({ where: { id: token.sub } });
+   const user = await db.user.findFirst({ where: { id: token.sub } });
    if (!user) return token;
    token.username = user.username;
    token.handle = user.handle;
