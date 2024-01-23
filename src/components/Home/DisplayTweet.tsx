@@ -9,6 +9,7 @@ import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export type DisplayTweetProps = {
  tweet: {
@@ -48,9 +49,9 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
  const router = useRouter();
  const username = tweet.user.username;
  return (
-  <div
-   onClick={() => router.push(`${username}/status/${tweet.id}`)}
-   className="border-b dark:border-b-white/25 hover:cursor-pointer bg-neutral-100 dark:bg-black hover:bg-neutral-200/30 dark:hover:bg-[#080808]"
+  <Link
+   href={`/${username}/status/${tweet.id}`}
+   className="border-b dark:border-b-white/25 hover:cursor-pointer bg-neutral-100 dark:bg-black hover:bg-neutral-200/30 dark:hover:bg-[#080808] block"
   >
    <article className="py-2 px-3 flex gap-3 leading-5" tabIndex={0}>
     <div className="shrink-0 select-none">
@@ -112,7 +113,7 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
      </div>
     </div>
    </article>
-  </div>
+  </Link>
  );
 };
 export default DisplayTweet;

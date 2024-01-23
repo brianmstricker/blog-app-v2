@@ -11,6 +11,7 @@ import PostReply from "@/components/Status/PostReply";
 import DisplayTweetMedia from "@/components/Home/DisplayTweetMedia";
 import ArrowBack from "@/components/Status/ArrowBack";
 import { headers } from "next/headers";
+import { Metadata } from "next";
 
 type StatusProps = {
  id: string;
@@ -42,6 +43,25 @@ type StatusProps = {
   createdAt: Date;
  }[];
 };
+
+export async function generateMetadata({
+ params,
+}: {
+ params: { username: string; tweetId: string };
+}): Promise<Metadata> {
+ const { username, tweetId } = params;
+ const tweet = (await fetchTweetAction({
+  username,
+  tweetId,
+ })) as StatusProps;
+ if (!tweet) return { title: "Chirp not found" };
+ return {
+  title: `${tweet.user.username} on Chirp: "${
+   tweet.text?.substring(0, 30) || tweet.media[0].url.substring(0, 30)
+  }" / Chirp`,
+  description: tweet.text,
+ };
+}
 
 const page = async ({
  params,
