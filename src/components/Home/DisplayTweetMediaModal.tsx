@@ -4,9 +4,12 @@ import { createPortal } from "react-dom";
 import HideScroll from "../HideScroll";
 import FocusTrap from "focus-trap-react";
 import Image from "next/image";
+import { IoClose } from "react-icons/io5";
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
+import { cn } from "@/lib/utils";
 
 type DisplayTweetMediaModalProps = {
- media: {
+ mainMedia: null | {
   id: string;
   tweetId: string;
   url: string;
@@ -15,27 +18,52 @@ type DisplayTweetMediaModalProps = {
   aspectRatio: string;
  };
  closeModal: () => void;
+ otherMedia?:
+  | {
+     id: string;
+     tweetId: string;
+     url: string;
+     width: string;
+     height: string;
+     aspectRatio: string;
+    }
+  | {
+     id: string;
+     tweetId: string;
+     url: string;
+     width: string;
+     height: string;
+     aspectRatio: string;
+    }[];
 };
 
+//todo: create a context for the right menu being hidden/shown
+
 const DisplayTweetMediaModal = ({
- media,
+ mainMedia: media,
  closeModal,
+ otherMedia,
 }: DisplayTweetMediaModalProps) => {
  const [scaledDimensions, setScaledDimensions] = useState({
   width: 0,
   height: 0,
  });
- const imgRef = useRef<HTMLDivElement | null>(null);
+ const [showRightMenu, setShowRightMenu] = useState(true);
+ const imgRef = useRef<HTMLImageElement | null>(null);
  const menuRef = useRef<HTMLDivElement | null>(null);
+ const hideMenuButtonRef = useRef<HTMLButtonElement | null>(null);
  useEffect(() => {
   const handleOutsideClick = (e: any) => {
    const modalNode = imgRef.current;
+   const hideMenuButtonNode = hideMenuButtonRef.current;
    const menuNode = menuRef.current;
    if (
     modalNode &&
     !modalNode.contains(e.target) &&
     menuNode &&
-    !menuNode.contains(e.target)
+    !menuNode.contains(e.target) &&
+    hideMenuButtonNode &&
+    !hideMenuButtonNode.contains(e.target)
    ) {
     closeModal();
    }
@@ -59,7 +87,7 @@ const DisplayTweetMediaModal = ({
  const calculateScaledDimensions = useCallback(() => {
   const maxWidth = window.innerWidth;
   const maxHeight = window.innerHeight;
-  const aspectRatio = Number(media.aspectRatio);
+  const aspectRatio = Number(media?.aspectRatio);
   let width, height;
   if (aspectRatio > 1) {
    width = maxWidth;
@@ -68,10 +96,10 @@ const DisplayTweetMediaModal = ({
    height = maxHeight;
    width = maxHeight * aspectRatio;
   }
-  width = Math.min(width, Number(media.width));
-  height = Math.min(height, Number(media.height));
+  width = Math.min(width, Number(media?.width));
+  height = Math.min(height, Number(media?.height));
   return { width, height };
- }, [media.aspectRatio, media.width, media.height]);
+ }, [media?.aspectRatio, media?.width, media?.height]);
  useEffect(() => {
   const updateDimensions = () => {
    const newDimensions = calculateScaledDimensions();
@@ -82,7 +110,7 @@ const DisplayTweetMediaModal = ({
   return () => {
    window.removeEventListener("resize", updateDimensions);
   };
- }, [media.aspectRatio, calculateScaledDimensions]);
+ }, [media?.aspectRatio, calculateScaledDimensions]);
  return createPortal(
   <>
    <HideScroll>
@@ -92,31 +120,56 @@ const DisplayTweetMediaModal = ({
        e.stopPropagation();
        e.preventDefault();
       }}
-      className="w-screen h-screen fixed inset-0 bg-white/95 dark:bg-black/95 z-[100]"
+      className="bg-black/30 dark:bg-white/10 w-screen h-screen fixed inset-0 z-[99]"
      >
-      <div className="flex h-full">
-       <div className="w-full h-full relative flex flex-col overflow-hidden">
-        <div className="flex-1 flex items-center justify-center">
-         <div ref={imgRef}>
-          <Image
-           src={media.url}
-           alt="tweet media"
-           className="mx-auto max-w-full max-h-full"
-           style={{ aspectRatio: Number(media.aspectRatio) }}
-           width={scaledDimensions.width}
-           height={scaledDimensions.height}
-          />
+      <div className="bg-white/90 dark:bg-black/90 w-screen h-screen fixed inset-0 z-[100]">
+       <div className="flex h-full">
+        <div className="w-full h-full relative flex flex-col">
+         <div className="flex-1 shrink flex items-center justify-center relative overflow-hidden">
+          {media && (
+           <>
+            <button
+             onClick={closeModal}
+             className="absolute top-2.5 left-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full"
+            >
+             <IoClose className="text-2xl text-black dark:text-white" />
+            </button>
+            <button
+             ref={hideMenuButtonRef}
+             onClick={() => setShowRightMenu((prev) => !prev)}
+             className="absolute top-2.5 right-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full"
+            >
+             {showRightMenu ? (
+              <AiOutlineDoubleRight className="text-2xl text-black dark:text-white" />
+             ) : (
+              <AiOutlineDoubleLeft className="text-2xl text-black dark:text-white" />
+             )}
+            </button>
+            <Image
+             ref={imgRef}
+             src={media.url}
+             alt="tweet media"
+             style={{ aspectRatio: Number(media.aspectRatio) }}
+             width={scaledDimensions.width}
+             height={scaledDimensions.height}
+             className="max-w-full max-h-full object-contain w-fit"
+            />
+           </>
+          )}
+         </div>
+         <div tabIndex={0} className="w-full shrink-0 py-3 flex justify-center">
+          <div>like/favorite/etc</div>
          </div>
         </div>
-        <div className="w-full border">
-         <div tabIndex={0}>like/favorite/etc</div>
+        <div
+         ref={menuRef}
+         className={cn(
+          "h-full bg-white dark:bg-black ml-auto border-l dark:border-l-white/25 shrink-0 min-w-[330px] max-w-[330px]",
+          !showRightMenu && "hidden"
+         )}
+        >
+         <div className="p-2">right menu here</div>
         </div>
-       </div>
-       <div
-        ref={menuRef}
-        className="h-full bg-black ml-auto border-l dark:border-l-white/25 shrink-0 min-w-[330px] max-w-[330px]"
-       >
-        <div className="p-2">right menu here</div>
        </div>
       </div>
      </div>

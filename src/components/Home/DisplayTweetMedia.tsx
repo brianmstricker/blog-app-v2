@@ -18,8 +18,21 @@ type TweetMediaProps = {
  username: string | null;
 };
 
+type SelectedMedia = {
+ id: string;
+ tweetId: string;
+ url: string;
+ width: string;
+ height: string;
+ aspectRatio: string;
+};
+
 const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
  const [renderModal, setRenderModal] = useState(false);
+ const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null);
+ const [otherMedia, setOtherMedia] = useState<
+  SelectedMedia | SelectedMedia[] | null
+ >(null);
  return (
   <>
    {media &&
@@ -32,7 +45,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
         <>
          {renderModal && (
           <DisplayTweetMediaModal
-           media={med}
+           mainMedia={selectedMedia}
            closeModal={() => setRenderModal(false)}
           />
          )}
@@ -40,12 +53,13 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
           onClick={(e) => {
            e.stopPropagation();
            e.preventDefault();
+           setSelectedMedia(med);
+           setRenderModal(true);
            // window.history.pushState(
            //  null,
            //  "",
            //  `/${username}/status/${med.tweetId}/photo/${i + 1}`
            // );
-           setRenderModal(true);
           }}
           className={cn(
            "relative mt-3 block overflow-hidden",
@@ -75,30 +89,102 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
      );
     })}
    {media && media.length === 3 && (
-    <div className="mt-3">
-     <div className="block overflow-hidden">
-      <div
-       className="relative"
-       style={{
-        paddingBottom: "56.25%",
-       }}
-      >
-       <div className="absolute inset-0 w-full h-full">
-        <div className="grid grid-cols-2 gap-[1px] w-full h-full">
-         <div key={media[0].id} className="relative w-full h-full">
-          <Image
-           className="object-cover rounded-tl-2xl rounded-bl-2xl w-full h-full border border-gray-200 dark:border-secondary"
-           src={media[0].url}
-           alt="preview of media upload"
-           fill
-           sizes="408px"
-          />
+    <>
+     {renderModal && (
+      <DisplayTweetMediaModal
+       mainMedia={selectedMedia}
+       closeModal={() => setRenderModal(false)}
+      />
+     )}
+     <div className="mt-3">
+      <div className="block overflow-hidden">
+       <div
+        className="relative"
+        style={{
+         paddingBottom: "56.25%",
+        }}
+       >
+        <div className="absolute inset-0 w-full h-full">
+         <div className="grid grid-cols-2 gap-[1px] w-full h-full">
+          <div
+           onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setSelectedMedia(media[0]);
+            setRenderModal(true);
+           }}
+           key={media[0].id}
+           className="relative w-full h-full"
+          >
+           <Image
+            className="object-cover rounded-tl-2xl rounded-bl-2xl w-full h-full border border-gray-200 dark:border-secondary"
+            src={media[0].url}
+            alt="preview of media upload"
+            fill
+            sizes="408px"
+           />
+          </div>
+          <div className="flex flex-col gap-[1px] threeImg">
+           {media.slice(1).map((med) => (
+            <div key={med.id} className="h-full">
+             <div
+              className="relative w-full h-full"
+              onClick={(e) => {
+               e.stopPropagation();
+               e.preventDefault();
+               setSelectedMedia(med);
+               setRenderModal(true);
+              }}
+             >
+              <Image
+               className="object-cover w-full h-full border border-gray-200 dark:border-secondary"
+               src={med.url}
+               alt="preview of media upload"
+               fill
+               sizes="260px"
+              />
+             </div>
+            </div>
+           ))}
+          </div>
          </div>
-         <div className="flex flex-col gap-[1px] threeImg">
-          {media.slice(1).map((med, i) => (
-           <div key={med.id} className="relative w-full h-full">
+        </div>
+       </div>
+      </div>
+     </div>
+    </>
+   )}
+   {media && media.length > 1 && media.length !== 3 && (
+    <>
+     {renderModal && (
+      <DisplayTweetMediaModal
+       mainMedia={selectedMedia}
+       closeModal={() => setRenderModal(false)}
+      />
+     )}
+     <div className="mt-3">
+      <div className="block overflow-hidden">
+       <div
+        className="relative"
+        style={{
+         paddingBottom: "56.25%",
+        }}
+       >
+        <div className="absolute w-full h-full inset-0">
+         <div className="w-full h-full grid grid-cols-2 gap-[1px] fourImg">
+          {media.map((med, i) => (
+           <div
+            key={med.id}
+            className="relative w-full h-full"
+            onClick={(e) => {
+             e.stopPropagation();
+             e.preventDefault();
+             setSelectedMedia(med);
+             setRenderModal(true);
+            }}
+           >
             <Image
-             className="object-cover w-full h-full border border-gray-200 dark:border-secondary"
+             className="object-cover rounded-2xl w-full h-full border border-gray-200 dark:border-secondary"
              src={med.url}
              alt="preview of media upload"
              fill
@@ -111,35 +197,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
        </div>
       </div>
      </div>
-    </div>
-   )}
-   {media && media.length > 1 && media.length !== 3 && (
-    <div className="mt-3">
-     <div className="block overflow-hidden">
-      <div
-       className="relative"
-       style={{
-        paddingBottom: "56.25%",
-       }}
-      >
-       <div className="absolute w-full h-full inset-0">
-        <div className="w-full h-full grid grid-cols-2 gap-[1px] fourImg">
-         {media.map((med, i) => (
-          <div key={med.id} className="relative w-full h-full">
-           <Image
-            className="object-cover rounded-2xl w-full h-full border border-gray-200 dark:border-secondary"
-            src={med.url}
-            alt="preview of media upload"
-            fill
-            sizes="260px"
-           />
-          </div>
-         ))}
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
+    </>
    )}
   </>
  );

@@ -108,7 +108,7 @@ const page = async ({
      <HiMiniEllipsisHorizontal className="text-lg text-mainGray" />
     </div>
    </div>
-   <div className="font-light">{tweet.text}</div>
+   <div>{tweet.text}</div>
    {tweet.media && tweet.media.length > 0 && (
     <DisplayTweetMedia media={tweet.media} username={tweet.user.username} />
    )}
