@@ -35,6 +35,7 @@ type DisplayTweetMediaModalProps = {
      height: string;
      aspectRatio: string;
     }[];
+ mainMeidaIndex?: string;
 };
 
 //todo: create a context for the right menu being hidden/shown
@@ -43,6 +44,7 @@ const DisplayTweetMediaModal = ({
  mainMedia: media,
  closeModal,
  otherMedia,
+ mainMeidaIndex,
 }: DisplayTweetMediaModalProps) => {
  const [scaledDimensions, setScaledDimensions] = useState({
   width: 0,
@@ -111,6 +113,10 @@ const DisplayTweetMediaModal = ({
    window.removeEventListener("resize", updateDimensions);
   };
  }, [media?.aspectRatio, calculateScaledDimensions]);
+ // if (otherMedia)
+ //  console.log(otherMedia);
+ //
+ // if (mainMeidaIndex) console.log(mainMeidaIndex);
  return createPortal(
   <>
    <HideScroll>

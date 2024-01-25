@@ -94,6 +94,10 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
       <DisplayTweetMediaModal
        mainMedia={selectedMedia}
        closeModal={() => setRenderModal(false)}
+       otherMedia={media.filter((med) => med.id !== selectedMedia?.id)}
+       mainMeidaIndex={media
+        .findIndex((med) => med.id === selectedMedia?.id)
+        .toString()}
       />
      )}
      <div className="mt-3">
@@ -160,6 +164,10 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
       <DisplayTweetMediaModal
        mainMedia={selectedMedia}
        closeModal={() => setRenderModal(false)}
+       otherMedia={media.filter((med) => med.id !== selectedMedia?.id)}
+       mainMeidaIndex={media
+        .findIndex((med) => med.id === selectedMedia?.id)
+        .toString()}
       />
      )}
      <div className="mt-3">
