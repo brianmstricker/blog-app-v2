@@ -39,7 +39,6 @@ export const postTweetAction = async (formData: FormData) => {
    .replace("]", "")
    .replace(/\"/g, "")
    .split(",");
-  console.log(width, height, aspectRatio);
   if (!text && !media) return { error: "No text or media" };
   if (text && typeof text !== "string") return { error: "Invalid text" };
   if (text && typeof text === "string" && text.length > 300) {
@@ -55,7 +54,8 @@ export const postTweetAction = async (formData: FormData) => {
    for (const file of media) {
     if (!(file instanceof File)) return { error: "Invalid file" };
     if (file.size > 5 * 1024 * 1024) return { error: "File too large" };
-    const newName = file.name + uuidv4();
+    const fileExt = file.name.split(".").pop();
+    const newName = file.name.split(".")[0] + "-" + uuidv4() + "." + fileExt;
     const fileBuffer = await file.arrayBuffer();
     const command = new PutObjectCommand({
      Bucket: process.env.S3_BUCKET_NAME!,
