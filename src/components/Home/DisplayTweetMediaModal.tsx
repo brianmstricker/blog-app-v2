@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import HideScroll from "../HideScroll";
 import FocusTrap from "focus-trap-react";
@@ -18,24 +18,24 @@ type DisplayTweetMediaModalProps = {
   aspectRatio: string;
  };
  closeModal: () => void;
- otherMedia?:
-  | {
-     id: string;
-     tweetId: string;
-     url: string;
-     width: string;
-     height: string;
-     aspectRatio: string;
-    }
-  | {
-     id: string;
-     tweetId: string;
-     url: string;
-     width: string;
-     height: string;
-     aspectRatio: string;
-    }[];
- mainMeidaIndex?: string;
+ otherMedia?: {
+  id: string;
+  tweetId: string;
+  url: string;
+  width: string;
+  height: string;
+  aspectRatio: string;
+ }[];
+ mainMediaIndex: string;
+};
+
+type OtherMedia = {
+ id: string;
+ tweetId: string;
+ url: string;
+ width: string;
+ height: string;
+ aspectRatio: string;
 };
 
 //todo: create a context for the right menu being hidden/shown
@@ -44,12 +44,15 @@ const DisplayTweetMediaModal = ({
  mainMedia: media,
  closeModal,
  otherMedia,
- mainMeidaIndex,
+ mainMediaIndex,
 }: DisplayTweetMediaModalProps) => {
  const [scaledDimensions, setScaledDimensions] = useState({
   width: 0,
   height: 0,
  });
+ const [otherScaledDimensions, setOtherScaledDimensions] = useState([
+  { width: 0, height: 0 },
+ ]);
  const [showRightMenu, setShowRightMenu] = useState(true);
  const imgRef = useRef<HTMLImageElement | null>(null);
  const menuRef = useRef<HTMLDivElement | null>(null);
@@ -90,7 +93,7 @@ const DisplayTweetMediaModal = ({
   const maxWidth = window.innerWidth;
   const maxHeight = window.innerHeight;
   const aspectRatio = Number(media?.aspectRatio);
-  let width, height;
+  let width: number, height: number;
   if (aspectRatio > 1) {
    width = maxWidth;
    height = maxWidth / aspectRatio;
@@ -100,12 +103,43 @@ const DisplayTweetMediaModal = ({
   }
   width = Math.min(width, Number(media?.width));
   height = Math.min(height, Number(media?.height));
-  return { width, height };
- }, [media?.aspectRatio, media?.width, media?.height]);
+  if (!otherMedia) return { width, height };
+  if (otherMedia) {
+   let otherWidth: number[] = [];
+   let otherHeight: number[] = [];
+   otherMedia.forEach((otherMediaItem: OtherMedia) => {
+    const otherMediaAspectRatio = Number(otherMediaItem.aspectRatio);
+    if (otherMediaAspectRatio > 1) {
+     otherWidth.push(Math.min(Number(otherMediaItem.width), maxWidth));
+     otherHeight.push(
+      Math.min(Number(otherMediaItem.height), maxWidth / otherMediaAspectRatio)
+     );
+    } else {
+     otherHeight.push(Math.min(Number(otherMediaItem.height), maxHeight));
+     otherWidth.push(
+      Math.min(Number(otherMediaItem.height) * otherMediaAspectRatio, maxWidth)
+     );
+    }
+   });
+   return { width, height, otherWidth, otherHeight };
+  }
+ }, [media?.aspectRatio, media?.width, media?.height, otherMedia]);
  useEffect(() => {
   const updateDimensions = () => {
    const newDimensions = calculateScaledDimensions();
-   setScaledDimensions(newDimensions);
+   if (!newDimensions) return;
+   setScaledDimensions({
+    width: newDimensions.width,
+    height: newDimensions.height,
+   });
+   if (newDimensions.otherWidth && newDimensions.otherHeight) {
+    setOtherScaledDimensions(
+     newDimensions.otherWidth.map((width, i) => ({
+      width,
+      height: newDimensions.otherHeight[i],
+     }))
+    );
+   }
   };
   updateDimensions();
   window.addEventListener("resize", updateDimensions);
@@ -113,10 +147,16 @@ const DisplayTweetMediaModal = ({
    window.removeEventListener("resize", updateDimensions);
   };
  }, [media?.aspectRatio, calculateScaledDimensions]);
- // if (otherMedia)
- //  console.log(otherMedia);
- //
- // if (mainMeidaIndex) console.log(mainMeidaIndex);
+ const mainMediaIndexNum = parseInt(mainMediaIndex);
+ const allMedia = useMemo(() => {
+  if (mainMediaIndex !== null && media && otherMedia) {
+   const clonedAllMedia = [...otherMedia];
+   clonedAllMedia.splice(mainMediaIndexNum, 0, media);
+   return clonedAllMedia;
+  }
+  return [media, ...(otherMedia || [])];
+ }, [mainMediaIndexNum, media, otherMedia, mainMediaIndex]);
+ console.log(allMedia);
  return createPortal(
   <>
    <HideScroll>
