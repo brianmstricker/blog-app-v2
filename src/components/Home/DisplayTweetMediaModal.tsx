@@ -7,6 +7,7 @@ import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { cn } from "@/lib/utils";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 type DisplayTweetMediaModalProps = {
  mainMedia: null | {
@@ -50,13 +51,18 @@ const DisplayTweetMediaModal = ({
   width: 0,
   height: 0,
  });
- const [otherScaledDimensions, setOtherScaledDimensions] = useState([
-  { width: 0, height: 0 },
- ]);
+ const [otherScaledDimensions, setOtherScaledDimensions] = useState<
+  [] | { width: number; height: number }[]
+ >([]);
+ const [activeMediaIndex, setActiveMediaIndex] = useState(
+  Number(mainMediaIndex)
+ );
  const [showRightMenu, setShowRightMenu] = useState(true);
  const imgRef = useRef<HTMLImageElement | null>(null);
  const menuRef = useRef<HTMLDivElement | null>(null);
  const hideMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+ const rightButtonRef = useRef<HTMLButtonElement | null>(null);
+ const leftButtonRef = useRef<HTMLButtonElement | null>(null);
  useEffect(() => {
   const handleOutsideClick = (e: any) => {
    const modalNode = imgRef.current;
@@ -68,7 +74,11 @@ const DisplayTweetMediaModal = ({
     menuNode &&
     !menuNode.contains(e.target) &&
     hideMenuButtonNode &&
-    !hideMenuButtonNode.contains(e.target)
+    !hideMenuButtonNode.contains(e.target) &&
+    rightButtonRef.current &&
+    !rightButtonRef.current.contains(e.target) &&
+    leftButtonRef.current &&
+    !leftButtonRef.current.contains(e.target)
    ) {
     closeModal();
    }
@@ -90,9 +100,10 @@ const DisplayTweetMediaModal = ({
   };
  }, [closeModal]);
  const calculateScaledDimensions = useCallback(() => {
+  if (!media) return;
   const maxWidth = window.innerWidth;
   const maxHeight = window.innerHeight;
-  const aspectRatio = Number(media?.aspectRatio);
+  const aspectRatio = Number(media.aspectRatio);
   let width: number, height: number;
   if (aspectRatio > 1) {
    width = maxWidth;
@@ -109,21 +120,20 @@ const DisplayTweetMediaModal = ({
    let otherHeight: number[] = [];
    otherMedia.forEach((otherMediaItem: OtherMedia) => {
     const otherMediaAspectRatio = Number(otherMediaItem.aspectRatio);
+    let tempWidth: number, tempHeight: number;
     if (otherMediaAspectRatio > 1) {
-     otherWidth.push(Math.min(Number(otherMediaItem.width), maxWidth));
-     otherHeight.push(
-      Math.min(Number(otherMediaItem.height), maxWidth / otherMediaAspectRatio)
-     );
+     tempWidth = maxWidth;
+     tempHeight = maxWidth / otherMediaAspectRatio;
     } else {
-     otherHeight.push(Math.min(Number(otherMediaItem.height), maxHeight));
-     otherWidth.push(
-      Math.min(Number(otherMediaItem.height) * otherMediaAspectRatio, maxWidth)
-     );
+     tempHeight = maxHeight;
+     tempWidth = maxHeight * otherMediaAspectRatio;
     }
+    otherWidth.push(Math.min(Number(otherMediaItem.width), tempWidth));
+    otherHeight.push(Math.min(Number(otherMediaItem.height), tempHeight));
    });
    return { width, height, otherWidth, otherHeight };
   }
- }, [media?.aspectRatio, media?.width, media?.height, otherMedia]);
+ }, [media, otherMedia]);
  useEffect(() => {
   const updateDimensions = () => {
    const newDimensions = calculateScaledDimensions();
@@ -156,7 +166,33 @@ const DisplayTweetMediaModal = ({
   }
   return [media, ...(otherMedia || [])];
  }, [mainMediaIndexNum, media, otherMedia, mainMediaIndex]);
- console.log(allMedia);
+ const updatedOtherDimensions = [...otherScaledDimensions];
+ updatedOtherDimensions.splice(mainMediaIndexNum, 0, scaledDimensions);
+ const allDimensions = updatedOtherDimensions;
+ function clickLeft() {
+  if (activeMediaIndex === 0) return;
+  const image = imgRef.current;
+  if (image) {
+   image.style.opacity = "0";
+   setTimeout(() => {
+    setActiveMediaIndex((prev) => Number(prev) - 1);
+    image.style.opacity = "1";
+   }, 125);
+  }
+ }
+ function clickRight() {
+  if (activeMediaIndex === allMedia.length - 1) {
+   return;
+  }
+  const image = imgRef.current;
+  if (image) {
+   image.style.opacity = "0";
+   setTimeout(() => {
+    setActiveMediaIndex((prev) => Number(prev) + 1);
+    image.style.opacity = "0";
+   }, 125);
+  }
+ }
  return createPortal(
   <>
    <HideScroll>
@@ -166,9 +202,9 @@ const DisplayTweetMediaModal = ({
        e.stopPropagation();
        e.preventDefault();
       }}
-      className="bg-black/30 dark:bg-white/10 w-screen h-screen fixed inset-0 z-[99]"
+      className="bg-black/20 dark:bg-white/10 w-screen h-screen fixed inset-0 z-[99]"
      >
-      <div className="bg-white/90 dark:bg-black/90 w-screen h-screen fixed inset-0 z-[100]">
+      <div className="bg-white/85 dark:bg-black/85 w-screen h-screen fixed inset-0 z-[100]">
        <div className="flex h-full">
         <div className="w-full h-full relative flex flex-col">
          <div className="flex-1 shrink flex items-center justify-center relative overflow-hidden">
@@ -176,14 +212,14 @@ const DisplayTweetMediaModal = ({
            <>
             <button
              onClick={closeModal}
-             className="absolute top-2.5 left-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full"
+             className="absolute top-2.5 left-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full z-10"
             >
              <IoClose className="text-2xl text-black dark:text-white" />
             </button>
             <button
              ref={hideMenuButtonRef}
              onClick={() => setShowRightMenu((prev) => !prev)}
-             className="absolute top-2.5 right-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full"
+             className="absolute top-2.5 right-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full z-10"
             >
              {showRightMenu ? (
               <AiOutlineDoubleRight className="text-2xl text-black dark:text-white" />
@@ -191,17 +227,61 @@ const DisplayTweetMediaModal = ({
               <AiOutlineDoubleLeft className="text-2xl text-black dark:text-white" />
              )}
             </button>
-            <Image
-             ref={imgRef}
-             src={media.url}
-             alt="tweet media"
-             style={{ aspectRatio: Number(media.aspectRatio) }}
-             width={scaledDimensions.width}
-             height={scaledDimensions.height}
-             className="max-w-full max-h-full object-contain w-fit"
-            />
+            {allMedia &&
+             allDimensions.length === allMedia.length &&
+             allMedia.length > 0 &&
+             allMedia.map((med, i) => (
+              <div key={med!.id} className="w-fit h-fit">
+               {i === activeMediaIndex && (
+                <Image
+                 ref={imgRef}
+                 src={med!.url}
+                 alt="tweet media"
+                 width={allDimensions[i].width}
+                 height={allDimensions[i].height}
+                 className="max-w-full max-h-full object-contain w-fit relative imgSlide"
+                 style={{ aspectRatio: Number(med!.aspectRatio) }}
+                />
+               )}
+               {/* {i === activeMediaIndex && (
+                <Image
+                 ref={imgRef}
+                 src={med!.url}
+                 alt="tweet media"
+                 width={allDimensions[i].width}
+                 height={allDimensions[i].height}
+                 className="max-w-full max-h-full object-contain w-fit relative imgSlide"
+                 style={{ aspectRatio: Number(med!.aspectRatio) }}
+                />
+               )} */}
+              </div>
+             ))}
            </>
           )}
+          <button
+           ref={leftButtonRef}
+           onClick={clickLeft}
+           className={cn(
+            "absolute left-4 top-1/2 -translate-y-1/2 p-2.5 bg-white dark:bg-black rounded-full hover:bg-black/5 dark:hover:bg-secondary z-10",
+            activeMediaIndex !== 0
+             ? "opacity-100"
+             : "opacity-0 pointer-events-none cursor-default"
+           )}
+          >
+           <FaArrowLeft className="fill-black dark:fill-white" />
+          </button>
+          <button
+           ref={rightButtonRef}
+           onClick={clickRight}
+           className={cn(
+            "absolute right-4 top-1/2 -translate-y-1/2 p-2.5 bg-white/90 dark:bg-black/90 rounded-full hover:bg-black/5 dark:hover:bg-secondary z-10",
+            activeMediaIndex !== allMedia.length - 1
+             ? "opacity-100"
+             : "opacity-0 pointer-events-none cursor-default"
+           )}
+          >
+           <FaArrowRight className="fill-black dark:fill-white" />
+          </button>
          </div>
          <div tabIndex={0} className="w-full shrink-0 py-3 flex justify-center">
           <div>like/favorite/etc</div>

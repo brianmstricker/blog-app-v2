@@ -30,9 +30,6 @@ type SelectedMedia = {
 const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
  const [renderModal, setRenderModal] = useState(false);
  const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null);
- const [otherMedia, setOtherMedia] = useState<
-  SelectedMedia | SelectedMedia[] | null
- >(null);
  return (
   <>
    {media &&
@@ -78,7 +75,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
            <Image
             src={med.url}
             alt="tweet media"
-            className="rounded-2xl object-cover border border-gray-200 dark:border-secondary"
+            className="rounded-2xl object-cover border border-gray-200 dark:border-secondary cursor-pointer"
             fill
             sizes="408px"
            />
@@ -122,7 +119,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
            className="relative w-full h-full"
           >
            <Image
-            className="object-cover rounded-tl-2xl rounded-bl-2xl w-full h-full border border-gray-200 dark:border-secondary"
+            className="object-cover rounded-tl-2xl rounded-bl-2xl w-full h-full border border-gray-200 dark:border-secondary cursor-pointer"
             src={media[0].url}
             alt="preview of media upload"
             fill
@@ -142,7 +139,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
               }}
              >
               <Image
-               className="object-cover w-full h-full border border-gray-200 dark:border-secondary"
+               className="object-cover w-full h-full border border-gray-200 dark:border-secondary cursor-pointer"
                src={med.url}
                alt="preview of media upload"
                fill
@@ -193,7 +190,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
             }}
            >
             <Image
-             className="object-cover rounded-2xl w-full h-full border border-gray-200 dark:border-secondary"
+             className="object-cover rounded-2xl w-full h-full border border-gray-200 dark:border-secondary cursor-pointer"
              src={med.url}
              alt="preview of media upload"
              fill
