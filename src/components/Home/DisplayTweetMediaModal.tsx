@@ -189,7 +189,7 @@ const DisplayTweetMediaModal = ({
    image.style.opacity = "0";
    setTimeout(() => {
     setActiveMediaIndex((prev) => Number(prev) + 1);
-    image.style.opacity = "0";
+    image.style.opacity = "1";
    }, 125);
   }
  }
@@ -239,21 +239,10 @@ const DisplayTweetMediaModal = ({
                  alt="tweet media"
                  width={allDimensions[i].width}
                  height={allDimensions[i].height}
-                 className="max-w-full max-h-full object-contain w-fit relative imgSlide"
+                 className="max-w-full max-h-full object-contain w-fit relative transition-all imgModalMedia"
                  style={{ aspectRatio: Number(med!.aspectRatio) }}
                 />
                )}
-               {/* {i === activeMediaIndex && (
-                <Image
-                 ref={imgRef}
-                 src={med!.url}
-                 alt="tweet media"
-                 width={allDimensions[i].width}
-                 height={allDimensions[i].height}
-                 className="max-w-full max-h-full object-contain w-fit relative imgSlide"
-                 style={{ aspectRatio: Number(med!.aspectRatio) }}
-                />
-               )} */}
               </div>
              ))}
            </>
