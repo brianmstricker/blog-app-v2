@@ -205,7 +205,7 @@ const DisplayTweetMediaModal = ({
       className="bg-black/20 dark:bg-white/10 w-screen h-screen fixed inset-0 z-[99]"
      >
       <div className="bg-white/85 dark:bg-black/85 w-screen h-screen fixed inset-0 z-[100]">
-       <div className="flex h-full">
+       <div className="flex h-full fadeIn" id="mediaModal">
         <div className="w-full h-full relative flex flex-col">
          <div className="flex-1 shrink flex items-center justify-center relative overflow-hidden">
           {media && (
@@ -239,7 +239,7 @@ const DisplayTweetMediaModal = ({
                  alt="tweet media"
                  width={allDimensions[i].width}
                  height={allDimensions[i].height}
-                 className="max-w-full max-h-full object-contain w-fit relative transition-all imgModalMedia"
+                 className="max-w-full max-h-full object-contain w-fit relative transition-all fadeIn"
                  style={{ aspectRatio: Number(med!.aspectRatio) }}
                 />
                )}

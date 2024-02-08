@@ -75,7 +75,7 @@ input:-webkit-autofill:is(.dark .dark\:bg-black) {
  border-radius: 0 0 1rem 0;
 }
 
-.imgModalMedia {
+.fadeIn {
  animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -85,5 +85,18 @@ input:-webkit-autofill:is(.dark .dark\:bg-black) {
  }
  100% {
   opacity: 1;
+ }
+}
+
+.fadeOut {
+ animation: fadeOut 0.5s ease-out;
+}
+
+@keyframes fadeOut {
+ 0% {
+  opacity: 1;
+ }
+ 100% {
+  opacity: 0;
  }
 }

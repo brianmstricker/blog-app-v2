@@ -30,6 +30,16 @@ type SelectedMedia = {
 const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
  const [renderModal, setRenderModal] = useState(false);
  const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null);
+ function closeModal() {
+  const modal = document.querySelector("#mediaModal");
+  if (modal) {
+   modal.classList.add("fadeOut");
+   setTimeout(() => {
+    modal.classList.remove("fadeOut");
+    setRenderModal(false);
+   }, 400);
+  }
+ }
  return (
   <>
    {media &&
@@ -44,7 +54,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
           <DisplayTweetMediaModal
            mainMedia={selectedMedia}
            mainMediaIndex="0"
-           closeModal={() => setRenderModal(false)}
+           closeModal={closeModal}
           />
          )}
          <div
@@ -91,7 +101,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
      {renderModal && (
       <DisplayTweetMediaModal
        mainMedia={selectedMedia}
-       closeModal={() => setRenderModal(false)}
+       closeModal={closeModal}
        otherMedia={media.filter((med) => med.id !== selectedMedia?.id)}
        mainMediaIndex={media
         .findIndex((med) => med.id === selectedMedia?.id)
@@ -161,7 +171,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
      {renderModal && (
       <DisplayTweetMediaModal
        mainMedia={selectedMedia}
-       closeModal={() => setRenderModal(false)}
+       closeModal={closeModal}
        otherMedia={media.filter((med) => med.id !== selectedMedia?.id)}
        mainMediaIndex={media
         .findIndex((med) => med.id === selectedMedia?.id)
