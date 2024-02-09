@@ -47,6 +47,7 @@ const DisplayTweetMediaModal = ({
  otherMedia,
  mainMediaIndex,
 }: DisplayTweetMediaModalProps) => {
+ const [loading, setLoading] = useState(true);
  const [scaledDimensions, setScaledDimensions] = useState({
   width: 0,
   height: 0,
@@ -57,6 +58,16 @@ const DisplayTweetMediaModal = ({
  const [activeMediaIndex, setActiveMediaIndex] = useState(
   Number(mainMediaIndex)
  );
+ const [seenIndexes, setSeenIndexes] = useState<number[]>([activeMediaIndex]);
+ useEffect(() => {
+  setSeenIndexes((prev) => {
+   if (prev.includes(activeMediaIndex)) return prev;
+   return [...prev, activeMediaIndex];
+  });
+ }, [activeMediaIndex]);
+ useEffect(() => {
+  setLoading(true);
+ }, [seenIndexes]);
  const [showRightMenu, setShowRightMenu] = useState(true);
  const imgRef = useRef<HTMLImageElement | null>(null);
  const menuRef = useRef<HTMLDivElement | null>(null);
@@ -208,6 +219,9 @@ const DisplayTweetMediaModal = ({
        <div className="flex h-full fadeIn" id="mediaModal">
         <div className="w-full h-full relative flex flex-col">
          <div className="flex-1 shrink flex items-center justify-center relative overflow-hidden">
+          {loading && (
+           <div className="absolute top-0 w-full bg-blue-400 h-[4px] sliding" />
+          )}
           {media && (
            <>
             <button
@@ -241,6 +255,7 @@ const DisplayTweetMediaModal = ({
                  height={allDimensions[i].height}
                  className="max-w-full max-h-full object-contain w-fit relative transition-all fadeIn"
                  style={{ aspectRatio: Number(med!.aspectRatio) }}
+                 onLoad={() => setLoading(false)}
                 />
                )}
               </div>
@@ -275,6 +290,7 @@ const DisplayTweetMediaModal = ({
          <div tabIndex={0} className="w-full shrink-0 py-3 flex justify-center">
           <div>like/favorite/etc</div>
          </div>
+         div
         </div>
         <div
          ref={menuRef}

@@ -67,8 +67,9 @@ const DisplayTweetMedia = ({
           onClick={(e) => {
            e.stopPropagation();
            e.preventDefault();
-           // setSelectedMedia(med);
-           // setRenderModal(true);
+           setSelectedMedia(med);
+           setRenderModal(true);
+           //todo: this
            // window.history.pushState(
            //  null,
            //  "",
