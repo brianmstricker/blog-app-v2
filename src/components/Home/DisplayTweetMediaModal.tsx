@@ -58,13 +58,7 @@ const DisplayTweetMediaModal = ({
  const [activeMediaIndex, setActiveMediaIndex] = useState(
   Number(mainMediaIndex)
  );
- const [seenIndexes, setSeenIndexes] = useState<number[]>([activeMediaIndex]);
- useEffect(() => {
-  setSeenIndexes((prev) => {
-   if (prev.includes(activeMediaIndex)) return prev;
-   return [...prev, activeMediaIndex];
-  });
- }, [activeMediaIndex]);
+ const [seenIndexes, setSeenIndexes] = useState<number[]>([]);
  useEffect(() => {
   setLoading(true);
  }, [seenIndexes]);
@@ -187,23 +181,31 @@ const DisplayTweetMediaModal = ({
    image.style.opacity = "0";
    setTimeout(() => {
     setActiveMediaIndex((prev) => Number(prev) - 1);
+    setSeenIndexes((prev) => {
+     if (prev.includes(activeMediaIndex)) return prev;
+     return [...prev, activeMediaIndex];
+    });
     image.style.opacity = "1";
    }, 125);
   }
  }
  function clickRight() {
-  if (activeMediaIndex === allMedia.length - 1) {
-   return;
-  }
+  if (activeMediaIndex === allMedia.length - 1) return;
   const image = imgRef.current;
   if (image) {
    image.style.opacity = "0";
    setTimeout(() => {
     setActiveMediaIndex((prev) => Number(prev) + 1);
+    setSeenIndexes((prev) => {
+     if (prev.includes(activeMediaIndex)) return prev;
+     return [...prev, activeMediaIndex];
+    });
     image.style.opacity = "1";
    }, 125);
   }
  }
+ //todo: FIX SO IT DOESN'T ONLY RENDER A SINGLE IMAGE//HAVE TO RERENDER IMAGES THAT WERE ALREADY SEEN
+ //todo: left/right arrow to change images
  return createPortal(
   <>
    <HideScroll>
@@ -241,25 +243,30 @@ const DisplayTweetMediaModal = ({
               <AiOutlineDoubleLeft className="text-2xl text-black dark:text-white" />
              )}
             </button>
-            {allMedia &&
-             allDimensions.length === allMedia.length &&
-             allMedia.length > 0 &&
-             allMedia.map((med, i) => (
-              <div key={med!.id} className="w-fit h-fit">
-               {i === activeMediaIndex && (
-                <Image
-                 ref={imgRef}
-                 src={med!.url}
-                 alt="tweet media"
-                 width={allDimensions[i].width}
-                 height={allDimensions[i].height}
-                 className="max-w-full max-h-full object-contain w-fit relative transition-all fadeIn"
-                 style={{ aspectRatio: Number(med!.aspectRatio) }}
-                 onLoad={() => setLoading(false)}
-                />
-               )}
-              </div>
-             ))}
+            <div>
+             {allMedia &&
+              allDimensions.length === allMedia.length &&
+              allMedia.length > 0 &&
+              allMedia.map((med, i) => (
+               <div key={med!.id} className="w-fit h-fit">
+                {i === activeMediaIndex && (
+                 <Image
+                  ref={imgRef}
+                  src={med!.url}
+                  alt="tweet media"
+                  width={allDimensions[i].width}
+                  height={allDimensions[i].height}
+                  className={cn(
+                   "max-w-full max-h-full object-contain w-fit",
+                   !seenIndexes.includes(i) && "fadeIn transition-all"
+                  )}
+                  style={{ aspectRatio: Number(med!.aspectRatio) }}
+                  onLoad={() => setLoading(false)}
+                 />
+                )}
+               </div>
+              ))}
+            </div>
            </>
           )}
           <button
