@@ -1,5 +1,3 @@
-import { fetchTweetAction } from "@/actions/tweet-actions";
-import { auth } from "@/auth";
 import Image from "next/image";
 import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 import moment from "moment";
@@ -7,11 +5,13 @@ import { FiShare } from "react-icons/fi";
 import { LuBookmark } from "react-icons/lu";
 import { FaRegHeart, FaRetweet } from "react-icons/fa6";
 import { BiMessageRounded } from "react-icons/bi";
-import PostReply from "@/components/Status/PostReply";
-import DisplayTweetMedia from "@/components/Home/DisplayTweetMedia";
 import ArrowBack from "@/components/Status/ArrowBack";
 import { headers } from "next/headers";
 import { Metadata } from "next";
+import { fetchTweetAction } from "@/actions/tweet-actions";
+import { auth } from "@/auth";
+import PostReply from "@/components/Status/PostReply";
+import MediaWrapper from "@/components/Status/MediaWrapper";
 
 type StatusProps = {
  id: string;
@@ -109,9 +109,7 @@ const page = async ({
     </div>
    </div>
    <div>{tweet.text}</div>
-   {tweet.media && tweet.media.length > 0 && (
-    <DisplayTweetMedia media={tweet.media} username={tweet.user.username} />
-   )}
+   {tweet.media && tweet.media.length > 0 && <MediaWrapper tweet={tweet} />}
    <div className="mt-3 text-mainGray text-[15px]">
     {moment(tweet.createdAt).format("LT \u00B7 ll")}
    </div>

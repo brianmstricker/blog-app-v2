@@ -1,6 +1,6 @@
+import { Suspense } from "react";
 import { fetchTweetsAction } from "@/actions/tweet-actions";
 import DisplayTweet from "@/components/Home/DisplayTweet";
-import { Suspense } from "react";
 import Loading from "./loading";
 
 export default async function Home() {

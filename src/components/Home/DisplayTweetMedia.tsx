@@ -16,6 +16,8 @@ type TweetMediaProps = {
     }[]
   | [];
  username: string | null;
+ renderModal: boolean;
+ setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type SelectedMedia = {
@@ -27,8 +29,12 @@ type SelectedMedia = {
  aspectRatio: string;
 };
 
-const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
- const [renderModal, setRenderModal] = useState(false);
+const DisplayTweetMedia = ({
+ media,
+ username,
+ renderModal,
+ setRenderModal,
+}: TweetMediaProps) => {
  const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null);
  function closeModal() {
   const modal = document.querySelector("#mediaModal");
@@ -44,7 +50,7 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
   <>
    {media &&
     media.length === 1 &&
-    media.map((med, i) => {
+    media.map((med) => {
      const imgAspectPercent = `${100 / Number(med.aspectRatio)}%`;
      return (
       <div key={med.id}>
@@ -61,8 +67,8 @@ const DisplayTweetMedia = ({ media, username }: TweetMediaProps) => {
           onClick={(e) => {
            e.stopPropagation();
            e.preventDefault();
-           setSelectedMedia(med);
-           setRenderModal(true);
+           // setSelectedMedia(med);
+           // setRenderModal(true);
            // window.history.pushState(
            //  null,
            //  "",

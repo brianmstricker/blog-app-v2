@@ -8,7 +8,8 @@ import Image from "next/image";
 import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export type DisplayTweetProps = {
  tweet: {
@@ -45,10 +46,37 @@ export type DisplayTweetProps = {
 
 const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
  //todo: likes functionality
+ const [renderModal, setRenderModal] = useState(false);
  const username = tweet.user.username;
+ const router = useRouter();
+ let isDragging = false;
+ const handleMouseDown = (e: any) => {
+  isDragging = false;
+  if (e.button === 0) return;
+  e.preventDefault();
+ };
+ const handleMouseUp = (e: any) => {
+  if (!isDragging && !renderModal) {
+   const target = e.target;
+   if (e.button === 2) return;
+   if (target.tagName === "IMG") {
+    return;
+   }
+   if (e.button === 1) {
+    e.preventDefault();
+    window.open(`/${username}/status/${tweet.id}`);
+    return;
+   }
+   if (e.button === 0) {
+    router.push(`/${username}/status/${tweet.id}`);
+   }
+  }
+ };
  return (
-  <Link
-   href={`/${username}/status/${tweet.id}`}
+  <div
+   onMouseDown={handleMouseDown}
+   onMouseUp={handleMouseUp}
+   onMouseMove={() => (isDragging = true)}
    className="border-b dark:border-b-white/25 hover:cursor-pointer bg-neutral-100 dark:bg-black hover:bg-neutral-200/30 dark:hover:bg-[#080808] block"
   >
    <article className="py-2 px-3 flex gap-3 leading-5" tabIndex={0}>
@@ -85,7 +113,12 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
       <div className="text-[15px] mt-[2px] font-light">{tweet.text}</div>
      )}
      {tweet.media && tweet.media.length > 0 && (
-      <DisplayTweetMedia media={tweet.media} username={tweet.user.username} />
+      <DisplayTweetMedia
+       media={tweet.media}
+       username={tweet.user.username}
+       renderModal={renderModal}
+       setRenderModal={setRenderModal}
+      />
      )}
      <div className="mt-2 mb-1 flex items-center justify-between text-mainGray">
       <div className="flex items-center justify-between max-w-[70%] w-full">
@@ -111,7 +144,7 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
      </div>
     </div>
    </article>
-  </Link>
+  </div>
  );
 };
 export default DisplayTweet;
