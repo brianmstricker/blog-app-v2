@@ -3,13 +3,16 @@ import { VscEllipsis } from "react-icons/vsc";
 import { BiMessageRounded } from "react-icons/bi";
 import { FaRetweet } from "react-icons/fa6";
 import { LuBookmark } from "react-icons/lu";
-import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
 import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { likeTweetAction } from "@/actions/tweet-actions";
+import { PiHeart, PiHeartFill } from "react-icons/pi";
+import { cn } from "@/lib/utils";
+import { User } from "next-auth";
 
 export type DisplayTweetProps = {
  tweet: {
@@ -42,10 +45,24 @@ export type DisplayTweetProps = {
    createdAt: Date;
   }[];
  };
+ usersLikedTweets?: string[];
+ setUsersLikedTweets?: React.Dispatch<React.SetStateAction<string[]>>;
+ user: User | undefined;
+ likesInfo?: { id: string; numberOfLikes: number }[];
+ setLikesInfo?: React.Dispatch<
+  React.SetStateAction<{ id: string; numberOfLikes: number }[]>
+ >;
 };
 
-const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
- //todo: likes functionality
+const DisplayTweet = ({
+ tweet,
+ usersLikedTweets,
+ setUsersLikedTweets,
+ user,
+ likesInfo,
+ setLikesInfo,
+}: DisplayTweetProps) => {
+ //todo: like animation
  const [renderModal, setRenderModal] = useState(false);
  const username = tweet.user.username;
  const router = useRouter();
@@ -59,7 +76,12 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
   if (!isDragging && !renderModal) {
    const target = e.target;
    if (e.button === 2) return;
-   if (target.tagName === "IMG") {
+   if (
+    target.tagName === "IMG" ||
+    target.classList.contains("iconBtn") ||
+    target.tagName === "path" ||
+    target.tagName === "svg"
+   ) {
     return;
    }
    if (e.button === 1) {
@@ -72,6 +94,36 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
    }
   }
  };
+ async function likeTweet() {
+  if (!user) return;
+  const like = await likeTweetAction({
+   tweetId: tweet.id,
+   userId: user.id,
+  });
+  if (like.success) {
+   const tweetId = tweet.id;
+   setUsersLikedTweets!((prev) => {
+    const updatedLikedTweets = like.like
+     ? [...prev, tweetId]
+     : prev.filter((id) => id !== tweetId);
+    return updatedLikedTweets;
+   });
+   setLikesInfo!((prev) => {
+    const updatedLikesInfo = prev.map((likeInfo) => {
+     if (likeInfo.id === tweetId) {
+      return {
+       ...likeInfo,
+       numberOfLikes: like.like
+        ? likeInfo.numberOfLikes + 1
+        : likeInfo.numberOfLikes - 1,
+      };
+     }
+     return likeInfo;
+    });
+    return updatedLikesInfo;
+   });
+  }
+ }
  return (
   <div
    onMouseDown={handleMouseDown}
@@ -120,26 +172,52 @@ const DisplayTweet = ({ tweet }: DisplayTweetProps) => {
        setRenderModal={setRenderModal}
       />
      )}
-     <div className="mt-2 mb-1 flex items-center justify-between text-mainGray">
+     <div className="flex items-center justify-between text-mainGray mt-1.5 -mb-1">
       <div className="flex items-center justify-between max-w-[70%] w-full">
        <div className="flex items-center gap-1">
-        <BiMessageRounded className="text-lg" />
-        <span className="text-[13px]">0</span>
+        <div className="p-2.5 rounded-full">
+         <BiMessageRounded className="text-lg iconBtn" />
+        </div>
+        <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">0</span>
        </div>
        <div className="flex items-center gap-1">
-        <FaRetweet className="text-lg" />
-        <span className="text-[13px]">0</span>
+        <div className="p-2.5 rounded-full">
+         <FaRetweet className="text-lg iconBtn" />
+        </div>
+        <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">0</span>
        </div>
-       <div className="flex items-center gap-1">
-        <FaRegHeart className="text-lg" />
+       <div
+        onClick={likeTweet}
+        className={cn(
+         "flex items-center gap-1 transition-all duration-150 hover:text-red-600 group iconBtn",
+         {
+          "text-red-600": usersLikedTweets?.includes(tweet.id),
+         }
+        )}
+       >
+        <div className="p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg">
+         {usersLikedTweets?.includes(tweet.id) ? (
+          <PiHeartFill className="iconBtn fill-red-500" />
+         ) : (
+          <PiHeart className="iconBtn" />
+         )}
+        </div>
         {tweet.likes && (
-         <span className="text-[13px]">{tweet.likes.length || 0}</span>
+         <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
+          {likesInfo
+           ?.filter((like) => like.id === tweet.id)
+           .map((like) => like.numberOfLikes)}
+         </span>
         )}
        </div>
       </div>
-      <div className="flex items-center gap-3 relative -left-2">
-       <LuBookmark className="text-lg" />
-       <FiShare className="text-lg" />
+      <div className="flex items-center gap-3 relative ">
+       <div className="p-2.5 rounded-ful -mr-5">
+        <LuBookmark className="text-lg iconBtn" />
+       </div>
+       <div className="p-2.5 rounded-ful">
+        <FiShare className="text-lg iconBtn" />
+       </div>
       </div>
      </div>
     </div>

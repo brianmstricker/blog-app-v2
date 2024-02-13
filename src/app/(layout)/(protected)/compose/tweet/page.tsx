@@ -15,7 +15,7 @@ const page = async () => {
    {Array.isArray(tweets) && tweets.length > 0 && (
     <>
      {tweets.map((tweet) => (
-      <DisplayTweet key={tweet.id} tweet={tweet} />
+      <DisplayTweet key={tweet.id} tweet={tweet} user={user} />
      ))}
     </>
    )}

@@ -157,3 +157,32 @@ export const fetchTweetAction = async ({
   return { error: error?.message || "Something went wrong" };
  }
 };
+
+export const likeTweetAction = async ({
+ tweetId,
+ userId,
+}: {
+ tweetId: string;
+ userId: string;
+}) => {
+ try {
+  const like = await db.like.findFirst({
+   where: { tweetId, userId },
+  });
+  if (like) {
+   await db.like.delete({ where: { id: like.id } });
+   // revalidatePath("/");
+   // revalidatePath(`/status/${tweetId}`);
+   return { success: true, like: false };
+  } else {
+   await db.like.create({
+    data: { tweetId, userId },
+   });
+   // revalidatePath("/");
+   // revalidatePath(`/status/${tweetId}`);
+   return { success: true, like: true };
+  }
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
