@@ -8,7 +8,7 @@ import { FiShare } from "react-icons/fi";
 import moment from "moment";
 import DisplayTweetMedia from "./DisplayTweetMedia";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { likeTweetAction } from "@/actions/tweet-actions";
 import { PiHeart, PiHeartFill } from "react-icons/pi";
 import { cn } from "@/lib/utils";
@@ -197,9 +197,9 @@ const DisplayTweet = ({
        >
         <div className="p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg">
          {usersLikedTweets?.includes(tweet.id) ? (
-          <PiHeartFill className="iconBtn fill-red-500" />
+          <PiHeartFill title="Unlike" className="iconBtn fill-red-500" />
          ) : (
-          <PiHeart className="iconBtn" />
+          <PiHeart title="Like" className="iconBtn" />
          )}
         </div>
         {tweet.likes && (

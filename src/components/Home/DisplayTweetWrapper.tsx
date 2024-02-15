@@ -45,7 +45,7 @@ const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
  useEffect(() => {
   if (user) {
    const likes = tweets.map((tweet) => {
-    return tweet.likes.filter((like) => like.userId === user.id);
+    return tweet.likes.filter((like) => like.userId == user.id);
    });
    const flatLikes = likes.flat().map((like) => like.tweetId);
    setUsersLikedTweets(flatLikes);
