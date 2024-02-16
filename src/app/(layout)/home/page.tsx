@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { fetchTweetsAction } from "@/actions/tweet-actions";
-import DisplayTweet from "@/components/Home/DisplayTweet";
 import Loading from "./loading";
 import DisplayTweetWrapper from "@/components/Home/DisplayTweetWrapper";
 import { auth } from "@/auth";

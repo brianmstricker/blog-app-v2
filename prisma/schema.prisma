@@ -12,20 +12,21 @@ datasource db {
 }
 
 model User {
- id            String    @id @default(cuid())
+ id            String     @id @default(cuid())
  name          String?
- username      String?   @unique @db.VarChar(30)
- handle        String?   @db.VarChar(30)
- email         String?   @unique
+ username      String?    @unique @db.VarChar(30)
+ handle        String?    @db.VarChar(30)
+ email         String?    @unique
  emailVerified DateTime?
  image         String?
  password      String?
- createdAt     DateTime  @default(now())
- updatedAt     DateTime  @updatedAt
+ createdAt     DateTime   @default(now())
+ updatedAt     DateTime   @updatedAt
  accounts      Account[]
  tweets        Tweet[]
  likes         Like[]
  Media         Media[]
+ bookmarks     Bookmark[]
 }
 
 model Account {
@@ -47,16 +48,17 @@ model Account {
 }
 
 model Tweet {
- id        String   @id @default(cuid())
- text      String?  @db.VarChar(300)
- createdAt DateTime @default(now())
- updatedAt DateTime @updatedAt
- reply     Boolean  @default(false)
+ id        String     @id @default(cuid())
+ text      String?    @db.VarChar(300)
+ createdAt DateTime   @default(now())
+ updatedAt DateTime   @updatedAt
+ reply     Boolean    @default(false)
  replyToId String?
  userId    String
  media     Media[]
- user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
  likes     Like[]
+ bookmarks Bookmark[]
 }
 
 model Media {
@@ -74,6 +76,17 @@ model Media {
 }
 
 model Like {
+ id        String   @id @default(cuid())
+ tweetId   String
+ userId    String
+ createdAt DateTime @default(now())
+ tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+ user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+ @@unique([tweetId, userId])
+}
+
+model Bookmark {
  id        String   @id @default(cuid())
  tweetId   String
  userId    String

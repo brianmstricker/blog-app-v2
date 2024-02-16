@@ -100,9 +100,9 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
      )}
      <div className="flex flex-1 flex-col ml-4 select-none">
       <span className="font-bold text-[14px] leading-[18px]">
-       {user.username}
+       {user.handle}
       </span>
-      <span className="text-mainGray">@{user.handle}</span>
+      <span className="text-mainGray">@{user.username}</span>
      </div>
      <div>
       <HiMiniEllipsisHorizontal />

@@ -5,12 +5,22 @@ import { BiSliderAlt } from "react-icons/bi";
 import { FaRegSmile } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { postTweetAction } from "@/actions/tweet-actions";
+import { postReplyAction, postTweetAction } from "@/actions/tweet-actions";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { TailSpin } from "react-loader-spinner";
 
-const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
+const CreateTweetBox = ({
+ userImage,
+ replyPage,
+ replyTweetUsername,
+ replyTweetId,
+}: {
+ userImage?: string | null;
+ replyPage?: boolean;
+ replyTweetUsername?: string | null | undefined;
+ replyTweetId?: string | null | undefined;
+}) => {
  //todo: add gif, emoji functionality
  //todo: add who can reply functionality
  //todo: maybe set background image on a div like twitter to hopefully stop images from popping in and out
@@ -20,9 +30,6 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  const [preview, setPreview] = useState<null | string[]>(null);
  const [imageAspect, setImageAspect] = useState<number | null>(null);
  const [loading, setLoading] = useState(false);
- const [mediaWidth, setMediaWidth] = useState<string | Blob>("");
- const [mediaHeight, setMediaHeight] = useState<string | Blob>("");
- const [mediaAspectRatio, setMediaAspectRatio] = useState<string | Blob>("");
  const inputRef = useRef<HTMLDivElement | null>(null);
  const tweetOptions = [
   { icon: <FaRegImage />, text: "Media" },
@@ -90,41 +97,50 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
    formData.append("height", JSON.stringify(height));
    formData.append("aspectRatio", JSON.stringify(aspectRatio));
   }
-  // if (media) {
-  //  media.forEach((file) => {
-  //   const img = document.createElement("img");
-  //   img.src = URL.createObjectURL(file);
-  //   img.onload = () => {
-  //    setMediaWidth(String(img.width));
-  //    setMediaHeight(String(img.height));
-  //    setMediaAspectRatio(String((img.width / img.height).toFixed(2)));
-  //   };
-  //   formData.append("width", mediaWidth);
-  //   formData.append("height", mediaHeight);
-  //   formData.append("aspectRatio", mediaAspectRatio);
-  //   formData.append("media", file);
-  //  });
-  // }
   if (tweet && tweet.length > 0 && tweet.length > 300) {
    return alert("Tweet is too long");
   }
   if (tweet && tweet.length > 0) {
    formData.append("text", tweet.trim());
   }
-  const post = await postTweetAction(formData);
-  if (post.success) {
-   setTweet("");
-   setMedia([]);
-   const tweetBox = document.getElementById("tweetBox");
-   const readOnlyInput = document.getElementById("readOnly");
-   const tweetLengthAmount = document.getElementById("tweetLengthAmount");
-   if (tweetBox && readOnlyInput && tweetLengthAmount) {
-    tweetBox.innerText = "";
-    readOnlyInput.innerHTML = "";
-    tweetLengthAmount.classList.add("opacity-0");
-   }
+  if (replyPage && replyTweetId && replyTweetUsername) {
+   formData.append("replyToId", replyTweetId);
+   formData.append("replyToUsername", replyTweetUsername);
   }
-  setLoading(false);
+  if (!replyPage) {
+   const post = await postTweetAction(formData);
+   if (post.success) {
+    setTweet("");
+    setMedia([]);
+    setWhoCanReply(false);
+    const tweetBox = document.getElementById("tweetBox");
+    const readOnlyInput = document.getElementById("readOnly");
+    const tweetLengthAmount = document.getElementById("tweetLengthAmount");
+    if (tweetBox && readOnlyInput && tweetLengthAmount) {
+     tweetBox.innerText = "";
+     readOnlyInput.innerHTML = "";
+     tweetLengthAmount.classList.add("opacity-0");
+    }
+   }
+   setLoading(false);
+  }
+  if (replyPage) {
+   const reply = await postReplyAction(formData);
+   if (reply.success) {
+    setTweet("");
+    setMedia([]);
+    setWhoCanReply(false);
+    const tweetBox = document.getElementById("tweetBox");
+    const readOnlyInput = document.getElementById("readOnly");
+    const tweetLengthAmount = document.getElementById("tweetLengthAmount");
+    if (tweetBox && readOnlyInput && tweetLengthAmount) {
+     tweetBox.innerText = "";
+     readOnlyInput.innerHTML = "";
+     tweetLengthAmount.classList.add("opacity-0");
+    }
+   }
+   setLoading(false);
+  }
  }
  function buttonDisabled() {
   if (loading) return true;
@@ -183,7 +199,12 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
  return (
   <div className="border-b dark:border-b-white/25 select-none">
    <div className="px-4 pt-2.5 flex">
-    <div className="shrink-0 select-none">
+    <div
+     className={cn(
+      "shrink-0 select-none",
+      replyPage && whoCanReply ? "mt-3 transition-all duration-200" : ""
+     )}
+    >
      {!userImage ? (
       <div className="w-11 h-11 rounded-full bg-blue-600" />
      ) : (
@@ -198,8 +219,20 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
       </div>
      )}
     </div>
-    <div className="flex flex-col ml-3 py-2 grow max-w-[90%]">
-     <div onClick={handleParentClick}>
+    <div className="flex flex-col ml-3 py-2 grow max-w-[90%] relative">
+     {whoCanReply && replyPage && (
+      <div className="text-[15px] font-light tracking-wide dark:text-white/50 text-gray-500/60 absolute -top-[10px]">
+       <div>
+        Replying to <span className="text-blue-400">@{replyTweetUsername}</span>
+       </div>
+      </div>
+     )}
+     <div
+      onClick={handleParentClick}
+      className={
+       replyPage && whoCanReply ? "mt-3 transition-all duration-200" : ""
+      }
+     >
       <div
        onClick={(e) => {
         e.stopPropagation();
@@ -209,7 +242,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
        <div className="select-none pointer-events-none">
         {!tweet && (
          <span className="absolute dark:text-white/50 text-gray-500/60 font-extralight">
-          What is happening?!
+          {replyPage ? "Post your reply" : "What is happening?!"}
          </span>
         )}
        </div>
@@ -357,7 +390,7 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
         </div>
        </div>
       )}
-      {whoCanReply && (
+      {whoCanReply && !replyPage && (
        <div className="border-b dark:border-b-white/25">
         <div className="mb-6 flex items-center gap-2 ml-1 text-main text-sm font-medium relative top-3">
          <FaEarthAmericas />
@@ -366,60 +399,126 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
        </div>
       )}
      </div>
-     <div className="flex items-center justify-between mt-2">
+     <div
+      className={cn(
+       "flex items-center justify-between ",
+       replyPage ? "-mt-4" : "mt-2",
+       whoCanReply && replyPage ? "mt-2" : ""
+      )}
+     >
       <div>
-       {tweetOptions.map((option) => (
-        <div
-         key={option.text}
-         className="group inline-flex flex-col relative justify-center items-center"
-        >
-         <label
-          className={cn(
-           "text-main cursor-pointer rounded-full font-bold text-xl inline-flex flex-col items-center p-2 focus:outline-main focus:outline",
-           option.text === "Media" && media?.length === 4 && "opacity-50"
-          )}
-          tabIndex={0}
-         >
-          {option.icon}
-          {option.text === "Media" && (
-           <input
-            disabled={media?.length === 4}
-            type="file"
-            multiple={true}
-            className="hidden"
-            onChange={async (e) => {
-             if (!e.target.files || e.target.files.length === 0) {
-              return;
-             }
-             if (e.target.files && e.target.files.length > 0) {
-              if (e.target.files.length > 4)
-               return alert("You can only upload 4 images at a time");
-              if (e.target.files.length <= 4) {
-               const filesArray = Array.from(e.target.files);
-               if (filesArray.length <= 4) {
-                const mediaFiles = await Promise.all(
-                 filesArray.map(async (file) => {
-                  return file;
-                 })
-                );
-                if (media) {
-                 const updatedMedia = [...media, ...mediaFiles];
-                 if (updatedMedia.length > 4)
-                  return alert("You can only upload 4 images at a time");
-                 setMedia(updatedMedia as File[]);
+       {!replyPage && (
+        <>
+         {tweetOptions.map((option) => (
+          <div
+           key={option.text}
+           className="group inline-flex flex-col relative justify-center items-center"
+          >
+           <label
+            className={cn(
+             "text-main cursor-pointer rounded-full font-bold text-xl inline-flex flex-col items-center p-2 focus:outline-main focus:outline",
+             option.text === "Media" && media?.length === 4 && "opacity-50"
+            )}
+            tabIndex={0}
+           >
+            {option.icon}
+            {option.text === "Media" && (
+             <input
+              disabled={media?.length === 4}
+              type="file"
+              multiple={true}
+              className="hidden"
+              onChange={async (e) => {
+               if (!e.target.files || e.target.files.length === 0) {
+                return;
+               }
+               if (e.target.files && e.target.files.length > 0) {
+                if (e.target.files.length > 4)
+                 return alert("You can only upload 4 images at a time");
+                if (e.target.files.length <= 4) {
+                 const filesArray = Array.from(e.target.files);
+                 if (filesArray.length <= 4) {
+                  const mediaFiles = await Promise.all(
+                   filesArray.map(async (file) => {
+                    return file;
+                   })
+                  );
+                  if (media) {
+                   const updatedMedia = [...media, ...mediaFiles];
+                   if (updatedMedia.length > 4)
+                    return alert("You can only upload 4 images at a time");
+                   setMedia(updatedMedia as File[]);
+                  }
+                 }
                 }
                }
-              }
-             }
-            }}
-           />
-          )}
-         </label>
-         <span className="text-xs opacity-0 group-hover:opacity-100 mt-2 text-white bg-gray-600 p-1 rounded-sm group-focus-within:opacity-100 w-fit absolute -bottom-6">
-          {option.text}
-         </span>
-        </div>
-       ))}
+              }}
+             />
+            )}
+           </label>
+           <span className="text-xs opacity-0 group-hover:opacity-100 mt-2 text-white bg-gray-600 p-1 rounded-sm group-focus-within:opacity-100 w-fit absolute -bottom-6">
+            {option.text}
+           </span>
+          </div>
+         ))}
+        </>
+       )}
+       {replyPage && whoCanReply && (
+        <>
+         {tweetOptions.map((option) => (
+          <div
+           key={option.text}
+           className="group inline-flex flex-col relative justify-center items-center"
+          >
+           <label
+            className={cn(
+             "text-main cursor-pointer rounded-full font-bold text-xl inline-flex flex-col items-center p-2 focus:outline-main focus:outline",
+             option.text === "Media" && media?.length === 4 && "opacity-50"
+            )}
+            tabIndex={0}
+           >
+            {option.icon}
+            {option.text === "Media" && (
+             <input
+              disabled={media?.length === 4}
+              type="file"
+              multiple={true}
+              className="hidden"
+              onChange={async (e) => {
+               if (!e.target.files || e.target.files.length === 0) {
+                return;
+               }
+               if (e.target.files && e.target.files.length > 0) {
+                if (e.target.files.length > 4)
+                 return alert("You can only upload 4 images at a time");
+                if (e.target.files.length <= 4) {
+                 const filesArray = Array.from(e.target.files);
+                 if (filesArray.length <= 4) {
+                  const mediaFiles = await Promise.all(
+                   filesArray.map(async (file) => {
+                    return file;
+                   })
+                  );
+                  if (media) {
+                   const updatedMedia = [...media, ...mediaFiles];
+                   if (updatedMedia.length > 4)
+                    return alert("You can only upload 4 images at a time");
+                   setMedia(updatedMedia as File[]);
+                  }
+                 }
+                }
+               }
+              }}
+             />
+            )}
+           </label>
+           <span className="text-xs opacity-0 group-hover:opacity-100 mt-2 text-white bg-gray-600 p-1 rounded-sm group-focus-within:opacity-100 w-fit absolute -bottom-6">
+            {option.text}
+           </span>
+          </div>
+         ))}
+        </>
+       )}
       </div>
       <div className="flex gap-2 items-center">
        <span
@@ -431,25 +530,50 @@ const CreateTweetBox = ({ userImage }: { userImage?: string | null }) => {
        <button
         onClick={handleSubmit}
         className={cn(
-         "bg-main py-1.5 px-4 rounded-full font-bold text-white transition-all duration-200",
-         buttonDisabled() ? "opacity-50 cursor-default" : ""
+         "bg-main px-4 rounded-full font-bold text-white transition-all duration-200",
+         buttonDisabled() ? "opacity-50 cursor-default" : "",
+         replyPage ? "py-2" : "py-1.5",
+         replyPage && !whoCanReply ? "-mt-[38px]" : ""
         )}
         disabled={buttonDisabled()}
        >
-        {!loading ? (
-         "Post"
-        ) : (
-         <span className="flex items-center gap-2">
-          Posting
-          <TailSpin
-           visible={true}
-           height="16"
-           width="16"
-           color="white"
-           ariaLabel="tail-spin-loading"
-           radius="1"
-          />
-         </span>
+        {!replyPage && (
+         <>
+          {!loading ? (
+           "Post"
+          ) : (
+           <span className="flex items-center gap-2">
+            Posting
+            <TailSpin
+             visible={true}
+             height="16"
+             width="16"
+             color="white"
+             ariaLabel="tail-spin-loading"
+             radius="1"
+            />
+           </span>
+          )}
+         </>
+        )}
+        {replyPage && (
+         <>
+          {!loading ? (
+           "Reply"
+          ) : (
+           <span className="flex items-center gap-2">
+            Replying
+            <TailSpin
+             visible={true}
+             height="16"
+             width="16"
+             color="white"
+             ariaLabel="tail-spin-loading"
+             radius="1"
+            />
+           </span>
+          )}
+         </>
         )}
        </button>
       </div>

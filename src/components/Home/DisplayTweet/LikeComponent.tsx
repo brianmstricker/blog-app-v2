@@ -98,13 +98,11 @@ const LikeComponent = ({
      <PiHeart title="Like" className="iconBtn" />
     )}
    </div>
-   {tweet.likes && (
-    <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
-     {likesInfo
-      ?.filter((like) => like.id === tweet.id)
-      .map((like) => like.numberOfLikes)}
-    </span>
-   )}
+   <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
+    {likesInfo
+     ?.filter((like) => like.id === tweet.id)
+     .map((like) => like.numberOfLikes) || 0}
+   </span>
   </div>
  );
 };
