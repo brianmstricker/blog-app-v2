@@ -113,7 +113,7 @@ export const postTweetAction = async (formData: FormData) => {
 
 export const fetchTweetsAction = async () => {
  try {
-  const tweets = await db.tweet.findMany({
+  let tweets = await db.tweet.findMany({
    where: { replyToId: null },
    orderBy: { createdAt: "desc" },
    include: {
@@ -124,7 +124,24 @@ export const fetchTweetsAction = async () => {
     media: true,
    },
   });
-  return tweets || [];
+  const replies = await db.tweet.findMany({
+   where: { replyToId: { not: null } },
+   orderBy: { createdAt: "desc" },
+   include: {
+    user: {
+     select: { username: true, handle: true, image: true },
+    },
+    likes: true,
+    media: true,
+   },
+  });
+  tweets = tweets.map((tweet) => {
+   const repliesLength = replies.filter(
+    (reply) => reply.replyToId === tweet.id
+   ).length;
+   return { ...tweet, repliesLength };
+  });
+  return tweets || null;
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }

@@ -68,8 +68,7 @@ type StatusProps = {
       tweetId: string;
       createdAt: Date;
      }[];
-    }[]
-  | null;
+    }[];
 };
 
 export async function generateMetadata({

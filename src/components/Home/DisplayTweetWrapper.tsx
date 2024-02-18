@@ -12,6 +12,7 @@ type DisplayTweetWrapperProps = {
   reply?: boolean;
   replyToId?: string | null;
   userId: string;
+  repliesLength?: number;
   user: {
    handle: string | null;
    username: string | null;

@@ -22,6 +22,7 @@ export type DisplayTweetProps = {
   reply?: boolean;
   replyToId?: string | null;
   userId: string;
+  repliesLength?: number;
   user: {
    handle: string | null;
    username: string | null;
@@ -152,7 +153,9 @@ const DisplayTweet = ({
         <div className="p-2.5 rounded-full">
          <BiMessageRounded className="text-lg iconBtn" />
         </div>
-        <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">0</span>
+        <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
+         {tweet.repliesLength}
+        </span>
        </div>
        <div className="flex items-center gap-1">
         <div className="p-2.5 rounded-full">

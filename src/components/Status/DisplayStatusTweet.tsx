@@ -39,6 +39,36 @@ type fetchTweetType = {
     createdAt: Date;
    }[];
   };
+  replies: {
+   id: string;
+   text: string | null;
+   createdAt: Date;
+   updatedAt: Date;
+   reply?: boolean;
+   replyToId?: string | null;
+   userId: string;
+   user: {
+    handle: string | null;
+    username: string | null;
+    image: string | null;
+   };
+   media:
+    | {
+       id: string;
+       tweetId: string;
+       url: string;
+       width: string;
+       height: string;
+       aspectRatio: string;
+      }[]
+    | [];
+   likes: {
+    id: string;
+    userId: string;
+    tweetId: string;
+    createdAt: Date;
+   }[];
+  }[];
  };
 };
 
@@ -87,7 +117,7 @@ const DisplayStatusTweet = ({ fetchTweet }: fetchTweetType) => {
      <div className="flex items-center justify-between text-mainGray">
       <div className="flex items-center gap-1">
        <BiMessageRounded className="text-xl" />
-       <span className="text-[13px]">0</span>
+       <span className="text-[13px]">{fetchTweet.replies.length}</span>
       </div>
       <div className="flex items-center gap-1">
        <FaRetweet className="text-xl" />
