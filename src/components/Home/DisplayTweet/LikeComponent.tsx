@@ -1,9 +1,11 @@
+"use client";
 import { likeTweetAction } from "@/actions/tweet-actions";
 import { cn } from "@/lib/utils";
 import { User } from "next-auth";
 import { PiHeart, PiHeartFill } from "react-icons/pi";
 
 type LikeComponentProps = {
+ statusPage?: boolean;
  tweet: {
   id: string;
   text: string | null;
@@ -50,6 +52,7 @@ const LikeComponent = ({
  user,
  setUsersLikedTweets,
  setLikesInfo,
+ statusPage,
 }: LikeComponentProps) => {
  async function likeTweet() {
   if (!user) return;
@@ -67,7 +70,7 @@ const LikeComponent = ({
    });
    setLikesInfo!((prev) => {
     const updatedLikesInfo = prev.map((likeInfo) => {
-     if (likeInfo.id === tweetId) {
+     if (likeInfo.id == tweetId) {
       return {
        ...likeInfo,
        numberOfLikes: like.like
@@ -82,28 +85,35 @@ const LikeComponent = ({
   }
  }
  return (
-  <div
-   onClick={likeTweet}
-   className={cn(
-    "flex items-center gap-1 transition-all duration-150 hover:text-red-600 group iconBtn",
-    {
-     "text-red-600": usersLikedTweets?.includes(tweet.id),
-    }
-   )}
-  >
-   <div className="p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg">
-    {usersLikedTweets?.includes(tweet.id) ? (
-     <PiHeartFill title="Unlike" className="iconBtn fill-red-500" />
-    ) : (
-     <PiHeart title="Like" className="iconBtn" />
+  <>
+   <div
+    title={usersLikedTweets?.includes(tweet.id) ? "Unlike" : "Like"}
+    onClick={likeTweet}
+    className={cn(
+     "flex items-center gap-1 transition-all duration-150 hover:text-red-600 group iconBtn",
+     {
+      "text-red-600": usersLikedTweets?.includes(tweet.id),
+     }
     )}
+   >
+    <div className="p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg cursor-pointer">
+     {usersLikedTweets?.includes(tweet.id) ? (
+      <PiHeartFill
+       className={cn("iconBtn fill-red-500", statusPage && "text-[22px]")}
+      />
+     ) : (
+      <PiHeart className={cn("iconBtn", statusPage && "text-[22px]")} />
+     )}
+    </div>
+    <span className="text-[13px] -ml-2.5 iconBtn w-[2px] cursor-pointer">
+     {!statusPage
+      ? likesInfo
+         ?.filter((like) => like.id === tweet.id)
+         .map((like) => like.numberOfLikes) || 0
+      : likesInfo?.map((like) => like.numberOfLikes) || 0}
+    </span>
    </div>
-   <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
-    {likesInfo
-     ?.filter((like) => like.id === tweet.id)
-     .map((like) => like.numberOfLikes) || 0}
-   </span>
-  </div>
+  </>
  );
 };
 export default LikeComponent;

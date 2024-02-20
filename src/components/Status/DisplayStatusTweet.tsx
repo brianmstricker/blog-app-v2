@@ -3,11 +3,13 @@ import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 import moment from "moment";
 import { FiShare } from "react-icons/fi";
 import { LuBookmark } from "react-icons/lu";
-import { FaRegHeart, FaRetweet } from "react-icons/fa6";
+import { FaRetweet } from "react-icons/fa6";
 import { BiMessageRounded } from "react-icons/bi";
 import MediaWrapper from "@/components/Status/MediaWrapper";
+import LikeComponent from "../Home/DisplayTweet/LikeComponent";
+import { User } from "next-auth";
 
-type fetchTweetType = {
+export type fetchTweetType = {
  fetchTweet: {
   tweet: {
    id: string;
@@ -70,10 +72,24 @@ type fetchTweetType = {
    }[];
   }[];
  };
+ user: User | undefined;
+ usersLikedTweets?: string[];
+ setUsersLikedTweets?: React.Dispatch<React.SetStateAction<string[]>>;
+ likesInfo?: { id: string; numberOfLikes: number }[];
+ setLikesInfo?: React.Dispatch<
+  React.SetStateAction<{ id: string; numberOfLikes: number }[]>
+ >;
 };
 
-const DisplayStatusTweet = ({ fetchTweet }: fetchTweetType) => {
- //todo: get functionality from displaytweet component working here
+const DisplayStatusTweet = ({
+ fetchTweet,
+ user,
+ usersLikedTweets,
+ setUsersLikedTweets,
+ likesInfo,
+ setLikesInfo,
+}: fetchTweetType) => {
+ //todo: like functionality, bookmark functionality
  return (
   <>
    <div
@@ -116,23 +132,24 @@ const DisplayStatusTweet = ({ fetchTweet }: fetchTweetType) => {
     <div className="py-3">
      <div className="flex items-center justify-between text-mainGray">
       <div className="flex items-center gap-1">
-       <BiMessageRounded className="text-xl" />
+       <BiMessageRounded className="text-[22px]" />
        <span className="text-[13px]">{fetchTweet.replies.length}</span>
       </div>
       <div className="flex items-center gap-1">
-       <FaRetweet className="text-xl" />
+       <FaRetweet className="text-[22px]" />
        <span className="text-[13px]">0</span>
       </div>
-      <div className="flex items-center gap-1">
-       <FaRegHeart className="text-xl" />
-       {fetchTweet.tweet.likes && (
-        <span className="text-[13px]">
-         {fetchTweet.tweet.likes.length || 0}
-        </span>
-       )}
-      </div>
-      <LuBookmark className="text-xl" />
-      <FiShare className="text-xl" />
+      <LikeComponent
+       tweet={fetchTweet.tweet}
+       statusPage
+       user={user}
+       usersLikedTweets={usersLikedTweets}
+       setUsersLikedTweets={setUsersLikedTweets}
+       likesInfo={likesInfo}
+       setLikesInfo={setLikesInfo}
+      />
+      <LuBookmark className="text-[22px]" />
+      <FiShare className="text-[22px]" />
      </div>
     </div>
    </div>
