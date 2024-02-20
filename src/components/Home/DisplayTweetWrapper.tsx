@@ -53,7 +53,7 @@ const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
   }
  }, [user, tweets]);
  return (
-  <>
+  <div className="pb-48">
    {tweets.map((tweet) => (
     <DisplayTweet
      key={tweet.id}
@@ -65,7 +65,7 @@ const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
      user={user}
     />
    ))}
-  </>
+  </div>
  );
 };
 export default DisplayTweetWrapper;
