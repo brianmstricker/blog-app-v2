@@ -4,12 +4,12 @@ import DisplayStatusTweet, { fetchTweetType } from "./DisplayStatusTweet";
 
 const DisplayStatusTweetWrapper = ({ fetchTweet, user }: fetchTweetType) => {
  const [usersLikedTweets, setUsersLikedTweets] = useState<string[]>([]);
- const [likesInfo, setLikesInfo] = useState(
-  fetchTweet.tweet.likes.map((tweet) => ({
-   id: tweet.tweetId,
+ const [likesInfo, setLikesInfo] = useState([
+  {
+   id: fetchTweet.tweet.id,
    numberOfLikes: fetchTweet.tweet.likes.length,
-  }))
- );
+  },
+ ]);
  useEffect(() => {
   if (user) {
    const likes = fetchTweet.tweet.likes.filter(
