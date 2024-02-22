@@ -48,6 +48,18 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
    window.removeEventListener("keydown", handleKeyDown);
   };
  }, []);
+ useEffect(() => {
+  if (!showLogoutMenu) return;
+  const handleKeyDown = (e: any) => {
+   if (e.key === "Escape") {
+    setShowLogoutMenu(false);
+   }
+  };
+  window.addEventListener("keydown", handleKeyDown);
+  return () => {
+   window.removeEventListener("keydown", handleKeyDown);
+  };
+ }, [showLogoutMenu]);
  return (
   <>
    <div className="relative">
