@@ -8,6 +8,7 @@ import { BiMessageRounded } from "react-icons/bi";
 import MediaWrapper from "@/components/Status/MediaWrapper";
 import LikeComponent from "../Home/DisplayTweet/LikeComponent";
 import { User } from "next-auth";
+import BookmarkComponent from "../Home/DisplayTweet/BookmarkComponent";
 
 export type fetchTweetType = {
  fetchTweet: {
@@ -35,6 +36,12 @@ export type fetchTweetType = {
       }[]
     | [];
    likes: {
+    id: string;
+    userId: string;
+    tweetId: string;
+    createdAt: Date;
+   }[];
+   bookmarks: {
     id: string;
     userId: string;
     tweetId: string;
@@ -79,6 +86,12 @@ export type fetchTweetType = {
  setLikesInfo?: React.Dispatch<
   React.SetStateAction<{ id: string; numberOfLikes: number }[]>
  >;
+ usersBookmarks?: string[];
+ setUsersBookmarks?: React.Dispatch<React.SetStateAction<string[]>>;
+ bookmarkInfo?: { id: string; numberOfBookmarks: number }[];
+ setBookmarkInfo?: React.Dispatch<
+  React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
+ >;
 };
 
 const DisplayStatusTweet = ({
@@ -88,8 +101,11 @@ const DisplayStatusTweet = ({
  setUsersLikedTweets,
  likesInfo,
  setLikesInfo,
+ usersBookmarks,
+ setUsersBookmarks,
+ bookmarkInfo,
+ setBookmarkInfo,
 }: fetchTweetType) => {
- //todo: like functionality, bookmark functionality
  return (
   <>
    <div
@@ -133,7 +149,7 @@ const DisplayStatusTweet = ({
      <div className="flex items-center justify-between text-mainGray">
       <div className="flex items-center gap-1">
        <BiMessageRounded className="text-[22px]" />
-       <span className="text-[13px]">{fetchTweet.replies.length}</span>
+       <span className="text-[13px] w-2">{fetchTweet.replies.length}</span>
       </div>
       <div className="flex items-center gap-1">
        <FaRetweet className="text-[22px]" />
@@ -148,7 +164,15 @@ const DisplayStatusTweet = ({
        likesInfo={likesInfo}
        setLikesInfo={setLikesInfo}
       />
-      <LuBookmark className="text-[22px]" />
+      <BookmarkComponent
+       tweet={fetchTweet.tweet}
+       statusPage
+       user={user}
+       usersBookmarks={usersBookmarks}
+       setUsersBookmarks={setUsersBookmarks}
+       bookmarkInfo={bookmarkInfo}
+       setBookmarkInfo={setBookmarkInfo}
+      />
       <FiShare className="text-[22px]" />
      </div>
     </div>

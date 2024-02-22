@@ -122,6 +122,7 @@ export const fetchTweetsAction = async () => {
     },
     likes: true,
     media: true,
+    bookmarks: true,
    },
   });
   const replies = await db.tweet.findMany({
@@ -133,6 +134,7 @@ export const fetchTweetsAction = async () => {
     },
     likes: true,
     media: true,
+    bookmarks: true,
    },
   });
   tweets = tweets.map((tweet) => {
@@ -168,6 +170,7 @@ export const fetchTweetAction = async ({
     },
     likes: true,
     media: true,
+    bookmarks: true,
    },
   });
   const replies = await db.tweet.findMany({
@@ -234,7 +237,7 @@ export const bookmarkTweetAction = async ({
    await db.bookmark.create({
     data: { tweetId, userId },
    });
-   return { success: true, like: true };
+   return { success: true, bookmark: true };
   }
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };

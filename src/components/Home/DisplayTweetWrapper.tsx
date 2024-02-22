@@ -34,14 +34,27 @@ type DisplayTweetWrapperProps = {
    tweetId: string;
    createdAt: Date;
   }[];
+  bookmarks: {
+   id: string;
+   userId: string;
+   tweetId: string;
+   createdAt: Date;
+  }[];
  }[];
  user: User | undefined;
 };
 
 const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
  const [usersLikedTweets, setUsersLikedTweets] = useState<string[]>([]);
+ const [usersBookmarks, setUsersBookmarks] = useState<string[]>([]);
  const [likesInfo, setLikesInfo] = useState(
   tweets.map((tweet) => ({ id: tweet.id, numberOfLikes: tweet.likes.length }))
+ );
+ const [bookmarkInfo, setBookmarkInfo] = useState(
+  tweets.map((tweet) => ({
+   id: tweet.id,
+   numberOfBookmarks: tweet.bookmarks.length,
+  }))
  );
  useEffect(() => {
   if (user) {
@@ -50,6 +63,11 @@ const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
    });
    const flatLikes = likes.flat().map((like) => like.tweetId);
    setUsersLikedTweets(flatLikes);
+   const bookmarks = tweets.map((tweet) => {
+    return tweet.bookmarks.filter((bookmark) => bookmark.userId == user.id);
+   });
+   const flatBookmarks = bookmarks.flat().map((bookmark) => bookmark.tweetId);
+   setUsersBookmarks(flatBookmarks);
   }
  }, [user, tweets]);
  return (
@@ -58,11 +76,15 @@ const DisplayTweetWrapper = ({ tweets, user }: DisplayTweetWrapperProps) => {
     <DisplayTweet
      key={tweet.id}
      tweet={tweet}
+     user={user}
      usersLikedTweets={usersLikedTweets}
      likesInfo={likesInfo}
      setLikesInfo={setLikesInfo}
      setUsersLikedTweets={setUsersLikedTweets}
-     user={user}
+     usersBookmarks={usersBookmarks}
+     setUsersBookmarks={setUsersBookmarks}
+     bookmarkInfo={bookmarkInfo}
+     setBookmarkInfo={setBookmarkInfo}
     />
    ))}
   </div>

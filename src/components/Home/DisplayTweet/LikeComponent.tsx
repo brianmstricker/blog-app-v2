@@ -105,7 +105,7 @@ const LikeComponent = ({
       <PiHeart className={cn("iconBtn", statusPage && "text-[22px]")} />
      )}
     </div>
-    <span className="text-[13px] -ml-2.5 iconBtn w-[2px] cursor-pointer">
+    <span className="text-[13px] -ml-2.5 iconBtn w-2 cursor-pointer">
      {!statusPage
       ? likesInfo
          ?.filter((like) => like.id === tweet.id)

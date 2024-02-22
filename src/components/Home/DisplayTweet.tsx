@@ -53,6 +53,12 @@ export type DisplayTweetProps = {
   React.SetStateAction<{ id: string; numberOfLikes: number }[]>
  >;
  isReply?: boolean;
+ usersBookmarks?: string[];
+ setUsersBookmarks?: React.Dispatch<React.SetStateAction<string[]>>;
+ bookmarkInfo?: { id: string; numberOfBookmarks: number }[];
+ setBookmarkInfo?: React.Dispatch<
+  React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
+ >;
 };
 
 const DisplayTweet = ({
@@ -63,6 +69,10 @@ const DisplayTweet = ({
  likesInfo,
  setLikesInfo,
  isReply,
+ usersBookmarks,
+ setUsersBookmarks,
+ bookmarkInfo,
+ setBookmarkInfo,
 }: DisplayTweetProps) => {
  //todo: like animation
  const [renderModal, setRenderModal] = useState(false);
@@ -153,7 +163,7 @@ const DisplayTweet = ({
         <div className="p-2.5 rounded-full">
          <BiMessageRounded className="text-lg iconBtn" />
         </div>
-        <span className="text-[13px] -ml-2.5 iconBtn w-[2px]">
+        <span className="text-[13px] -ml-2.5 iconBtn w-2">
          {tweet.repliesLength}
         </span>
        </div>
@@ -165,15 +175,22 @@ const DisplayTweet = ({
        </div>
        <LikeComponent
         tweet={tweet}
+        user={user}
         usersLikedTweets={usersLikedTweets}
         likesInfo={likesInfo}
-        user={user}
         setUsersLikedTweets={setUsersLikedTweets}
         setLikesInfo={setLikesInfo}
        />
       </div>
       <div className="flex items-center gap-3 relative ">
-       <BookmarkComponent />
+       <BookmarkComponent
+        tweet={tweet}
+        user={user}
+        usersBookmarks={usersBookmarks}
+        setUsersBookmarks={setUsersBookmarks}
+        bookmarkInfo={bookmarkInfo}
+        setBookmarkInfo={setBookmarkInfo}
+       />
        <div className="p-2.5 rounded-ful">
         <FiShare className="text-lg iconBtn" />
        </div>
