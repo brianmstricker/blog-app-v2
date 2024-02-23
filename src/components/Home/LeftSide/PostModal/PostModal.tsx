@@ -9,6 +9,7 @@ import { ThreeCircles } from "react-loader-spinner";
 import FocusTrap from "focus-trap-react";
 import { PiFeather } from "react-icons/pi";
 import { FaPlus } from "react-icons/fa";
+import CreateTweetBox from "../../HomeTweetBox/CreateTweetBox";
 
 const PostModal = ({ userImg }: { userImg?: string | null }) => {
  const router = useRouter();
@@ -93,7 +94,7 @@ const PostModal = ({ userImg }: { userImg?: string | null }) => {
      <>
       <HideScroll>
        <FocusTrap>
-        <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center">
+        <div className="w-screen h-screen fixed inset-0 bg-slate-600/80 dark:bg-[#5b708366] z-[100] flex justify-center items-start">
          {closingModal && (
           <div className="flex items-center justify-center">
            <div tabIndex={0} className="w-0 h-0" />
@@ -109,17 +110,15 @@ const PostModal = ({ userImg }: { userImg?: string | null }) => {
          {!closingModal && (
           <div
            ref={modalRef}
-           className="bg-white dark:bg-black sm:max-w-[600px] w-[100%] h-[100%] sm:max-h-[275px] rounded-2xl p-3 sm:mt-12 relative"
+           className="bg-white dark:bg-black z-[0] sm:max-w-[600px] w-[100%] h-[100%] sm:h-auto sm:rounded-2xl p-3 relative sm:top-[5%] sm:max-h-[90vh]"
           >
            <button
-            className="p-[2px] rounded-full relative top-1 left-1"
+            className="p-[2px] rounded-full relative top-1 left-1 mb-6"
             onClick={closeModal}
            >
             <IoClose className="w-5 h-5" />
            </button>
-           <div className="h-[90%]">
-            <ModalTweetBox userImg={userImg} closeModal={closeModal} />
-           </div>
+           <ModalTweetBox userImg={userImg} closeModal={closeModal} />
           </div>
          )}
         </div>

@@ -11,7 +11,9 @@
 }
 
 #tweetBox,
-#readOnly {
+#readOnly,
+#tweetBoxModal,
+#readOnlyModal {
  -webkit-user-modify: read-write-plaintext-only;
 }
 

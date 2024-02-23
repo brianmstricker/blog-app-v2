@@ -149,6 +149,9 @@ const CreateTweetBox = ({
   if (tweet && !media) {
    if (tweet.length > 300 || tweet.trim() === "") return true;
   }
+  if (tweet && media && media.length === 0) {
+   if (tweet.length > 300 || tweet.trim() === "") return true;
+  }
   if (tweet && media && media.length > 0) {
    if (tweet.length > 300) {
     return true;
