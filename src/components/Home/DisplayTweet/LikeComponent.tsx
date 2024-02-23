@@ -96,7 +96,7 @@ const LikeComponent = ({
      }
     )}
    >
-    <div className="p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg cursor-pointer">
+    <div className="p-2.5 rounded-full group-hover:bg-black/5 dark:group-hover:bg-white/5 iconBtn text-lg cursor-pointer">
      {usersLikedTweets?.includes(tweet.id) ? (
       <PiHeartFill
        className={cn("iconBtn fill-red-500", statusPage && "text-[22px]")}

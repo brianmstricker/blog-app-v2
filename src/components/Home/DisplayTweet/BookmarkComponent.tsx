@@ -43,6 +43,7 @@ type BookmarkComponentProps = {
  setBookmarkInfo?: React.Dispatch<
   React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
  >;
+ setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkComponent = ({
@@ -53,6 +54,7 @@ const BookmarkComponent = ({
  setUsersBookmarks,
  setBookmarkInfo,
  statusPage,
+ setBookmarkRemovedBanner,
 }: BookmarkComponentProps) => {
  async function bookmarkTweet() {
   if (!user) return;
@@ -61,6 +63,12 @@ const BookmarkComponent = ({
    userId: user.id,
   });
   if (bookmark.success) {
+   if (!bookmark.bookmark) {
+    setBookmarkRemovedBanner!(true);
+    setTimeout(() => {
+     setBookmarkRemovedBanner!(false);
+    }, 3000);
+   }
    const tweetId = tweet.id;
    setUsersBookmarks!((prev) => {
     const updatedBookmarks = bookmark.bookmark
@@ -69,7 +77,7 @@ const BookmarkComponent = ({
     return updatedBookmarks;
    });
    setBookmarkInfo!((prev) => {
-    const updatedLikesInfo = prev.map((bookmarkInfo) => {
+    const updatedBookmarkInfo = prev.map((bookmarkInfo) => {
      if (bookmarkInfo.id == tweetId) {
       return {
        ...bookmarkInfo,
@@ -80,7 +88,7 @@ const BookmarkComponent = ({
      }
      return bookmarkInfo;
     });
-    return updatedLikesInfo;
+    return updatedBookmarkInfo;
    });
   }
  }
@@ -100,7 +108,7 @@ const BookmarkComponent = ({
    >
     <div
      className={cn(
-      "p-2.5 rounded-full group-hover:bg-white/5 iconBtn text-lg cursor-pointer",
+      "p-2.5 rounded-full group-hover:bg-black/5 dark:group-hover:bg-white/5 iconBtn text-lg cursor-pointer",
       !statusPage && "-mr-5"
      )}
     >

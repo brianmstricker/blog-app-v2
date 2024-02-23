@@ -1,7 +1,7 @@
-const page = () => {
+const Page = () => {
  return (
   <div tabIndex={0}>
-   <h1 className="text-xl font-medium pt-3 px-4">Notifications</h1>
+   <h1 className="text-xl font-bold pt-3 px-4">Notifications</h1>
    <div className="w-full h-0.5 my-3 border-b dark:border-white/25" />
    <div className="max-w-sm mx-auto mt-4">
     <p className="text-4xl font-bold">
@@ -16,4 +16,4 @@ const page = () => {
   </div>
  );
 };
-export default page;
+export default Page;

@@ -232,11 +232,17 @@ export const bookmarkTweetAction = async ({
   });
   if (bookmark) {
    await db.bookmark.delete({ where: { id: bookmark.id } });
+   revalidatePath("/");
+   revalidatePath(`/status/${tweetId}`);
+   revalidatePath(`/bookmarks`);
    return { success: true, like: false };
   } else {
    await db.bookmark.create({
     data: { tweetId, userId },
    });
+   revalidatePath("/");
+   revalidatePath(`/status/${tweetId}`);
+   revalidatePath(`/bookmarks`);
    return { success: true, bookmark: true };
   }
  } catch (error: any) {
@@ -342,6 +348,47 @@ export const postReplyAction = async (formData: FormData) => {
   return { success: true };
  } catch (error: any) {
   console.log(error);
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const fetchBookmarksAction = async () => {
+ try {
+  const userInfo = await auth();
+  const user = userInfo?.user;
+  if (!userInfo || !user) return { error: "Not logged in" };
+  const bookmarks = await db.bookmark.findMany({
+   where: { userId: user.id },
+   orderBy: { createdAt: "desc" },
+   include: {
+    tweet: {
+     include: {
+      user: {
+       select: { username: true, handle: true, image: true },
+      },
+      likes: true,
+      media: true,
+      bookmarks: true,
+     },
+    },
+   },
+  });
+  return bookmarks || null;
+ } catch (error: any) {
+  return { error: error?.message || "Something went wrong" };
+ }
+};
+
+export const clearBookmarksAction = async () => {
+ try {
+  const userInfo = await auth();
+  const user = userInfo?.user;
+  if (!userInfo || !user) return { error: "Not logged in" };
+  await db.bookmark.deleteMany({ where: { userId: user.id } });
+  revalidatePath(`/bookmarks`);
+  revalidatePath(`/home`);
+  return { success: true };
+ } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }
 };

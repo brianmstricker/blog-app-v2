@@ -59,6 +59,7 @@ export type DisplayTweetProps = {
  setBookmarkInfo?: React.Dispatch<
   React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
  >;
+ setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DisplayTweet = ({
@@ -73,6 +74,7 @@ const DisplayTweet = ({
  setUsersBookmarks,
  bookmarkInfo,
  setBookmarkInfo,
+ setBookmarkRemovedBanner,
 }: DisplayTweetProps) => {
  //todo: like animation
  const [renderModal, setRenderModal] = useState(false);
@@ -190,6 +192,7 @@ const DisplayTweet = ({
         setUsersBookmarks={setUsersBookmarks}
         bookmarkInfo={bookmarkInfo}
         setBookmarkInfo={setBookmarkInfo}
+        setBookmarkRemovedBanner={setBookmarkRemovedBanner}
        />
        <div className="p-2.5 rounded-ful">
         <FiShare className="text-lg iconBtn" />
