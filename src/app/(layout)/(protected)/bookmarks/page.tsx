@@ -16,7 +16,7 @@ const Page = async () => {
      <div>
       <h1 className="text-xl font-bold">Bookmarks</h1>
       <span className="text-mainGray relative -top-1 text-sm">
-       @{user.handle}
+       @{user.username}
       </span>
      </div>
      {bookmarks && bookmarks.length > 0 && <ClearBookmarksComponent />}

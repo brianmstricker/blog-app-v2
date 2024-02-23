@@ -118,7 +118,7 @@ const DisplayTweet = ({
     isReply ? "pt-2" : ""
    )}
   >
-   <article className="py-2 px-3 flex gap-3 leading-5" tabIndex={0}>
+   <article className="py-2 px-4 flex gap-3 leading-5" tabIndex={0}>
     <div className="shrink-0 select-none">
      {!tweet.user.image ? (
       <div className="w-11 h-11 rounded-full bg-blue-600" />
@@ -159,7 +159,7 @@ const DisplayTweet = ({
        setRenderModal={setRenderModal}
       />
      )}
-     <div className="flex items-center justify-between text-mainGray mt-1.5 -mb-1">
+     <div className="flex items-center justify-between text-mainGray mt-1.5 -mb-1 -ml-2.5">
       <div className="flex items-center justify-between max-w-[70%] w-full">
        <div className="flex items-center gap-1">
         <div className="p-2.5 rounded-full">
