@@ -8,14 +8,14 @@ const LeftMenu = async () => {
  const userInfo = await auth();
  const user = userInfo?.user;
  return (
-  <aside className="h-screen sticky top-0 flex flex-col mr-4">
-   <nav className="flex-1">
+  <aside className="h-screen sticky top-0 flex flex-col mr-2 sm:mr-4">
+   <nav className="flex-1 flex flex-col items-end xl:block">
     <LeftMenuLogo user={!!user} />
-    {!!user && <LeftMenuNav />}
+    {!!user && <LeftMenuNav user={user} />}
     {!!user && <PostModal userImg={user?.image} />}
    </nav>
    {!!user && user.username && user.handle && (
-    <div className="mb-4 rounded-full">
+    <div className="mb-4 flex xl:block justify-end">
      <LeftMenuUserInfo user={user} />
     </div>
    )}

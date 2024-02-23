@@ -7,6 +7,8 @@ import { createPortal } from "react-dom";
 import HideScroll from "@/components/HideScroll";
 import { ThreeCircles } from "react-loader-spinner";
 import FocusTrap from "focus-trap-react";
+import { PiFeather } from "react-icons/pi";
+import { FaPlus } from "react-icons/fa";
 
 const PostModal = ({ userImg }: { userImg?: string | null }) => {
  const router = useRouter();
@@ -80,9 +82,11 @@ const PostModal = ({ userImg }: { userImg?: string | null }) => {
   <>
    <button
     onClick={showModal}
-    className="w-full mt-8 rounded-full text-lg font-medium bg-main text-white py-3 hover:bg-main/90 transition-all duration-150"
+    className="w-fit xl:w-full mt-4 md:mt-8 rounded-full text-lg font-medium bg-main text-white py-3 xl:px-0 hover:bg-main/90 transition-all duration-150 px-3 relative"
    >
-    Post
+    <span className="hidden xl:block">Post</span>
+    <PiFeather className="xl:hidden text-[18px] sm:text-[22px] md:text-2xl relative top-[2px]" />
+    <FaPlus className="xl:hidden absolute text-[9px] sm:text-[10px] top-2" />
    </button>
    {modalShow &&
     createPortal(

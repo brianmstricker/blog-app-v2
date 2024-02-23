@@ -66,7 +66,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
     {showLogoutMenu && (
      <div
       ref={logoutMenuRef}
-      className="boxShadow bg-white dark:bg-black rounded-2xl border dark:border-white/25 h-full w-full min-w-[260px] max-w-[360px] min-h-[80px] max-h-[480px] relative -top-4 pt-3"
+      className="boxShadow bg-white dark:bg-black rounded-2xl border dark:border-white/25 h-full w-full min-w-[260px] max-w-[360px] min-h-[80px] max-h-[480px] xl:relative xl:-top-4 xl:pt-3 absolute -top-[5.5rem]"
      >
       <button
        id="logout"
@@ -78,7 +78,7 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
       </button>
       <div className="flex justify-center">
        <svg
-        className="triangle absolute -bottom-3 fill-white dark:fill-black"
+        className="triangle absolute -bottom-3 fill-white dark:fill-black left-6 xl:left-auto"
         viewBox="0 0 24 24"
         aria-hidden="true"
        >
@@ -93,14 +93,14 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
      tabIndex={0}
      onClick={() => setShowLogoutMenu((prev) => !prev)}
      className={cn(
-      "flex items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/15 p-3 rounded-full transition-all duration-150",
+      "flex w-fit xl:w-auto items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/15 p-3 rounded-full transition-all duration-150 -mr-2 xl:-mr-0",
       showLogoutMenu && "pointer-events-none"
      )}
     >
      {!user.image ? (
-      <div className="w-11 h-11 rounded-full bg-blue-600" />
+      <div className=" w-[40px] h-[40px] sm:w-11 sm:h-11 rounded-full bg-blue-600" />
      ) : (
-      <div className="relative w-11 h-11 rounded-full">
+      <div className="relative w-[40px] h-[40px] sm:w-11 sm:h-11 rounded-full">
        <Image
         src={user.image}
         alt="user PFP"
@@ -110,13 +110,13 @@ const LeftMenuUserInfo = ({ user }: { user: User }) => {
        />
       </div>
      )}
-     <div className="flex flex-1 flex-col ml-4 select-none">
+     <div className="flex-1 flex-col ml-4 select-none hidden xl:flex">
       <span className="font-bold text-[14px] leading-[18px]">
        {user.handle}
       </span>
       <span className="text-mainGray">@{user.username}</span>
      </div>
-     <div>
+     <div className="hidden xl:block">
       <HiMiniEllipsisHorizontal />
      </div>
     </div>

@@ -17,8 +17,9 @@ import {
  FaBell,
 } from "react-icons/fa6";
 import Link from "next/link";
+import { User } from "next-auth";
 
-const LeftMenuNav = () => {
+const LeftMenuNav = ({ user }: { user: User }) => {
  const path = usePathname();
  const [activeLink, setActiveLink] = useState(path);
  useEffect(() => {
@@ -27,7 +28,12 @@ const LeftMenuNav = () => {
   if (newPath === "") setActiveLink("home");
  }, [path]);
  const userLinks = [
-  { href: "/", label: "Home", icon: IoHomeOutline, activeIcon: IoHomeSharp },
+  {
+   href: user ? "/home" : "/",
+   label: "Home",
+   icon: IoHomeOutline,
+   activeIcon: IoHomeSharp,
+  },
   {
    href: "/explore",
    label: "Explore",
@@ -55,25 +61,26 @@ const LeftMenuNav = () => {
   { href: "/profile", label: "Profile", icon: FaRegUser, activeIcon: FaUser },
  ];
  return (
-  <ul className="flex flex-col mt-2 gap-4">
+  <ul className="flex flex-col mt-2 gap-2 md:gap-4">
    {userLinks.map((link) => (
     <li key={link.label}>
      <Link
       href={link.href}
       scroll={false}
-      className="flex items-center gap-6 py-3 rounded-full px-4 hover:bg-black/10 dark:hover:bg-white/15 transition-all duration-150"
+      title={link.label}
+      className="flex items-center gap-6 py-3 rounded-full px-3 xl:px-4 hover:bg-black/10 dark:hover:bg-white/15 transition-all duration-150"
       onClick={() => {
        window.scrollTo({ top: 0, behavior: "smooth" });
       }}
      >
-      <span className="text-2xl">
+      <span>
        {activeLink.toLowerCase() === link.label.toLowerCase() ? (
-        <link.activeIcon className="w-7 h-7" />
+        <link.activeIcon className="w-[22px] h-[22px] md:w-7 md:h-7" />
        ) : (
-        <link.icon className="w-7 h-7" />
+        <link.icon className="w-[22px] h-[22px] md:w-7 md:h-7" />
        )}
       </span>
-      <span className="text-xl">{link.label}</span>
+      <span className="hidden xl:block text-xl">{link.label}</span>
      </Link>
     </li>
    ))}
