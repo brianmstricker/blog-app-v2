@@ -2,7 +2,7 @@
 import { likeTweetAction } from "@/actions/tweet-actions";
 import { cn } from "@/lib/utils";
 import { PiHeart, PiHeartFill } from "react-icons/pi";
-import { startTransition, useOptimistic } from "react";
+import { startTransition, useOptimistic, useState } from "react";
 
 type LikeComponentProps = {
  statusPage?: boolean;
@@ -22,6 +22,7 @@ const LikeComponent = ({
  statusPage,
  likes,
 }: LikeComponentProps) => {
+ const [loading, setLoading] = useState(false);
  const liked = (like: any) =>
   like.userId === userId && like.tweetId === tweetId;
  const [optimisticLikes, addOptimisticLikes] = useOptimistic(
@@ -34,6 +35,7 @@ const LikeComponent = ({
  );
  async function handleClick() {
   if (!userId) return;
+  setLoading(true);
   startTransition(() => {
    addOptimisticLikes({ tweetId, userId });
   });
@@ -41,12 +43,14 @@ const LikeComponent = ({
    tweetId: tweetId,
    userId: userId,
   });
+  setLoading(false);
  }
  return (
   <>
-   <div
+   <button
     title={optimisticLikes?.some(liked) ? "Unlike" : "Like"}
     onClick={handleClick}
+    disabled={loading}
     className={cn(
      "flex items-center gap-1 transition-all duration-150 hover:text-red-600 group iconBtn",
      {
@@ -66,7 +70,7 @@ const LikeComponent = ({
     <span className="text-[13px] -ml-2.5 iconBtn w-2 cursor-pointer">
      {optimisticLikes?.filter((like) => like.tweetId === tweetId).length || 0}
     </span>
-   </div>
+   </button>
   </>
  );
 };
