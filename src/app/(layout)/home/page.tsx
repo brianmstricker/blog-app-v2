@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { fetchTweetsAction } from "@/actions/tweet-actions";
 import Loading from "./loading";
-import DisplayTweetWrapper from "@/components/Home/DisplayTweetWrapper";
 import { auth } from "@/auth";
+import DisplayTweet from "@/components/Home/DisplayTweet";
 
 export default async function Home() {
  const userInfo = await auth();
@@ -12,7 +12,11 @@ export default async function Home() {
   <>
    <Suspense fallback={<Loading />}>
     {Array.isArray(tweets) && tweets.length > 0 && (
-     <DisplayTweetWrapper tweets={tweets} user={user} />
+     <div className="pb-48">
+      {tweets.map((tweet) => (
+       <DisplayTweet key={tweet.id} tweet={tweet} user={user} />
+      ))}
+     </div>
     )}
     {Array.isArray(tweets) && tweets.length === 0 && (
      <div className="border-b dark:border-b-white/25 py-5 text-center text-xl font-bold">

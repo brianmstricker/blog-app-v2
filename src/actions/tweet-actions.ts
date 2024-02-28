@@ -203,19 +203,18 @@ export const likeTweetAction = async ({
   });
   if (like) {
    await db.like.delete({ where: { id: like.id } });
-   revalidatePath("/");
-   revalidatePath(`/status/${tweetId}`);
    return { success: true, like: false };
   } else {
    await db.like.create({
     data: { tweetId, userId },
    });
-   revalidatePath("/");
-   revalidatePath(`/status/${tweetId}`);
    return { success: true, like: true };
   }
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
+ } finally {
+  revalidatePath("/");
+  revalidatePath(`/status/${tweetId}`);
  }
 };
 

@@ -37,22 +37,12 @@ type BookmarkComponentProps = {
   }[];
  };
  user: User | undefined;
- usersBookmarks?: string[];
- setUsersBookmarks?: React.Dispatch<React.SetStateAction<string[]>>;
- bookmarkInfo?: { id: string; numberOfBookmarks: number }[];
- setBookmarkInfo?: React.Dispatch<
-  React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
- >;
  setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkComponent = ({
  tweet,
- usersBookmarks,
- bookmarkInfo,
  user,
- setUsersBookmarks,
- setBookmarkInfo,
  statusPage,
  setBookmarkRemovedBanner,
 }: BookmarkComponentProps) => {
