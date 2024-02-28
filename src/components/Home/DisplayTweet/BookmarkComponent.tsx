@@ -1,98 +1,72 @@
 "use client";
 import { bookmarkTweetAction } from "@/actions/tweet-actions";
 import { cn } from "@/lib/utils";
-import { User } from "next-auth";
+import { startTransition, useOptimistic, useState } from "react";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 
 type BookmarkComponentProps = {
  statusPage?: boolean;
- tweet: {
+ tweetId: string;
+ userId: string | undefined;
+ bookmarks: {
   id: string;
-  text: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  reply?: boolean;
-  replyToId?: string | null;
   userId: string;
-  user: {
-   handle: string | null;
-   username: string | null;
-   image: string | null;
-  };
-  media:
-   | {
-      id: string;
-      tweetId: string;
-      url: string;
-      width: string;
-      height: string;
-      aspectRatio: string;
-     }[]
-   | [];
-  likes: {
-   id: string;
-   userId: string;
-   tweetId: string;
-   createdAt: Date;
-  }[];
- };
- user: User | undefined;
+  tweetId: string;
+  createdAt: Date;
+ }[];
  setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkComponent = ({
- tweet,
- user,
+ tweetId,
+ userId,
+ bookmarks,
  statusPage,
  setBookmarkRemovedBanner,
 }: BookmarkComponentProps) => {
- async function bookmarkTweet() {
-  if (!user) return;
-  const bookmark = await bookmarkTweetAction({
-   tweetId: tweet.id,
-   userId: user.id,
+ const [loading, setLoading] = useState(false);
+ const bookmarked = (bookmark: any) =>
+  bookmark.userId === userId && bookmark.tweetId === tweetId;
+ const [optimisticBookmarks, addOptimisticBookmarks] = useOptimistic(
+  bookmarks,
+  (state, updateBookmark) =>
+   // @ts-ignore
+   state.some(bookmarked)
+    ? state.filter((bookmark) => bookmark.userId != userId)
+    : [...state, updateBookmark]
+ );
+ async function handleClick() {
+  if (!userId) return;
+  setLoading(true);
+  startTransition(() => {
+   addOptimisticBookmarks({ tweetId, userId });
   });
-  if (bookmark.success) {
-   if (!bookmark.bookmark) {
-    setBookmarkRemovedBanner!(true);
-    setTimeout(() => {
-     setBookmarkRemovedBanner!(false);
-    }, 3000);
-   }
-   const tweetId = tweet.id;
-   setUsersBookmarks!((prev) => {
-    const updatedBookmarks = bookmark.bookmark
-     ? [...prev, tweetId]
-     : prev.filter((id) => id !== tweetId);
-    return updatedBookmarks;
-   });
-   setBookmarkInfo!((prev) => {
-    const updatedBookmarkInfo = prev.map((bookmarkInfo) => {
-     if (bookmarkInfo.id == tweetId) {
-      return {
-       ...bookmarkInfo,
-       numberOfBookmarks: bookmark.bookmark
-        ? bookmarkInfo.numberOfBookmarks + 1
-        : bookmarkInfo.numberOfBookmarks - 1,
-      };
-     }
-     return bookmarkInfo;
-    });
-    return updatedBookmarkInfo;
-   });
+  const bookmark = await bookmarkTweetAction({
+   tweetId,
+   userId,
+  });
+  if (!bookmark.bookmark) {
+   setBookmarkRemovedBanner!(true);
+   setTimeout(() => {
+    setBookmarkRemovedBanner?.(false);
+   }, 3000);
   }
+  setLoading(false);
  }
  return (
   <>
-   <div
+   <button
     title={
-     usersBookmarks?.includes(tweet.id) ? "Remove from Bookmarks" : "Bookmark"
+     optimisticBookmarks?.some(bookmarked)
+      ? "Remove from Bookmarks"
+      : "Bookmark"
     }
-    onClick={bookmarkTweet}
+    disabled={loading}
+    onClick={handleClick}
     className={cn(
      "flex items-center gap-1 transition-all duration-150 hover:text-blue-500 group iconBtn",
      {
-      "text-blue-500": usersBookmarks?.includes(tweet.id),
+      "text-blue-500": optimisticBookmarks?.some(bookmarked),
      }
     )}
    >
@@ -102,7 +76,7 @@ const BookmarkComponent = ({
       !statusPage && "-mr-5"
      )}
     >
-     {usersBookmarks?.includes(tweet.id) ? (
+     {optimisticBookmarks?.some(bookmarked) ? (
       <FaBookmark
        className={cn("iconBtn fill-blue-500", statusPage && "text-[22px]")}
       />
@@ -112,10 +86,11 @@ const BookmarkComponent = ({
     </div>
     {statusPage && (
      <span className="text-[13px] -ml-2.5 iconBtn w-2 cursor-pointer">
-      {bookmarkInfo?.map((like) => like.numberOfBookmarks) || 0}
+      {optimisticBookmarks?.filter((bookmark) => bookmark.tweetId === tweetId)
+       .length || 0}
      </span>
     )}
-   </div>
+   </button>
   </>
  );
 };

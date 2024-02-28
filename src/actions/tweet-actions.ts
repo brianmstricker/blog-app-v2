@@ -231,21 +231,19 @@ export const bookmarkTweetAction = async ({
   });
   if (bookmark) {
    await db.bookmark.delete({ where: { id: bookmark.id } });
-   revalidatePath("/");
-   revalidatePath(`/status/${tweetId}`);
-   revalidatePath(`/bookmarks`);
-   return { success: true, like: false };
+   return { success: true, bookmark: false };
   } else {
    await db.bookmark.create({
     data: { tweetId, userId },
    });
-   revalidatePath("/");
-   revalidatePath(`/status/${tweetId}`);
-   revalidatePath(`/bookmarks`);
    return { success: true, bookmark: true };
   }
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
+ } finally {
+  revalidatePath("/");
+  revalidatePath(`/status/${tweetId}`);
+  revalidatePath(`/bookmarks`);
  }
 };
 

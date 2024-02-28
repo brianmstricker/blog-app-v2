@@ -44,6 +44,12 @@ export type DisplayTweetProps = {
    tweetId: string;
    createdAt: Date;
   }[];
+  bookmarks: {
+   id: string;
+   userId: string;
+   tweetId: string;
+   createdAt: Date;
+  }[];
  };
  user: User | undefined;
  isReply?: boolean;
@@ -162,11 +168,12 @@ const DisplayTweet = ({
        />
       </div>
       <div className="flex items-center gap-3 relative ">
-       {/* <BookmarkComponent
-        tweet={tweet}
-        user={user}
+       <BookmarkComponent
+        tweetId={tweet.id}
+        userId={user?.id}
+        bookmarks={tweet.bookmarks}
         setBookmarkRemovedBanner={setBookmarkRemovedBanner}
-       /> */}
+       />
        <div className="p-2.5 rounded-ful">
         <FiShare className="text-lg iconBtn" />
        </div>
