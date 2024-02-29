@@ -4,8 +4,9 @@
 <https://ui.shadcn.com/docs/components/form>
 -using this for spinners, they have a ton <https://mhnpd.github.io/react-loader-spinner/docs/components/oval>
 -mobile responsiveness
--like/bookmark functionality for replies
--added to bookmarks banner
 -modal view (right side, bottom options)
 -post modal
 -top navbar/bottom navbar/post button on devices under 500px
+-optimistic update when replying
+-update status page to show the main post when it's a reply
+-retweet functionality

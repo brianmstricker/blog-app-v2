@@ -252,12 +252,12 @@ export const postReplyAction = async (formData: FormData) => {
  const userInfo = await auth();
  const user = userInfo?.user;
  if (!userInfo || !user) return { error: "Not logged in" };
+ const text = formData.get("text");
+ const media = formData.getAll("media");
+ const replyToId = formData.get("replyToId");
+ const replyToUsername = formData.get("replyToUsername");
+ if (!replyToId || !replyToUsername) return { error: "No tweet to reply to" };
  try {
-  const text = formData.get("text");
-  const media = formData.getAll("media");
-  const replyToId = formData.get("replyToId");
-  const replyToUsername = formData.get("replyToUsername");
-  if (!replyToId || !replyToUsername) return { error: "No tweet to reply to" };
   const width = formData
    .getAll("width")
    .toString()
@@ -313,6 +313,8 @@ export const postReplyAction = async (formData: FormData) => {
    return { error: "No text or media" };
   const newReply = await db.tweet.create({
    data: {
+    reply: true,
+    replyToUsername: replyToUsername as string,
     replyToId: replyToId as string,
     text: updatedText,
     userId: user.id,
@@ -342,11 +344,13 @@ export const postReplyAction = async (formData: FormData) => {
     })),
    });
   }
-  revalidatePath(`/${replyToUsername}/status/${replyToId}`);
   return { success: true };
  } catch (error: any) {
   console.log(error);
   return { error: error?.message || "Something went wrong" };
+ } finally {
+  revalidatePath(`/${replyToUsername}/status/${replyToId}`);
+  revalidatePath("/");
  }
 };
 
@@ -371,7 +375,18 @@ export const fetchBookmarksAction = async () => {
     },
    },
   });
-  return bookmarks || null;
+  const replies = await db.tweet.findMany({
+   where: {
+    replyToId: { not: null, in: bookmarks.map((b) => b.tweetId) },
+   },
+  });
+  const bookmarkRepliesLength = bookmarks.map((bookmark) => {
+   const repliesLength = replies.filter(
+    (reply) => reply.replyToId === bookmark.tweetId
+   ).length;
+   return { ...bookmark, repliesLength };
+  });
+  return bookmarkRepliesLength || null;
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  }

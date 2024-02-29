@@ -12,6 +12,7 @@ import { User } from "next-auth";
 import LikeComponent from "./DisplayTweet/LikeComponent";
 import BookmarkComponent from "./DisplayTweet/BookmarkComponent";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export type DisplayTweetProps = {
  tweet: {
@@ -21,6 +22,7 @@ export type DisplayTweetProps = {
   updatedAt: Date;
   reply?: boolean;
   replyToId?: string | null;
+  replyToUsername?: string | null;
   userId: string;
   repliesLength?: number;
   user: {
@@ -53,9 +55,15 @@ export type DisplayTweetProps = {
  };
  user: User | undefined;
  isReply?: boolean;
+ repliesLength?: number;
 };
 
-const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
+const DisplayTweet = ({
+ tweet,
+ user,
+ isReply,
+ repliesLength,
+}: DisplayTweetProps) => {
  //todo: like animation
  const [renderModal, setRenderModal] = useState(false);
  const username = tweet.user.username;
@@ -74,7 +82,8 @@ const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
     target.tagName === "IMG" ||
     target.classList.contains("iconBtn") ||
     target.tagName === "path" ||
-    target.tagName === "svg"
+    target.tagName === "svg" ||
+    target.classList.contains("username")
    ) {
     return;
    }
@@ -117,8 +126,18 @@ const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
     <div className="flex-1">
      <div className="flex items-center justify-between">
       <div className="flex gap-1 items-center">
-       <span>{tweet.user.handle}</span>
-       <span className="text-mainGray">@{tweet.user.username}</span>
+       <Link
+        href={`/user/${tweet.user.username}`}
+        className="hover:underline underline-offset-1 username"
+       >
+        {tweet.user.handle}
+       </Link>
+       <Link
+        href={`/user/${tweet.user.username}`}
+        className="text-mainGray username"
+       >
+        @{tweet.user.username}
+       </Link>
        <span className="text-mainGray">&#183;</span>
        <span className="text-mainGray">
         {moment(tweet.createdAt).fromNow()}
@@ -128,6 +147,17 @@ const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
        <VscEllipsis />
       </div>
      </div>
+     {tweet.reply && tweet.replyToUsername && (
+      <div className="text-[15px] text-mainGray mt-[2px] w-fit username cursor-default">
+       Replying to{" "}
+       <Link
+        href={`/user/${tweet.replyToUsername}`}
+        className="text-main hover:underline underline-offset-1 username"
+       >
+        @{tweet.replyToUsername}
+       </Link>
+      </div>
+     )}
      {tweet.text && (
       <div className="text-[15px] mt-[2px] font-light">{tweet.text}</div>
      )}
@@ -146,7 +176,7 @@ const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
          <BiMessageRounded className="text-lg iconBtn" />
         </div>
         <span className="text-[13px] -ml-2.5 iconBtn w-2">
-         {tweet.repliesLength}
+         {tweet.repliesLength || repliesLength}
         </span>
        </div>
        <div className="flex items-center gap-1">

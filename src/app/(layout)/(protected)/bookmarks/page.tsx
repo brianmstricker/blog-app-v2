@@ -32,7 +32,12 @@ const Page = async () => {
     {bookmarks && bookmarks.length > 0 && (
      <div className="pb-48">
       {bookmarks.map((bookmark) => (
-       <DisplayTweet key={bookmark.id} tweet={bookmark.tweet} user={user} />
+       <DisplayTweet
+        key={bookmark.id}
+        tweet={bookmark.tweet}
+        user={user}
+        repliesLength={bookmark.repliesLength}
+       />
       ))}
      </div>
     )}
