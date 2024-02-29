@@ -181,6 +181,7 @@ export const fetchTweetAction = async ({
     },
     likes: true,
     media: true,
+    bookmarks: true,
    },
    orderBy: { createdAt: "desc" },
   });
