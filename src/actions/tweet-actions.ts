@@ -103,11 +103,12 @@ export const postTweetAction = async (formData: FormData) => {
     })),
    });
   }
-  revalidatePath("/");
   return { success: true };
  } catch (error: any) {
   console.log(error);
   return { error: error?.message || "Something went wrong" };
+ } finally {
+  revalidatePath("/home");
  }
 };
 
@@ -214,8 +215,9 @@ export const likeTweetAction = async ({
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  } finally {
-  revalidatePath("/");
+  revalidatePath("/home");
   revalidatePath(`/status/${tweetId}`);
+  revalidatePath(`/bookmarks`);
  }
 };
 
@@ -242,7 +244,7 @@ export const bookmarkTweetAction = async ({
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
  } finally {
-  revalidatePath("/");
+  revalidatePath("/home");
   revalidatePath(`/status/${tweetId}`);
   revalidatePath(`/bookmarks`);
  }
@@ -350,7 +352,8 @@ export const postReplyAction = async (formData: FormData) => {
   return { error: error?.message || "Something went wrong" };
  } finally {
   revalidatePath(`/${replyToUsername}/status/${replyToId}`);
-  revalidatePath("/");
+  revalidatePath("/home");
+  revalidatePath("/bookmarks");
  }
 };
 
@@ -398,10 +401,12 @@ export const clearBookmarksAction = async () => {
   const user = userInfo?.user;
   if (!userInfo || !user) return { error: "Not logged in" };
   await db.bookmark.deleteMany({ where: { userId: user.id } });
-  revalidatePath(`/bookmarks`);
-  revalidatePath(`/home`);
   return { success: true };
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };
+ } finally {
+  revalidatePath(`/bookmarks`);
+  revalidatePath(`/home`);
+  revalidatePath(`/status`);
  }
 };

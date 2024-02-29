@@ -58,14 +58,19 @@ const LeftMenuNav = ({ user }: { user: User }) => {
    icon: FaRegBookmark,
    activeIcon: FaBookmark,
   },
-  { href: "/profile", label: "Profile", icon: FaRegUser, activeIcon: FaUser },
+  {
+   href: `/user/${user.username}`,
+   label: "Profile",
+   icon: FaRegUser,
+   activeIcon: FaUser,
+  },
  ];
  return (
   <ul className="flex flex-col mt-2 gap-2 md:gap-4">
    {userLinks.map((link) => (
     <li key={link.label}>
      <Link
-      href={link.href}
+      href={link.href.toLowerCase()}
       scroll={false}
       title={link.label}
       className="flex items-center gap-6 py-3 rounded-full px-3 xl:px-4 hover:bg-black/10 dark:hover:bg-white/15 transition-all duration-150"
