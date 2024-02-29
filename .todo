@@ -9,4 +9,5 @@
 -top navbar/bottom navbar/post button on devices under 500px
 -optimistic update when replying
 -update status page to show the main post when it's a reply
+-update status page username so it's a link to profile
 -retweet functionality
