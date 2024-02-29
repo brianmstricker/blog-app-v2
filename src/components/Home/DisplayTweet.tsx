@@ -53,15 +53,9 @@ export type DisplayTweetProps = {
  };
  user: User | undefined;
  isReply?: boolean;
- setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const DisplayTweet = ({
- tweet,
- user,
- isReply,
- setBookmarkRemovedBanner,
-}: DisplayTweetProps) => {
+const DisplayTweet = ({ tweet, user, isReply }: DisplayTweetProps) => {
  //todo: like animation
  const [renderModal, setRenderModal] = useState(false);
  const username = tweet.user.username;
@@ -172,7 +166,6 @@ const DisplayTweet = ({
         tweetId={tweet.id}
         userId={user?.id}
         bookmarks={tweet.bookmarks}
-        setBookmarkRemovedBanner={setBookmarkRemovedBanner}
        />
        <div className="p-2.5 rounded-ful">
         <FiShare className="text-lg iconBtn" />

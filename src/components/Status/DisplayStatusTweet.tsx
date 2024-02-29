@@ -2,7 +2,6 @@ import Image from "next/image";
 import { HiMiniEllipsisHorizontal } from "react-icons/hi2";
 import moment from "moment";
 import { FiShare } from "react-icons/fi";
-import { LuBookmark } from "react-icons/lu";
 import { FaRetweet } from "react-icons/fa6";
 import { BiMessageRounded } from "react-icons/bi";
 import MediaWrapper from "@/components/Status/MediaWrapper";
@@ -77,35 +76,18 @@ export type fetchTweetType = {
     tweetId: string;
     createdAt: Date;
    }[];
+   bookmarks: {
+    id: string;
+    userId: string;
+    tweetId: string;
+    createdAt: Date;
+   }[];
   }[];
  };
  user: User | undefined;
- usersLikedTweets?: string[];
- setUsersLikedTweets?: React.Dispatch<React.SetStateAction<string[]>>;
- likesInfo?: { id: string; numberOfLikes: number }[];
- setLikesInfo?: React.Dispatch<
-  React.SetStateAction<{ id: string; numberOfLikes: number }[]>
- >;
- usersBookmarks?: string[];
- setUsersBookmarks?: React.Dispatch<React.SetStateAction<string[]>>;
- bookmarkInfo?: { id: string; numberOfBookmarks: number }[];
- setBookmarkInfo?: React.Dispatch<
-  React.SetStateAction<{ id: string; numberOfBookmarks: number }[]>
- >;
 };
 
-const DisplayStatusTweet = ({
- fetchTweet,
- user,
- usersLikedTweets,
- setUsersLikedTweets,
- likesInfo,
- setLikesInfo,
- usersBookmarks,
- setUsersBookmarks,
- bookmarkInfo,
- setBookmarkInfo,
-}: fetchTweetType) => {
+const DisplayStatusTweet = ({ fetchTweet, user }: fetchTweetType) => {
  return (
   <>
    <div
@@ -156,22 +138,16 @@ const DisplayStatusTweet = ({
        <span className="text-[13px]">0</span>
       </div>
       <LikeComponent
-       tweet={fetchTweet.tweet}
        statusPage
-       user={user}
-       usersLikedTweets={usersLikedTweets}
-       setUsersLikedTweets={setUsersLikedTweets}
-       likesInfo={likesInfo}
-       setLikesInfo={setLikesInfo}
+       tweetId={fetchTweet.tweet.id}
+       userId={user?.id}
+       likes={fetchTweet.tweet.likes}
       />
       <BookmarkComponent
-       tweet={fetchTweet.tweet}
        statusPage
-       user={user}
-       usersBookmarks={usersBookmarks}
-       setUsersBookmarks={setUsersBookmarks}
-       bookmarkInfo={bookmarkInfo}
-       setBookmarkInfo={setBookmarkInfo}
+       tweetId={fetchTweet.tweet.id}
+       userId={user?.id}
+       bookmarks={fetchTweet.tweet.bookmarks}
       />
       <FiShare className="text-[22px]" />
      </div>

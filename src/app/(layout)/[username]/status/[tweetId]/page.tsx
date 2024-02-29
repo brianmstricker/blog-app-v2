@@ -6,7 +6,6 @@ import { auth } from "@/auth";
 import PostReply from "@/components/Status/PostReply";
 import DisplayTweet from "@/components/Home/DisplayTweet";
 import DisplayStatusTweet from "@/components/Status/DisplayStatusTweet";
-import DisplayStatusTweetWrapper from "@/components/Status/DisplayStatusTweetWrapper";
 
 type StatusProps = {
  tweet: {
@@ -38,6 +37,12 @@ type StatusProps = {
    tweetId: string;
    createdAt: Date;
   }[];
+  bookmarks: {
+   id: string;
+   userId: string;
+   tweetId: string;
+   createdAt: Date;
+  }[];
  };
  replies:
   | {
@@ -64,6 +69,12 @@ type StatusProps = {
         }[]
       | [];
      likes: {
+      id: string;
+      userId: string;
+      tweetId: string;
+      createdAt: Date;
+     }[];
+     bookmarks: {
       id: string;
       userId: string;
       tweetId: string;
@@ -110,8 +121,7 @@ const page = async ({
  return (
   <div>
    <ArrowBack referer={referer} />
-   {/* <DisplayStatusTweet fetchTweet={fetchTweet} user={user} /> */}
-   <DisplayStatusTweetWrapper fetchTweet={fetchTweet} user={user} />
+   <DisplayStatusTweet user={user} fetchTweet={fetchTweet} />
    {!!user && (
     <div>
      <PostReply

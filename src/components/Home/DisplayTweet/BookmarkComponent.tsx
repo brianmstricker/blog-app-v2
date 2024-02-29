@@ -3,6 +3,7 @@ import { bookmarkTweetAction } from "@/actions/tweet-actions";
 import { cn } from "@/lib/utils";
 import { startTransition, useOptimistic, useState } from "react";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import RemovedBanner from "../Bookmark/RemovedBanner";
 
 type BookmarkComponentProps = {
  statusPage?: boolean;
@@ -14,7 +15,6 @@ type BookmarkComponentProps = {
   tweetId: string;
   createdAt: Date;
  }[];
- setBookmarkRemovedBanner?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BookmarkComponent = ({
@@ -22,8 +22,8 @@ const BookmarkComponent = ({
  userId,
  bookmarks,
  statusPage,
- setBookmarkRemovedBanner,
 }: BookmarkComponentProps) => {
+ const [showRemovedBanner, setShowRemovedBanner] = useState(false);
  const [loading, setLoading] = useState(false);
  const bookmarked = (bookmark: any) =>
   bookmark.userId === userId && bookmark.tweetId === tweetId;
@@ -46,10 +46,10 @@ const BookmarkComponent = ({
    userId,
   });
   if (!bookmark.bookmark) {
-   setBookmarkRemovedBanner!(true);
+   setShowRemovedBanner(true);
    setTimeout(() => {
-    setBookmarkRemovedBanner?.(false);
-   }, 3000);
+    setShowRemovedBanner(false);
+   }, 3500);
   }
   setLoading(false);
  }
@@ -91,6 +91,7 @@ const BookmarkComponent = ({
      </span>
     )}
    </button>
+   {showRemovedBanner && <RemovedBanner />}
   </>
  );
 };

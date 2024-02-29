@@ -1,7 +1,7 @@
 import { fetchBookmarksAction } from "@/actions/tweet-actions";
 import { auth } from "@/auth";
-import BookmarkTweetWrapper from "@/components/Home/Bookmark/BookmarkTweetWrapper";
 import ClearBookmarksComponent from "@/components/Home/Bookmark/ClearBookmarksComponent";
+import DisplayTweet from "@/components/Home/DisplayTweet";
 
 const Page = async () => {
  const userInfo = await auth();
@@ -30,8 +30,10 @@ const Page = async () => {
      </div>
     )}
     {bookmarks && bookmarks.length > 0 && (
-     <div>
-      <BookmarkTweetWrapper bookmarks={bookmarks} user={user} />
+     <div className="pb-48">
+      {bookmarks.map((bookmark) => (
+       <DisplayTweet key={bookmark.id} tweet={bookmark.tweet} user={user} />
+      ))}
      </div>
     )}
    </div>
