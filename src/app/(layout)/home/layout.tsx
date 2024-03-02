@@ -11,7 +11,7 @@ export default async function HomePageLayout({
  const user = userInfo?.user;
  return (
   <>
-   <ForYouFollowing />
+   <ForYouFollowing user={user} />
    {!!user ? (
     <CreateTweetBox userImage={user.image} />
    ) : (

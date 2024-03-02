@@ -235,7 +235,7 @@ const DisplayTweetMediaModal = ({
             <button
              ref={hideMenuButtonRef}
              onClick={() => setShowRightMenu((prev) => !prev)}
-             className="absolute top-2.5 right-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full z-10"
+             className="absolute top-2.5 right-2.5 p-2 bg-white/80 dark:bg-black/80 rounded-full z-10 hidden md:block transition-all duration-150"
             >
              {showRightMenu ? (
               <AiOutlineDoubleRight className="text-2xl text-black dark:text-white" />
@@ -302,8 +302,8 @@ const DisplayTweetMediaModal = ({
         <div
          ref={menuRef}
          className={cn(
-          "h-full bg-white dark:bg-black ml-auto border-l dark:border-l-white/25 shrink-0 min-w-[330px] max-w-[330px]",
-          !showRightMenu && "hidden"
+          "h-full bg-white dark:bg-black ml-auto border-l dark:border-l-white/25 shrink-0 min-w-[330px] max-w-[330px] hidden md:block transition-all duration-150",
+          !showRightMenu && "!hidden"
          )}
         >
          <div className="p-2">right menu here</div>

@@ -9,7 +9,6 @@ import { ThreeCircles } from "react-loader-spinner";
 import FocusTrap from "focus-trap-react";
 import { PiFeather } from "react-icons/pi";
 import { FaPlus } from "react-icons/fa";
-import CreateTweetBox from "../../HomeTweetBox/CreateTweetBox";
 
 const PostModal = ({ userImg }: { userImg?: string | null }) => {
  const router = useRouter();
