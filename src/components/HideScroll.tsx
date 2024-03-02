@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const HideScroll = ({ children }: { children: React.ReactNode }) => {
- const scrollbarWidth =
-  window.innerWidth - document.documentElement.clientWidth;
+ const [scrollbarWidth, setScrollbarWidth] = useState(0);
  useEffect(() => {
-  document.body.classList.add("hide-scroll");
-  return () => document.body.classList.remove("hide-scroll");
+  if (window.innerWidth - document.documentElement.clientWidth !== 0)
+   setScrollbarWidth(window.innerWidth - document.documentElement.clientWidth);
  }, []);
  useEffect(() => {
+  document.body.classList.add("hide-scroll");
   document.body.style.paddingRight = `${scrollbarWidth}px`;
   return () => {
    document.body.style.paddingRight = "0";
+   document.body.classList.remove("hide-scroll");
   };
  }, [scrollbarWidth]);
  return <div>{children}</div>;
