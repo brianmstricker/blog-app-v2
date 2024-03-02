@@ -5,11 +5,9 @@ import CheckoutGithub from "./CheckoutGithub";
 import RightFooter from "./RightFooter";
 import NewToChirp from "./NewToChirp";
 import YouMightLike from "./YouMightLike";
-import { auth } from "@/auth";
+import { User } from "next-auth";
 
-const RightMenu = async () => {
- const userInfo = await auth();
- const user = userInfo?.user;
+const RightMenu = async ({ user }: { user: User | undefined }) => {
  return (
   <aside className="pl-4 flex flex-col gap-4 sticky top-0">
    {!!user && (

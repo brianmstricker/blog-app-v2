@@ -1,12 +1,10 @@
 import LeftMenuUserInfo from "./LeftMenuUserInfo";
 import PostModal from "./PostModal/PostModal";
 import LeftMenuNav from "./LeftMenuNav";
-import { auth } from "@/auth";
 import LeftMenuLogo from "./LeftMenuLogo";
+import { User } from "next-auth";
 
-const LeftMenu = async () => {
- const userInfo = await auth();
- const user = userInfo?.user;
+const LeftMenu = async ({ user }: { user: User }) => {
  return (
   <aside className="h-screen sticky top-0 flex flex-col mr-2 sm:mr-4">
    <nav className="flex-1 flex flex-col items-end xl:block">
