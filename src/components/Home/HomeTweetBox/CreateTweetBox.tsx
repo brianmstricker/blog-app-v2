@@ -209,9 +209,9 @@ const CreateTweetBox = ({
      )}
     >
      {!userImage ? (
-      <div className="w-11 h-11 rounded-full bg-blue-600" />
+      <div className="w-9 h-9 min-[400px]:w-11 min-[400px]:h-11 rounded-full bg-blue-600" />
      ) : (
-      <div className="relative w-11 h-11 rounded-full">
+      <div className="relative w-9 h-9 min-[400px]:w-11 min-[400px]:h-11 rounded-full">
        <Image
         src={userImage}
         alt="user PFP"
@@ -409,7 +409,7 @@ const CreateTweetBox = ({
        whoCanReply && replyPage ? "mt-2" : ""
       )}
      >
-      <div>
+      <div className="grid grid-cols-2 min-[400px]:block">
        {!replyPage && (
         <>
          {tweetOptions.map((option) => (

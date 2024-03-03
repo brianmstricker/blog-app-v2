@@ -110,9 +110,9 @@ const DisplayTweet = ({
    <article className="py-2 px-4 flex gap-3 leading-5" tabIndex={0}>
     <div className="shrink-0 select-none">
      {!tweet.user.image ? (
-      <div className="w-11 h-11 rounded-full bg-blue-600" />
+      <div className="w-9 h-9 min-[400px]:w-11 min-[400px]:h-11 rounded-full bg-blue-600" />
      ) : (
-      <div className="relative w-11 h-11 rounded-full">
+      <div className="relative w-9 h-9 min-[400px]:w-11 min-[400px]:h-11 rounded-full">
        <Image
         src={tweet.user.image}
         alt="user PFP"
@@ -125,7 +125,7 @@ const DisplayTweet = ({
     </div>
     <div className="flex-1">
      <div className="flex items-center justify-between">
-      <div className="flex gap-1 items-center">
+      <div className="flex flex-col min-[400px]:flex-row gap-[2px] min-[400px]:gap-1 min-[400px]:items-center">
        <Link
         href={`/user/${tweet.user.username}`}
         className="hover:underline underline-offset-1 username"
@@ -134,14 +134,26 @@ const DisplayTweet = ({
        </Link>
        <Link
         href={`/user/${tweet.user.username}`}
-        className="text-mainGray username"
+        className="text-mainGray username hidden min-[400px]:block"
        >
         @{tweet.user.username}
        </Link>
-       <span className="text-mainGray">&#183;</span>
-       <span className="text-mainGray">
+       <span className="text-mainGray hidden min-[400px]:block">&#183;</span>
+       <span className="text-mainGray hidden min-[400px]:block">
         {moment(tweet.createdAt).fromNow()}
        </span>
+       <div className="flex gap-1 min-[400px]:hidden">
+        <Link
+         href={`/user/${tweet.user.username}`}
+         className="text-mainGray username"
+        >
+         @{tweet.user.username}
+        </Link>
+        <span className="text-mainGray">&#183;</span>
+        <span className="text-mainGray">
+         {moment(tweet.createdAt).fromNow(true)}
+        </span>
+       </div>
       </div>
       <div className="text-mainGray text-xl relative -left-2">
        <VscEllipsis />
