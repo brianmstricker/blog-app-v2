@@ -12,7 +12,7 @@ const Page = async () => {
  return (
   <>
    <div tabIndex={0}>
-    <div className="pt-1 pb-2 px-4 flex items-center justify-between sticky top-0 z-10 bg-gray-100/95 dark:bg-black/95 backdrop-blur-sm">
+    <div className="pt-1 pb-2 px-4 flex items-center justify-between sticky top-0 z-10 bg-white/90 dark:bg-black/90 backdrop-blur-sm">
      <div>
       <h1 className="text-xl font-bold">Bookmarks</h1>
       <span className="text-mainGray relative -top-1 text-sm">

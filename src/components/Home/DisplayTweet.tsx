@@ -103,7 +103,7 @@ const DisplayTweet = ({
    onMouseUp={handleMouseUp}
    onMouseMove={() => (isDragging = true)}
    className={cn(
-    "border-b dark:border-b-white/25 hover:cursor-pointer bg-neutral-100 dark:bg-black hover:bg-neutral-200/30 dark:hover:bg-[#080808] block",
+    "border-b dark:border-b-white/25 hover:cursor-pointer bg-white dark:bg-black hover:bg-neutral-100/50 dark:hover:bg-[#080808] block",
     isReply ? "pt-2" : ""
    )}
   >

@@ -3,8 +3,7 @@
 <https://authjs.dev/reference/nextjs>
 <https://ui.shadcn.com/docs/components/form>
 -using this for spinners, they have a ton <https://mhnpd.github.io/react-loader-spinner/docs/components/oval>
--mobile responsiveness, mobile navbar
--modal view (right side, bottom options)
+-media modal view (right side, bottom options)
 -post modal
 -top navbar/bottom navbar/post button on devices under 500px
 -optimistic update when replying/posting - might not be doable right now
@@ -12,4 +11,4 @@
 -update status page username so it's a link to profile
 -retweet functionality
 -quick reply feature
--pagination
+-scroll pagination

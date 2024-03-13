@@ -10,7 +10,7 @@ const ForYouFollowing = ({ user }: { user: User | undefined }) => {
  const tabs = [{ label: "For you" }, { label: "Following" }];
  //todo: small screen scroll effect
  return (
-  <div className="w-full min-[500px]:sticky top-0 border-b dark:border-b-white/25 z-[2] bg-gray-100/60 dark:bg-black/60 backdrop-blur-md">
+  <div className="w-full min-[500px]:sticky top-0 border-b dark:border-b-white/25 z-[2] bg-white/60 dark:bg-black/60 backdrop-blur-md">
    {!!user && <TopNav user={user} />}
    <div className="flex items-center">
     <div className="flex w-full mx-auto">
