@@ -23,9 +23,8 @@ const LeftMenuNav = ({ user }: { user: User }) => {
  const path = usePathname();
  const [activeLink, setActiveLink] = useState(path);
  useEffect(() => {
-  const newPath = path.replace("/", "");
-  setActiveLink(newPath);
-  if (newPath === "") setActiveLink("home");
+  setActiveLink(path);
+  if (path === "") setActiveLink("home");
  }, [path]);
  const userLinks = [
   {
@@ -79,7 +78,7 @@ const LeftMenuNav = ({ user }: { user: User }) => {
       }}
      >
       <span>
-       {activeLink.toLowerCase() === link.label.toLowerCase() ? (
+       {activeLink.toLowerCase() === link.href.toLowerCase() ? (
         <link.activeIcon className="w-[22px] h-[22px] md:w-7 md:h-7" />
        ) : (
         <link.icon className="w-[22px] h-[22px] md:w-7 md:h-7" />
