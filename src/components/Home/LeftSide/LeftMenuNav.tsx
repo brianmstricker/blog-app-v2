@@ -59,6 +59,11 @@ const LeftMenuNav = ({ user }: { user: User }) => {
   },
   {
    href: `/user/${user.username}`,
+   extraHref: [
+    `/user/${user.username}/with_replies`,
+    `/user/${user.username}/media`,
+    `/user/${user.username}/likes`,
+   ],
    label: "Profile",
    icon: FaRegUser,
    activeIcon: FaUser,
@@ -78,7 +83,8 @@ const LeftMenuNav = ({ user }: { user: User }) => {
       }}
      >
       <span>
-       {activeLink.toLowerCase() === link.href.toLowerCase() ? (
+       {activeLink.toLowerCase() === link.href.toLowerCase() ||
+       link.extraHref?.includes(activeLink) ? (
         <link.activeIcon className="w-[22px] h-[22px] md:w-7 md:h-7" />
        ) : (
         <link.icon className="w-[22px] h-[22px] md:w-7 md:h-7" />
