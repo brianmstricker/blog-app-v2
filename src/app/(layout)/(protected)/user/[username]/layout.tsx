@@ -40,7 +40,7 @@ const layout = async ({
       style={{ backgroundImage: `url(${user.banner})` }}
      ></div>
     ) : (
-     <div className="h-[200px] w-full bg-neutral-100 dark:bg-neutral-700" />
+     <div className="h-[200px] w-full bg-neutral-100 dark:bg-neutral-700/80" />
     )}
     <div className="px-4 pt-2">
      <div className="flex items-start justify-between">

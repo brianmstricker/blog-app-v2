@@ -1,4 +1,5 @@
-import { fetchUserAction } from "@/actions/user-actions";
+import { fetchUserAction, fetchUserTweetsAction } from "@/actions/user-actions";
+import { auth } from "@/auth";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -17,6 +18,12 @@ export async function generateMetadata({
 }
 
 const page = async ({}: {}) => {
+ const userInfo = await auth();
+ if (!userInfo) return;
+ const { user } = userInfo;
+ if (!user) return;
+ const tweets = await fetchUserTweetsAction(user.id);
+ // console.log(tweets);
  return <div></div>;
 };
 export default page;

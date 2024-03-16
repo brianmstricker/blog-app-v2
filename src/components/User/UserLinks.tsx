@@ -19,7 +19,7 @@ const UserLinks = ({ username }: { username: string | null }) => {
      <Link
       href={`/user/${username}/${link.href?.toLowerCase()}`}
       key={link.name}
-      className="w-full text-center py-2 cursor-pointer hover:bg-black/10 text-mainGray"
+      className="w-full text-center pb-2.5 pt-3.5 cursor-pointer hover:bg-black/10 hover:dark:bg-white/10 transition-all duration-100 text-mainGray"
      >
       <div className="w-fit mx-auto">
        <div
@@ -35,7 +35,7 @@ const UserLinks = ({ username }: { username: string | null }) => {
        </div>
        <div
         className={cn(
-         "h-0 w-full bg-blue-400 relative top-2 rounded-full",
+         "h-0 w-full bg-main relative top-2.5 rounded-full",
          currentLink === link.href?.toLowerCase() && "h-1",
          link.href === "" && !currentLink && "h-1"
         )}
