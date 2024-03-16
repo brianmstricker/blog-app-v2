@@ -63,9 +63,9 @@ model Tweet {
  replyToUsername String?
  userId          String
  media           Media[]
- user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
  likes           Like[]
  bookmarks       Bookmark[]
+ user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Media {
