@@ -13,7 +13,7 @@ const UserLinks = ({ username }: { username: string | null }) => {
  const path = usePathname();
  const currentLink = path.split("/")[3];
  return (
-  <div className="flex justify-between mt-8 border-b dark:border-b-white/25">
+  <div className="flex justify-between mt-4 border-b dark:border-b-white/25">
    {links.map((link) => {
     return (
      <Link
