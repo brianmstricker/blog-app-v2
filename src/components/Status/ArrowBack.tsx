@@ -28,7 +28,7 @@ const ArrowBack = ({
     </div>
    ) : (
     <button onClick={goBack} className="p-1 rounded-full">
-     <IoArrowBackSharp className="w-6 h-6" />
+     <IoArrowBackSharp className="w-5 h-5" />
     </button>
    )}
   </>
