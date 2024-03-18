@@ -36,9 +36,10 @@ export const fetchUserAction = async (username: string) => {
 
 export const fetchUserTweetsAction = async (userId: string) => {
  try {
-  const tweets = await db.tweet.findMany({
+  let tweets = await db.tweet.findMany({
    where: {
     userId,
+    reply: false,
    },
    orderBy: {
     createdAt: "desc",
@@ -52,11 +53,32 @@ export const fetchUserTweetsAction = async (userId: string) => {
     likes: true,
     media: true,
     bookmarks: true,
+    user: true,
    },
   });
   if (!tweets) {
    return null;
   }
+  const replies = await db.tweet.findMany({
+   where: {
+    userId,
+    reply: true,
+   },
+   include: {
+    user: {
+     select: { username: true, handle: true, image: true },
+    },
+    likes: true,
+    media: true,
+    bookmarks: true,
+   },
+  });
+  tweets = tweets.map((tweet) => {
+   const repliesLength = replies.filter(
+    (reply) => reply.replyToId === tweet.id
+   ).length;
+   return { ...tweet, repliesLength };
+  });
   return tweets;
  } catch (error: any) {
   return { error: error?.message || "Something went wrong" };

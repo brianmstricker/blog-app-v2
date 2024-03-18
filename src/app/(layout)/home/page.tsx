@@ -14,7 +14,12 @@ export default async function Home() {
     {Array.isArray(tweets) && tweets.length > 0 && (
      <div className="pb-48">
       {tweets.map((tweet) => (
-       <DisplayTweet key={tweet.id} tweet={tweet} user={user} />
+       <DisplayTweet
+        key={tweet.id}
+        tweet={tweet}
+        user={user}
+        repliesLength={(tweet as any).repliesLength}
+       />
       ))}
      </div>
     )}

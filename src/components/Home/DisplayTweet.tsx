@@ -107,7 +107,7 @@ const DisplayTweet = ({
     isReply ? "pt-2" : ""
    )}
   >
-   <article className="py-2 px-4 flex gap-3 leading-5" tabIndex={0}>
+   <article className="pb-2 pt-3 px-4 flex gap-3 leading-5" tabIndex={0}>
     <div className="shrink-0 select-none">
      {!tweet.user.image ? (
       <div className="w-9 h-9 min-[400px]:w-11 min-[400px]:h-11 rounded-full bg-blue-600" />

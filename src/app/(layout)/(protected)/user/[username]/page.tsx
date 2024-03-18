@@ -1,5 +1,6 @@
 import { fetchUserAction, fetchUserTweetsAction } from "@/actions/user-actions";
 import { auth } from "@/auth";
+import DisplayTweet from "@/components/Home/DisplayTweet";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -23,7 +24,19 @@ const page = async ({}: {}) => {
  const { user } = userInfo;
  if (!user) return;
  const tweets = await fetchUserTweetsAction(user.id);
- // console.log(tweets);
- return <div></div>;
+ if (!tweets) return <div>No tweets found</div>;
+ if ("error" in tweets) return <div>{tweets.error}</div>;
+ return (
+  <div>
+   {tweets.map((tweet) => (
+    <DisplayTweet
+     key={tweet.id}
+     tweet={tweet}
+     user={user}
+     repliesLength={(tweet as any).repliesLength}
+    />
+   ))}
+  </div>
+ );
 };
 export default page;
