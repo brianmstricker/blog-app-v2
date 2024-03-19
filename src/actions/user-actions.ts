@@ -34,11 +34,13 @@ export const fetchUserAction = async (username: string) => {
  }
 };
 
-export const fetchUserTweetsAction = async (userId: string) => {
+export const fetchUserTweetsAction = async (username: string) => {
  try {
   let tweets = await db.tweet.findMany({
    where: {
-    userId,
+    user: {
+     username,
+    },
     reply: false,
    },
    orderBy: {
@@ -61,7 +63,9 @@ export const fetchUserTweetsAction = async (userId: string) => {
   }
   const replies = await db.tweet.findMany({
    where: {
-    userId,
+    user: {
+     username,
+    },
     reply: true,
    },
    include: {

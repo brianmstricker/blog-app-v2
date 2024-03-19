@@ -74,13 +74,6 @@ export const TweetSchema = z.object({
  replyToId: z.string().optional(),
 });
 
-// bio           String?
-// location      String?
-// website       String?
-// banner        String?
-// image         String?
-// handle        String
-
 export const UserSectionSchema = z.object({
  handle: z
   .string()
@@ -90,4 +83,12 @@ export const UserSectionSchema = z.object({
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
   ),
+ bio: z.string().max(160, "Bio must be at most 160 characters long").optional(),
+ location: z
+  .string()
+  .max(40, "Location must be at most 30 characters long")
+  .optional(),
+ website: z.string().url().optional(),
+ banner: z.string().url().optional(),
+ image: z.string().url().optional(),
 });

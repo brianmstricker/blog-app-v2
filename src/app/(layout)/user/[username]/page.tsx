@@ -18,14 +18,13 @@ export async function generateMetadata({
  };
 }
 
-const page = async ({}: {}) => {
- const userInfo = await auth();
- if (!userInfo) return;
- const { user } = userInfo;
- if (!user) return;
- const tweets = await fetchUserTweetsAction(user.id);
+const page = async ({ params }: { params: { username: string } }) => {
+ const { username } = params;
+ const tweets = await fetchUserTweetsAction(username);
  if (!tweets) return <div>No tweets found</div>;
  if ("error" in tweets) return <div>{tweets.error}</div>;
+ const currentUser = await auth();
+ const user = currentUser?.user;
  return (
   <div>
    {tweets.map((tweet) => (
