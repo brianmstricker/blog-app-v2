@@ -26,7 +26,7 @@ export const RegisterSchema = z.object({
  username: z
   .string()
   .min(3, "Username must be at least 3 characters long")
-  .max(30, "Username must be at most 30 characters long")
+  .max(20, "Username must be at most 30 characters long")
   .regex(
    /^[a-zA-Z0-9_]+$/,
    "Username must only contain alphanumeric characters and underscores"
@@ -34,7 +34,7 @@ export const RegisterSchema = z.object({
  handle: z
   .string()
   .min(1, "Handle must be at least 1 characters long")
-  .max(30, "Handle must be at most 30 characters long")
+  .max(20, "Handle must be at most 30 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
@@ -45,7 +45,7 @@ export const UsernameHandleSchema = z.object({
  username: z
   .string()
   .min(3, "Username must be at least 3 characters long")
-  .max(30, "Username must be at most 30 characters long")
+  .max(20, "Username must be at most 30 characters long")
   .regex(
    /^[a-zA-Z0-9_]+$/,
    "Username must only contain alphanumeric characters and underscores"
@@ -53,7 +53,7 @@ export const UsernameHandleSchema = z.object({
  handle: z
   .string()
   .min(1, "Handle must be at least 1 characters long")
-  .max(30, "Handle must be at most 30 characters long")
+  .max(20, "Handle must be at most 30 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
@@ -72,4 +72,22 @@ export const TweetSchema = z.object({
  media: z.union([z.string().url(), z.undefined()]),
  reply: z.boolean().optional(),
  replyToId: z.string().optional(),
+});
+
+// bio           String?
+// location      String?
+// website       String?
+// banner        String?
+// image         String?
+// handle        String
+
+export const UserSectionSchema = z.object({
+ handle: z
+  .string()
+  .min(1, "Handle must be at least 1 characters long")
+  .max(20, "Handle must be at most 30 characters long")
+  .regex(
+   /^[^<>[\]{}\\|`~]+$/,
+   "Handle must not contain certain special characters"
+  ),
 });

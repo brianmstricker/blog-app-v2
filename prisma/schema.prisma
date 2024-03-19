@@ -14,8 +14,8 @@ datasource db {
 model User {
  id            String      @id @default(cuid())
  name          String?
- username      String?     @unique @db.VarChar(30)
- handle        String?     @db.VarChar(30)
+ username      String?     @unique @db.VarChar(20)
+ handle        String?     @db.VarChar(20)
  email         String?     @unique
  emailVerified DateTime?
  image         String?
