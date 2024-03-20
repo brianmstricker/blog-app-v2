@@ -26,7 +26,7 @@ export const RegisterSchema = z.object({
  username: z
   .string()
   .min(3, "Username must be at least 3 characters long")
-  .max(20, "Username must be at most 30 characters long")
+  .max(20, "Username must be at most 20 characters long")
   .regex(
    /^[a-zA-Z0-9_]+$/,
    "Username must only contain alphanumeric characters and underscores"
@@ -34,7 +34,7 @@ export const RegisterSchema = z.object({
  handle: z
   .string()
   .min(1, "Handle must be at least 1 characters long")
-  .max(20, "Handle must be at most 30 characters long")
+  .max(20, "Handle must be at most 20 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
@@ -45,7 +45,7 @@ export const UsernameHandleSchema = z.object({
  username: z
   .string()
   .min(3, "Username must be at least 3 characters long")
-  .max(20, "Username must be at most 30 characters long")
+  .max(20, "Username must be at most 20 characters long")
   .regex(
    /^[a-zA-Z0-9_]+$/,
    "Username must only contain alphanumeric characters and underscores"
@@ -53,7 +53,7 @@ export const UsernameHandleSchema = z.object({
  handle: z
   .string()
   .min(1, "Handle must be at least 1 characters long")
-  .max(20, "Handle must be at most 30 characters long")
+  .max(20, "Handle must be at most 20 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
@@ -68,7 +68,6 @@ export const TweetSchema = z.object({
    .max(300, "Tweet must be at most 300 characters long"),
   z.undefined(),
  ]),
- //todo: maybe not .url()
  media: z.union([z.string().url(), z.undefined()]),
  reply: z.boolean().optional(),
  replyToId: z.string().optional(),
@@ -78,7 +77,7 @@ export const UserSectionSchema = z.object({
  handle: z
   .string()
   .min(1, "Handle must be at least 1 characters long")
-  .max(20, "Handle must be at most 30 characters long")
+  .max(20, "Handle must be at most 20 characters long")
   .regex(
    /^[^<>[\]{}\\|`~]+$/,
    "Handle must not contain certain special characters"
@@ -86,7 +85,7 @@ export const UserSectionSchema = z.object({
  bio: z.string().max(160, "Bio must be at most 160 characters long").optional(),
  location: z
   .string()
-  .max(40, "Location must be at most 30 characters long")
+  .max(40, "Location must be at most 40 characters long")
   .optional(),
  website: z.string().url().optional(),
  banner: z.string().url().optional(),

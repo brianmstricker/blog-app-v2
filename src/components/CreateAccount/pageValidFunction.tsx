@@ -46,8 +46,8 @@ export function isSecondPageInvalid(form: any) {
  const username = form.watch("username");
  const handle = form.watch("handle");
  if (username) {
-  if (username.length < 3 || username.length > 30) {
-   errors.username = "Username must be between 3 and 30 characters";
+  if (username.length < 3 || username.length > 20) {
+   errors.username = "Username must be between 3 and 20 characters";
   }
   if (!/^[a-zA-Z0-9_]+$/.test(username)) {
    errors.username =
@@ -55,8 +55,8 @@ export function isSecondPageInvalid(form: any) {
   }
  }
  if (handle) {
-  if (handle.length < 1 || handle.length > 30) {
-   errors.handle = "Handle must be between 3 and 30 characters";
+  if (handle.length < 1 || handle.length > 20) {
+   errors.handle = "Handle must be between 3 and 20 characters";
   }
   if (!/^[^<>[\]{}\\|`~]+$/.test(handle)) {
    errors.handle = "Handle must not contain certain special characters";

@@ -5,28 +5,33 @@ type CreateAccountLabelProps = {
  errors: any;
  form: any;
  field: string;
+ text?: string;
  type?: string;
  emailExistError?: boolean;
  userExistError?: boolean;
+ editAccountPage?: boolean;
 };
 
 const CreateAccountLabel = ({
  errors,
  form,
  field,
+ text,
  type = "text",
  emailExistError,
  userExistError,
+ editAccountPage,
 }: CreateAccountLabelProps) => {
  const fieldValue = form.watch(field);
  return (
   <label
-   htmlFor={field}
+   htmlFor={text ? text : field}
    className={cn(
     "relative group p-3 border border-mainGray/80 rounded w-full focus-within:outline focus-within:outline-1 focus-within:outline-main mt-3",
     fieldValue && errors && errors[field] && "!border-red-500 !outline-red-500",
     !!emailExistError && "!border-red-500 !outline-red-500",
-    !!userExistError && "!border-red-500 !outline-red-500"
+    !!userExistError && "!border-red-500 !outline-red-500",
+    editAccountPage && "block"
    )}
   >
    <div
@@ -41,7 +46,7 @@ const CreateAccountLabel = ({
     {field === "confirmPassword" ? "Confirm Password" : field}
    </div>
    <input
-    id={field}
+    id={text ? text : field}
     name={field}
     className="outline-none mt-3 w-full bg-white dark:bg-black"
     type={type}
